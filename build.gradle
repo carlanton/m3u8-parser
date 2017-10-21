@@ -1,0 +1,26 @@
+group 'io.lindstrom'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'idea'
+apply plugin: 'java'
+
+ext {
+    ideaGeneratedSources = file('out/production/classes/generated')
+}
+
+idea.module {
+    sourceDirs += ideaGeneratedSources
+    generatedSourceDirs += ideaGeneratedSources
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.google.guava:guava:23.2-jre'
+    compileOnly 'org.immutables:value:2.5.5'
+    testCompile 'junit:junit:4.12'
+}
