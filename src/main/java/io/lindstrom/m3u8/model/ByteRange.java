@@ -15,13 +15,13 @@ public interface ByteRange {
 
     class Builder extends ByteRangeBuilder {}
 
-    static ByteRange of(int length) {
+    static ByteRange of(long length) {
         return builder()
                 .length(length)
                 .build();
     }
 
-    static ByteRange of(int length, long offset) {
+    static ByteRange of(long length, long offset) {
         return builder()
                 .length(length)
                 .offset(offset)
