@@ -41,7 +41,7 @@ public class AlternativeRenditionParser extends AbstractLineParser<AlternativeRe
                     builder.name(value);
                     break;
                 case DEFAULT:
-                    builder.getDefault(yesOrNo(value));
+                    builder.defaultRendition(yesOrNo(value));
                     break;
                 case AUTOSELECT:
                     builder.autoSelect(yesOrNo(value));
@@ -75,7 +75,7 @@ public class AlternativeRenditionParser extends AbstractLineParser<AlternativeRe
         alternativeRendition.language().ifPresent(value -> attributes.addQuoted(Tags.LANGUAGE, value));
         alternativeRendition.assocLanguage().ifPresent(value -> attributes.addQuoted(Tags.ASSOC_LANGUAGE, value));
         attributes.addQuoted(Tags.NAME, alternativeRendition.name());
-        alternativeRendition.getDefault().ifPresent(value -> attributes.add(Tags.DEFAULT, value));
+        alternativeRendition.defaultRendition().ifPresent(value -> attributes.add(Tags.DEFAULT, value));
         alternativeRendition.autoSelect().ifPresent(value -> attributes.add(Tags.AUTOSELECT, value));
         alternativeRendition.forced().ifPresent(value -> attributes.add(Tags.FORCED, value));
         alternativeRendition.inStreamId().ifPresent(value -> attributes.addQuoted(Tags.INSTREAM_ID, value));

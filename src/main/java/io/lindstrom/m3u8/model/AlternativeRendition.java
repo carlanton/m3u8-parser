@@ -13,7 +13,7 @@ public interface AlternativeRendition {
     Optional<String> language();
     Optional<String> assocLanguage();
     String name();
-    Optional<Boolean> getDefault();
+    Optional<Boolean> defaultRendition();
     Optional<Boolean> autoSelect();
     Optional<Boolean> forced();
     Optional<String> inStreamId();
