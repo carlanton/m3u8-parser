@@ -20,7 +20,7 @@ public class ByteRangeParser extends AbstractLineParser<ByteRange> {
             throw new RuntimeException("Invalid byte range " + attributes);
         }
         ByteRange.Builder byteRange = ByteRange.builder();
-        byteRange.subRangeOffset(Long.parseLong(matcher.group(1)));
+        byteRange.length(Long.parseLong(matcher.group(1)));
         if (matcher.group(2) != null) {
             byteRange.offset(Long.parseLong(matcher.group(2)));
         }
@@ -29,7 +29,7 @@ public class ByteRangeParser extends AbstractLineParser<ByteRange> {
 
     @Override
     protected String writeAttributes(ByteRange byteRange) {
-        return byteRange.subRangeOffset() +
+        return byteRange.length() +
                 byteRange.offset().map(offset -> "@" + offset).orElse("");
     }
 }

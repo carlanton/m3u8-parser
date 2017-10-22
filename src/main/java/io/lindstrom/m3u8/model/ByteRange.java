@@ -6,7 +6,7 @@ import java.util.Optional;
 
 @Value.Immutable
 public interface ByteRange {
-    long subRangeOffset();
+    long length();
     Optional<Long> offset();
 
     static Builder builder() {
@@ -15,15 +15,15 @@ public interface ByteRange {
 
     class Builder extends ByteRangeBuilder {}
 
-    static ByteRange of(int subRangeOffset) {
+    static ByteRange of(int length) {
         return builder()
-                .subRangeOffset(subRangeOffset)
+                .length(length)
                 .build();
     }
 
-    static ByteRange of(int subRangeOffset, long offset) {
+    static ByteRange of(int length, long offset) {
         return builder()
-                .subRangeOffset(subRangeOffset)
+                .length(length)
                 .offset(offset)
                 .build();
     }
