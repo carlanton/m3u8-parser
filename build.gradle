@@ -20,7 +20,6 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.guava:guava:23.2-jre'
     compileOnly 'org.immutables:value:2.5.5'
     testCompile 'junit:junit:4.12'
 }

@@ -1,30 +1,29 @@
 package io.lindstrom.m3u8.parser;
 
-import com.google.common.base.Splitter;
 import io.lindstrom.m3u8.Tags;
 import io.lindstrom.m3u8.model.AlternativeRendition;
 import io.lindstrom.m3u8.model.MediaType;
 import io.lindstrom.m3u8.util.AttributeListBuilder;
+import io.lindstrom.m3u8.util.ParserUtils;
 
 import java.util.Map;
 
 import static io.lindstrom.m3u8.Tags.*;
-import static io.lindstrom.m3u8.Tags.CHANNELS;
-import static io.lindstrom.m3u8.Tags.CHARACTERISTICS;
 
-public class AlternativeRenditionParser implements Parser<AlternativeRendition> {
-    private static final Splitter SPLITTER_COMMA = Splitter.on(',').trimResults();
-    private static final Splitter SPLITTER_SLASH = Splitter.on('/').trimResults();
+public class AlternativeRenditionParser extends AbstractLineParser<AlternativeRendition> {
+    public AlternativeRenditionParser() {
+        super(EXT_X_MEDIA);
+    }
 
     @Override
-    public AlternativeRendition parse(Map<String, String> attributes) {
+    protected AlternativeRendition parseAttributes(Map<String, String> attributes) {
         AlternativeRendition.Builder builder = AlternativeRendition.builder();
         for (Map.Entry<String, String> entry : attributes.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
             switch (key) {
                 case TYPE:
-                    builder.type(MediaType.valueOf(value));
+                    builder.type(MediaType.parse(value));
                     break;
                 case URI:
                     builder.uri(value);
@@ -54,10 +53,10 @@ public class AlternativeRenditionParser implements Parser<AlternativeRendition> 
                     builder.inStreamId(value);
                     break;
                 case CHARACTERISTICS:
-                    builder.characteristics(SPLITTER_COMMA.split(value));
+                    builder.characteristics(ParserUtils.split(value, ","));
                     break;
                 case CHANNELS:
-                    builder.channels(SPLITTER_SLASH.split(value));
+                    builder.channels(ParserUtils.split(value, "/"));
                     break;
                 default:
                     throw new RuntimeException("Unknown key " + key);
@@ -67,7 +66,7 @@ public class AlternativeRenditionParser implements Parser<AlternativeRendition> 
     }
 
     @Override
-    public String write(AlternativeRendition alternativeRendition) {
+    protected String writeAttributes(AlternativeRendition alternativeRendition) {
         AttributeListBuilder attributes = new AttributeListBuilder();
 
         attributes.add(Tags.TYPE, alternativeRendition.type());
@@ -88,8 +87,7 @@ public class AlternativeRenditionParser implements Parser<AlternativeRendition> 
         if (!alternativeRendition.channels().isEmpty()) {
             attributes.addQuoted(Tags.CHANNELS, String.join("/", alternativeRendition.channels()));
         }
-
-        return String.format("%s:%s\n", Tags.EXT_X_MEDIA, attributes);
+        return attributes.toString();
     }
 
     private static boolean yesOrNo(String value) {

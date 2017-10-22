@@ -9,8 +9,10 @@ import java.util.Optional;
 public interface VariantStream {
     long bandwidth();
     Optional<Long> averageBandwidth();
+
+
     List<String> codecs();
-    Optional<String> resolution();
+    Optional<Resolution> resolution();
     Optional<Double> frameRate();
     Optional<String> hdcpLevel();
     Optional<String> audio();

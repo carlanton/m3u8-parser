@@ -11,7 +11,7 @@ public interface IFramePlaylist {
     long bandwidth();
     Optional<Long> averageBandwidth();
     List<String> codecs();
-    Optional<String> resolution();
+    Optional<Resolution> resolution();
     Optional<String> hdcpLevel();
     Optional<String> video();
 
