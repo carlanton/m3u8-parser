@@ -5,6 +5,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 public interface Resolution {
     int width();
+
     int height();
 
     static Builder builder() {
@@ -18,5 +19,6 @@ public interface Resolution {
                 .build();
     }
 
-    class Builder extends ResolutionBuilder {}
+    class Builder extends ResolutionBuilder {
+    }
 }

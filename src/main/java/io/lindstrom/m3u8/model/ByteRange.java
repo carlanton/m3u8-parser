@@ -5,18 +5,20 @@ import org.immutables.value.Value;
 import java.util.Optional;
 
 /**
- *
+ * Byte Range
  */
 @Value.Immutable
 public interface ByteRange {
     long length();
+
     Optional<Long> offset();
 
     static Builder builder() {
         return new Builder();
     }
 
-    class Builder extends ByteRangeBuilder {}
+    class Builder extends ByteRangeBuilder {
+    }
 
     static ByteRange of(long length) {
         return builder()

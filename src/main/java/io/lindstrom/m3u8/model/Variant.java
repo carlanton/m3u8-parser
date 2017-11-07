@@ -5,23 +5,79 @@ import org.immutables.value.Value;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Variant Stream
+ *
+ * @see <a href="https://tools.ietf.org/html/rfc8216#section-4.3.4.1" target="_blank">
+ * RFC 8216 - 4.3.4.2.  EXT-X-STREAM-INF</a>
+ */
 @Value.Immutable
 public interface Variant {
+    /**
+     * The value is a decimal-integer of bits per second.  It represents the peak segment
+     * bit rate of the Variant Stream.
+     *
+     * @return variant attribute BANDWIDTH
+     */
     long bandwidth();
+
+    /**
+     * The value is a decimal-integer of bits per second.  It represents the average segment
+     * bit rate of the Variant Stream.
+     *
+     * @return variant attribute AVERAGE-BANDWIDTH
+     */
     Optional<Long> averageBandwidth();
+
+    /**
+     * @return variant attribute CODECS
+     */
     List<String> codecs();
+
+    /**
+     * @return variant attribute RESOLUTION
+     */
     Optional<Resolution> resolution();
+
+    /**
+     * @return variant attribute FRAME-RATE
+     */
     Optional<Double> frameRate();
+
+    /**
+     * @return variant attribute HDCP-LEVEL
+     */
     Optional<String> hdcpLevel();
+
+    /**
+     * @return variant attribute AUDIO
+     */
     Optional<String> audio();
+
+    /**
+     * @return variant attribute VIDEO
+     */
     Optional<String> video();
+
+    /**
+     * @return variant attribute SUBTITLES
+     */
     Optional<String> subtitles();
+
+    /**
+     * @return variant attribute CLOSED-CAPTIONS
+     */
     Optional<String> closedCaptions();
+
+    /**
+     * @return URI to the media playlist
+     */
     String uri();
 
     static Builder builder() {
         return new Builder();
     }
 
-    class Builder extends VariantBuilder {}
+    class Builder extends VariantBuilder {
+    }
 }

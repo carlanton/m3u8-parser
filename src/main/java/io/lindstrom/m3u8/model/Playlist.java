@@ -4,12 +4,11 @@ import org.immutables.value.Value;
 
 /**
  * Common playlist interface
- * 
+ *
  * @see MasterPlaylist
  * @see MediaPlaylist
  */
 public interface Playlist {
-
     /**
      * The playlist compatibility version.
      *

@@ -7,13 +7,15 @@ import java.util.Optional;
 @Value.Immutable
 public interface MapInfo {
     String uri();
+
     Optional<ByteRange> byteRange();
 
     static Builder builder() {
         return new Builder();
     }
 
-    class Builder extends MapInfoBuilder {}
+    class Builder extends MapInfoBuilder {
+    }
 
     static MapInfo of(String uri) {
         return builder()
