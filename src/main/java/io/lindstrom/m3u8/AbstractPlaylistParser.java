@@ -67,11 +67,11 @@ abstract class AbstractPlaylistParser<T extends Playlist, B> {
         return build(builder);
     }
 
-    protected abstract B newBuilder();
-    protected abstract void onTag(B builder, String prefix, String attributes, Supplier<String> nextLine);
-    protected abstract void onURI(B builder, String uri);
-    protected abstract T build(B builder);
-    protected abstract void write(T playlist, StringBuilder stringBuilder);
+    abstract B newBuilder();
+    abstract void onTag(B builder, String prefix, String attributes, Supplier<String> nextLine);
+    abstract void onURI(B builder, String uri);
+    abstract T build(B builder);
+    abstract void write(T playlist, StringBuilder stringBuilder);
 
     public String writePlaylistAsString(T playlist) {
         StringBuilder stringBuilder = new StringBuilder();

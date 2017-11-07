@@ -1,4 +1,4 @@
-package io.lindstrom.m3u8.parser;
+package io.lindstrom.m3u8;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class AbstractLineParser<T> implements Parser<T> {
+abstract class AbstractLineParser<T> implements Parser<T> {
     private static final Pattern ATTRIBUTE_LIST_PATTERN = Pattern.compile("([A-Z0-9\\-]+)=(?:(?:\"([^\"]+)\")|([^,]+))");
     private final String tag;
 

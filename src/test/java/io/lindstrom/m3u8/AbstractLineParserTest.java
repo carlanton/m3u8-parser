@@ -1,4 +1,4 @@
-package io.lindstrom.m3u8.parser;
+package io.lindstrom.m3u8;
 
 import org.junit.Test;
 

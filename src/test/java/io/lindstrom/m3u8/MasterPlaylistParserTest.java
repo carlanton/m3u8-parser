@@ -28,15 +28,15 @@ public class MasterPlaylistParserTest {
                 .addAlternativeRenditions(AlternativeRendition.builder()
                         .type(MediaType.AUDIO)
                         .name("Default audio")
-                        .groupdId("AUDIO")
+                        .groupId("AUDIO")
                         .build())
-                .addVariantStreams(
-                        VariantStream.builder()
+                .addVariants(
+                        Variant.builder()
                                 .addCodecs("avc1.4d401f", "mp4a.40.2")
                                 .bandwidth(900000)
                                 .uri("v0.m3u8")
                                 .build(),
-                        VariantStream.builder()
+                        Variant.builder()
                                 .addCodecs("avc1.4d401f", "mp4a.40.2")
                                 .bandwidth(900000)
                                 .uri("v1.m3u8")

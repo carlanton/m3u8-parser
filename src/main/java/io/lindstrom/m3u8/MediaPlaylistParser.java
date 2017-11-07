@@ -3,8 +3,6 @@ package io.lindstrom.m3u8;
 import io.lindstrom.m3u8.model.MediaPlaylist;
 import io.lindstrom.m3u8.model.MediaSegment;
 import io.lindstrom.m3u8.model.PlaylistType;
-import io.lindstrom.m3u8.parser.ByteRangeParser;
-import io.lindstrom.m3u8.parser.MapInfoParser;
 
 import java.time.OffsetDateTime;
 import java.util.function.Supplier;

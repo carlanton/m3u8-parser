@@ -1,4 +1,4 @@
-package io.lindstrom.m3u8.parser;
+package io.lindstrom.m3u8;
 
 import io.lindstrom.m3u8.model.MapInfo;
 import io.lindstrom.m3u8.util.AttributeListBuilder;
@@ -7,10 +7,10 @@ import java.util.Map;
 
 import static io.lindstrom.m3u8.Tags.*;
 
-public class MapInfoParser extends AbstractLineParser<MapInfo> {
+class MapInfoParser extends AbstractLineParser<MapInfo> {
     private final ByteRangeParser byteRangeParser = new ByteRangeParser();
 
-    public MapInfoParser() {
+    MapInfoParser() {
         super(EXT_X_MAP);
     }
 

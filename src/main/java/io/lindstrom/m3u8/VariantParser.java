@@ -1,8 +1,7 @@
-package io.lindstrom.m3u8.parser;
+package io.lindstrom.m3u8;
 
-import io.lindstrom.m3u8.Tags;
 import io.lindstrom.m3u8.model.Resolution;
-import io.lindstrom.m3u8.model.VariantStream;
+import io.lindstrom.m3u8.model.Variant;
 import io.lindstrom.m3u8.util.AttributeListBuilder;
 import io.lindstrom.m3u8.util.ParserUtils;
 
@@ -10,14 +9,14 @@ import java.util.Map;
 
 import static io.lindstrom.m3u8.Tags.*;
 
-public class VariantStreamParser extends AbstractLineParser<VariantStream> {
-    public VariantStreamParser() {
+class VariantParser extends AbstractLineParser<Variant> {
+    VariantParser() {
         super(EXT_X_STREAM_INF);
     }
 
     @Override
-    protected VariantStream parseAttributes(Map<String, String> attributes) {
-        VariantStream.Builder builder = VariantStream.builder();
+    protected Variant parseAttributes(Map<String, String> attributes) {
+        Variant.Builder builder = Variant.builder();
         for (Map.Entry<String, String> entry : attributes.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
@@ -63,13 +62,13 @@ public class VariantStreamParser extends AbstractLineParser<VariantStream> {
     }
 
     @Override
-    public void write(VariantStream value, StringBuilder stringBuilder) {
+    public void write(Variant value, StringBuilder stringBuilder) {
         super.write(value, stringBuilder);
         stringBuilder.append(value.uri()).append('\n');
     }
 
     @Override
-    protected String writeAttributes(VariantStream variantStream) {
+    protected String writeAttributes(Variant variantStream) {
         AttributeListBuilder attributes = new AttributeListBuilder();
 
         attributes.add(Tags.BANDWIDTH, String.valueOf(variantStream.bandwidth()));

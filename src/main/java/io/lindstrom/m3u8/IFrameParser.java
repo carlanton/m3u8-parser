@@ -1,7 +1,6 @@
-package io.lindstrom.m3u8.parser;
+package io.lindstrom.m3u8;
 
-import io.lindstrom.m3u8.Tags;
-import io.lindstrom.m3u8.model.IFramePlaylist;
+import io.lindstrom.m3u8.model.IFrameVariant;
 import io.lindstrom.m3u8.util.AttributeListBuilder;
 import io.lindstrom.m3u8.util.ParserUtils;
 
@@ -9,14 +8,14 @@ import java.util.Map;
 
 import static io.lindstrom.m3u8.Tags.*;
 
-public class IFramePlaylistParser extends AbstractLineParser<IFramePlaylist> {
-    public IFramePlaylistParser() {
+class IFrameParser extends AbstractLineParser<IFrameVariant> {
+    IFrameParser() {
         super(EXT_X_I_FRAME_STREAM_INF);
     }
 
     @Override
-    protected IFramePlaylist parseAttributes(Map<String, String> attributes) {
-        IFramePlaylist.Builder builder = IFramePlaylist.builder();
+    protected IFrameVariant parseAttributes(Map<String, String> attributes) {
+        IFrameVariant.Builder builder = IFrameVariant.builder();
         for (Map.Entry<String, String> entry : attributes.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
@@ -34,7 +33,7 @@ public class IFramePlaylistParser extends AbstractLineParser<IFramePlaylist> {
                     builder.codecs(ParserUtils.split(value, ","));
                     break;
                 case RESOLUTION:
-                    builder.resolution(VariantStreamParser.parseResolution(value));
+                    builder.resolution(VariantParser.parseResolution(value));
                     break;
                 case HDCP_LEVEL:
                     builder.hdcpLevel(value);
@@ -50,7 +49,7 @@ public class IFramePlaylistParser extends AbstractLineParser<IFramePlaylist> {
     }
 
     @Override
-    protected String writeAttributes(IFramePlaylist iFramePlaylist) {
+    protected String writeAttributes(IFrameVariant iFramePlaylist) {
         AttributeListBuilder attributes = new AttributeListBuilder();
 
         attributes.addQuoted(Tags.URI, iFramePlaylist.uri());
@@ -59,7 +58,7 @@ public class IFramePlaylistParser extends AbstractLineParser<IFramePlaylist> {
         if (!iFramePlaylist.codecs().isEmpty()) {
             attributes.addQuoted(Tags.CODECS, String.join(",", iFramePlaylist.codecs()));
         }
-        iFramePlaylist.resolution().ifPresent(value -> attributes.add(Tags.RESOLUTION, VariantStreamParser.writeResolution(value)));
+        iFramePlaylist.resolution().ifPresent(value -> attributes.add(Tags.RESOLUTION, VariantParser.writeResolution(value)));
         iFramePlaylist.hdcpLevel().ifPresent(value -> attributes.add(Tags.HDCP_LEVEL, value));
         iFramePlaylist.video().ifPresent(value -> attributes.addQuoted(Tags.VIDEO, value));
 

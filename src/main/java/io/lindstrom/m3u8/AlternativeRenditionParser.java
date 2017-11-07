@@ -1,6 +1,5 @@
-package io.lindstrom.m3u8.parser;
+package io.lindstrom.m3u8;
 
-import io.lindstrom.m3u8.Tags;
 import io.lindstrom.m3u8.model.AlternativeRendition;
 import io.lindstrom.m3u8.model.MediaType;
 import io.lindstrom.m3u8.util.AttributeListBuilder;
@@ -10,8 +9,8 @@ import java.util.Map;
 
 import static io.lindstrom.m3u8.Tags.*;
 
-public class AlternativeRenditionParser extends AbstractLineParser<AlternativeRendition> {
-    public AlternativeRenditionParser() {
+class AlternativeRenditionParser extends AbstractLineParser<AlternativeRendition> {
+    AlternativeRenditionParser() {
         super(EXT_X_MEDIA);
     }
 
@@ -29,7 +28,7 @@ public class AlternativeRenditionParser extends AbstractLineParser<AlternativeRe
                     builder.uri(value);
                     break;
                 case GROUP_ID:
-                    builder.groupdId(value);
+                    builder.groupId(value);
                     break;
                 case LANGUAGE:
                     builder.language(value);
@@ -71,7 +70,7 @@ public class AlternativeRenditionParser extends AbstractLineParser<AlternativeRe
 
         attributes.add(Tags.TYPE, alternativeRendition.type());
         alternativeRendition.uri().ifPresent(uri -> attributes.addQuoted(Tags.URI, uri));
-        attributes.addQuoted(Tags.GROUP_ID, alternativeRendition.groupdId());
+        attributes.addQuoted(Tags.GROUP_ID, alternativeRendition.groupId());
         alternativeRendition.language().ifPresent(value -> attributes.addQuoted(Tags.LANGUAGE, value));
         alternativeRendition.assocLanguage().ifPresent(value -> attributes.addQuoted(Tags.ASSOC_LANGUAGE, value));
         attributes.addQuoted(Tags.NAME, alternativeRendition.name());
