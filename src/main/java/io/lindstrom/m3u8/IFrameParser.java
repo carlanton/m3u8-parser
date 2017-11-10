@@ -14,7 +14,7 @@ class IFrameParser extends AbstractLineParser<IFrameVariant> {
     }
 
     @Override
-    protected IFrameVariant parseAttributes(Map<String, String> attributes) {
+    protected IFrameVariant parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
         IFrameVariant.Builder builder = IFrameVariant.builder();
         for (Map.Entry<String, String> entry : attributes.entrySet()) {
             String key = entry.getKey();
@@ -42,7 +42,7 @@ class IFrameParser extends AbstractLineParser<IFrameVariant> {
                     builder.video(value);
                     break;
                 default:
-                    throw new RuntimeException("Unknown key " + key);
+                    throw new PlaylistParserException("Unknown key " + key);
             }
         }
         return builder.build();

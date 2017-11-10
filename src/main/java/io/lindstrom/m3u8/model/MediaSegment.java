@@ -19,6 +19,13 @@ public interface MediaSegment {
 
     Optional<MapInfo> mapInfo();
 
+    Optional<MediaSegmentKey> mediaSegmentKey();
+
+    @Value.Default
+    default boolean discontinuity() {
+        return false;
+    }
+
     static Builder builder() {
         return new Builder();
     }

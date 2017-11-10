@@ -3,7 +3,7 @@ package io.lindstrom.m3u8;
 import io.lindstrom.m3u8.model.MasterPlaylist;
 
 import java.util.Collections;
-import java.util.function.Supplier;
+import java.util.Iterator;
 
 import static io.lindstrom.m3u8.Tags.*;
 
@@ -18,7 +18,7 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
     }
 
     @Override
-    void onTag(MasterPlaylist.Builder builder, String prefix, String attributes, Supplier<String> nextLine) {
+    void onTag(MasterPlaylist.Builder builder, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
         switch (prefix) {
             case EXT_X_VERSION:
                 builder.version(Integer.parseInt(attributes));
@@ -29,7 +29,7 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
                 break;
 
             case EXT_X_STREAM_INF:
-                String uriLine = nextLine.get();
+                String uriLine = lineIterator.next();
                 if (uriLine == null || uriLine.startsWith("#")) {
                     throw new RuntimeException("Expected URI, got " + uriLine);
                 }

@@ -15,10 +15,10 @@ class ByteRangeParser extends AbstractLineParser<ByteRange> {
     }
 
     @Override
-    public ByteRange parse(String attributes) {
+    public ByteRange parse(String attributes) throws PlaylistParserException {
         Matcher matcher = BYTE_RANGE_PATTERN.matcher(attributes);
         if (!matcher.matches()) {
-            throw new RuntimeException("Invalid byte range " + attributes);
+            throw new PlaylistParserException("Invalid byte range " + attributes);
         }
         ByteRange.Builder byteRange = ByteRange.builder();
         byteRange.length(Long.parseLong(matcher.group(1)));

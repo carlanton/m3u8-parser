@@ -29,6 +29,13 @@ class Tags {
 
     // 4.3.2.4 EXT-X-KEY
     static final String EXT_X_KEY = "#EXT-X-KEY";
+    static final String METHOD = "METHOD";
+    static final String IV = "IV";
+    static final String KEYFORMAT = "KEYFORMAT";
+    static final String KEYFORMATVERSIONS = "KEYFORMATVERSIONS";
+
+
+
 
     // 4.3.2.5 EXT-X-MAP
     static final String EXT_X_MAP = "#EXT-X-MAP";

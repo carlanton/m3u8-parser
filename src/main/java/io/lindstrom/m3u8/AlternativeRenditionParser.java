@@ -15,7 +15,7 @@ class AlternativeRenditionParser extends AbstractLineParser<AlternativeRendition
     }
 
     @Override
-    protected AlternativeRendition parseAttributes(Map<String, String> attributes) {
+    protected AlternativeRendition parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
         AlternativeRendition.Builder builder = AlternativeRendition.builder();
         for (Map.Entry<String, String> entry : attributes.entrySet()) {
             String key = entry.getKey();
@@ -89,14 +89,14 @@ class AlternativeRenditionParser extends AbstractLineParser<AlternativeRendition
         return attributes.toString();
     }
 
-    private static boolean yesOrNo(String value) {
+    private static boolean yesOrNo(String value) throws PlaylistParserException {
         switch (value) {
             case "YES":
                 return true;
             case "NO":
                 return false;
             default:
-                throw new RuntimeException("Meh");
+                throw new PlaylistParserException("Meh");
         }
     }
 }

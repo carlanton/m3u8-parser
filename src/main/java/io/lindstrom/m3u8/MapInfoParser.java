@@ -15,7 +15,7 @@ class MapInfoParser extends AbstractLineParser<MapInfo> {
     }
 
     @Override
-    protected MapInfo parseAttributes(Map<String, String> attributes) {
+    protected MapInfo parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
         MapInfo.Builder builder = MapInfo.builder()
                 .uri(attributes.get(URI));
 

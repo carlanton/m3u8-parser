@@ -22,12 +22,12 @@ abstract class AbstractLineParser<T> implements Parser<T> {
     }
 
     @Override
-    public T parse(String attributes) {
+    public T parse(String attributes) throws PlaylistParserException {
         return parse(attributes, Collections.emptyMap());
     }
 
     @Override
-    public T parse(String attributes, Map<String, String> moreAttributes) {
+    public T parse(String attributes, Map<String, String> moreAttributes) throws PlaylistParserException {
         if (attributes.isEmpty()) {
             return parseAttributes(Collections.emptyMap());
         } else {
@@ -37,7 +37,7 @@ abstract class AbstractLineParser<T> implements Parser<T> {
         }
     }
 
-    protected T parseAttributes(Map<String, String> attributes) {
+    protected T parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
         throw new UnsupportedOperationException("Not implemented");
     }
 

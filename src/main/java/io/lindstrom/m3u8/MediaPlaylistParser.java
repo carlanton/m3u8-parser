@@ -5,13 +5,14 @@ import io.lindstrom.m3u8.model.MediaSegment;
 import io.lindstrom.m3u8.model.PlaylistType;
 
 import java.time.OffsetDateTime;
-import java.util.function.Supplier;
+import java.util.Iterator;
 
 import static io.lindstrom.m3u8.Tags.*;
 
 public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, MediaPlaylistParser.Builder> {
     private final MapInfoParser mapInfoParser = new MapInfoParser();
     private final ByteRangeParser byteRangeParser = new ByteRangeParser();
+    private final MediaSegmentKeyParser mediaSegmentKeyParser = new MediaSegmentKeyParser();
 
     protected static class Builder {
         private final MediaPlaylist.Builder playlistBuilder = MediaPlaylist.builder();
@@ -24,7 +25,7 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
     }
 
     @Override
-    protected void onTag(Builder builderWrapper, String prefix, String attributes, Supplier<String> nextLine) {
+    protected void onTag(Builder builderWrapper, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
         MediaPlaylist.Builder builder = builderWrapper.playlistBuilder;
         MediaSegment.Builder mediaSegmentBuilder = builderWrapper.segmentBuilder;
 
@@ -56,7 +57,7 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
             case EXTINF:
                 String[] values = attributes.split(",", 2);
                 mediaSegmentBuilder.duration(Double.parseDouble(values[0]));
-                if (values.length == 2) {
+                if (values.length == 2 && !values[1].isEmpty()) {
                     mediaSegmentBuilder.title(values[1]);
                 }
                 break;
@@ -77,13 +78,19 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
                 builder.mediaSequence(Integer.parseInt(attributes));
                 break;
 
-            case EXT_X_DISCONTINUITY_SEQUENCE:
-            case EXT_X_DISCONTINUITY:
             case EXT_X_KEY:
+                mediaSegmentBuilder.mediaSegmentKey(mediaSegmentKeyParser.parse(attributes));
+                break;
+
+            case EXT_X_DISCONTINUITY:
+                mediaSegmentBuilder.discontinuity(true);
+                break;
+
+            case EXT_X_DISCONTINUITY_SEQUENCE:
             case EXT_X_DATERANGE:
             case EXT_X_START:
             default:
-                throw new UnsupportedOperationException("Tag not implemented: " + prefix);
+                throw new PlaylistParserException("Tag not implemented: " + prefix);
         }
     }
 
@@ -138,6 +145,9 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
 
         // EXT-X-BYTERANGE
         mediaSegment.byteRange().ifPresent(byteRange -> byteRangeParser.write(byteRange, stringBuilder));
+
+        // EXT-X-KEY
+        mediaSegment.mediaSegmentKey().ifPresent(key -> mediaSegmentKeyParser.write(key, stringBuilder));
 
         // <URI>
         stringBuilder.append(mediaSegment.uri()).append('\n');

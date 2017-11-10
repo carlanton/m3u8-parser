@@ -15,7 +15,7 @@ class VariantParser extends AbstractLineParser<Variant> {
     }
 
     @Override
-    protected Variant parseAttributes(Map<String, String> attributes) {
+    protected Variant parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
         Variant.Builder builder = Variant.builder();
         for (Map.Entry<String, String> entry : attributes.entrySet()) {
             String key = entry.getKey();
@@ -55,7 +55,7 @@ class VariantParser extends AbstractLineParser<Variant> {
                     builder.closedCaptions(value);
                     break;
                 default:
-                    throw new RuntimeException("Unknown key " + key);
+                    throw new PlaylistParserException("Unknown key " + key);
             }
         }
         return builder.build();
