@@ -5,7 +5,7 @@ import org.immutables.value.Value;
 import java.util.Optional;
 
 @Value.Immutable
-public interface MediaSegmentKey {
+public interface SegmentKey {
     KeyMethod method();
 
     Optional<String> uri();
@@ -20,5 +20,5 @@ public interface MediaSegmentKey {
         return new Builder();
     }
 
-    class Builder extends MediaSegmentKeyBuilder {}
+    class Builder extends SegmentKeyBuilder {}
 }

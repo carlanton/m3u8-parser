@@ -12,7 +12,7 @@ import static io.lindstrom.m3u8.Tags.*;
 public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, MediaPlaylistParser.Builder> {
     private final MapInfoParser mapInfoParser = new MapInfoParser();
     private final ByteRangeParser byteRangeParser = new ByteRangeParser();
-    private final MediaSegmentKeyParser mediaSegmentKeyParser = new MediaSegmentKeyParser();
+    private final SegmentKeyParser segmentKeyParser = new SegmentKeyParser();
 
     protected static class Builder {
         private final MediaPlaylist.Builder playlistBuilder = MediaPlaylist.builder();
@@ -79,7 +79,7 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
                 break;
 
             case EXT_X_KEY:
-                mediaSegmentBuilder.mediaSegmentKey(mediaSegmentKeyParser.parse(attributes));
+                mediaSegmentBuilder.segmentKey(segmentKeyParser.parse(attributes));
                 break;
 
             case EXT_X_DISCONTINUITY:
@@ -129,6 +129,11 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
 
     private void writeMediaSegment(MediaSegment mediaSegment, StringBuilder stringBuilder) {
 
+        // EXT-X-DISCONTINUITY
+        if (mediaSegment.discontinuity()) {
+            stringBuilder.append(EXT_X_DISCONTINUITY).append('\n');
+        }
+
         // EXT-X-PROGRAM-DATE-TIME
         mediaSegment.programDateTime().ifPresent(value -> stringBuilder
                 .append(EXT_X_PROGRAM_DATE_TIME).append(':')
@@ -147,7 +152,7 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
         mediaSegment.byteRange().ifPresent(byteRange -> byteRangeParser.write(byteRange, stringBuilder));
 
         // EXT-X-KEY
-        mediaSegment.mediaSegmentKey().ifPresent(key -> mediaSegmentKeyParser.write(key, stringBuilder));
+        mediaSegment.segmentKey().ifPresent(key -> segmentKeyParser.write(key, stringBuilder));
 
         // <URI>
         stringBuilder.append(mediaSegment.uri()).append('\n');

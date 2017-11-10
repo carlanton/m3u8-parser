@@ -19,7 +19,7 @@ public interface MediaSegment {
 
     Optional<MapInfo> mapInfo();
 
-    Optional<MediaSegmentKey> mediaSegmentKey();
+    Optional<SegmentKey> segmentKey();
 
     @Value.Default
     default boolean discontinuity() {

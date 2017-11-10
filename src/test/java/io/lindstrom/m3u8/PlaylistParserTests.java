@@ -305,7 +305,7 @@ public class PlaylistParserTests {
         assertEquals(15, playlist.targetDuration());
         assertThat(playlist.mediaSegments(), is(Arrays.asList(
                 MediaSegment.builder()
-                        .mediaSegmentKey(MediaSegmentKey.builder()
+                        .segmentKey(SegmentKey.builder()
                                 .method(KeyMethod.AES_128)
                                 .uri("https://priv.example.com/key.php?r=52")
                                 .build())
@@ -321,7 +321,7 @@ public class PlaylistParserTests {
                         .uri("http://media.example.com/fileSequence52-C.ts")
                         .build(),
                 MediaSegment.builder()
-                        .mediaSegmentKey(MediaSegmentKey.builder()
+                        .segmentKey(SegmentKey.builder()
                                 .method(KeyMethod.AES_128)
                                 .uri("https://priv.example.com/key.php?r=53")
                                 .build())
