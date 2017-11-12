@@ -5,6 +5,9 @@ import org.immutables.value.Value;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Media Playlist interface
+ */
 @Value.Immutable
 public interface MediaPlaylist extends Playlist {
     int targetDuration();

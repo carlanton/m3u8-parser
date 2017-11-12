@@ -6,7 +6,7 @@ import java.util.List;
 import static io.lindstrom.m3u8.Tags.NO;
 import static io.lindstrom.m3u8.Tags.YES;
 
-public class AttributeListBuilder {
+class AttributeListBuilder {
     private final List<String> attributes = new ArrayList<>();
 
     public void add(String key, Enum<?> value) {

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Alternative Renditions
+ * Alternative Renditions (EXT-X-MEDIA)
  *
  * @see <a href="https://tools.ietf.org/html/rfc8216#section-4.3.4.1">
  * RFC 8216 - 4.3.4.1.  EXT-X-MEDIA</a>

@@ -2,6 +2,9 @@ package io.lindstrom.m3u8.model;
 
 import org.immutables.value.Value;
 
+/**
+ * Video resolution interface
+ */
 @Value.Immutable
 public interface Resolution {
     int width();

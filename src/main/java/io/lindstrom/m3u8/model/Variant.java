@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Variant Stream
+ * Variant Stream (EXT-X-STREAM-INF)
  *
  * @see <a href="https://tools.ietf.org/html/rfc8216#section-4.3.4.1" target="_blank">
  * RFC 8216 - 4.3.4.2.  EXT-X-STREAM-INF</a>

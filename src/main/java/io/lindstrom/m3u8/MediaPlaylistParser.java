@@ -9,23 +9,42 @@ import java.util.Iterator;
 
 import static io.lindstrom.m3u8.Tags.*;
 
+/**
+ * MediaPlaylistParser can read and write Media Playlists according to RFC 8216 (HTTP Live Streaming).
+ * <p>
+ * Example usage:
+ * <pre>
+ * {@code
+ * MediaPlaylistParser parser = new MediaPlaylistParser();
+ *
+ * // Parse playlist
+ * MediaPlaylist playlist = parser.readPlaylist(Paths.get("path/to/media-playlist.m3u8"));
+ *
+ * // Update playlist version
+ * MediaPlaylist updated = MediaPlaylist.builder()
+ *                                      .from(playlist)
+ *                                      .version(2)
+ *                                      .build();
+ *
+ * // Write playlist to standard out
+ * System.out.println(parser.writePlaylistAsString(updated));
+ * }
+ * </pre>
+ *
+ * This implementation is re-usable and thread safe.
+ */
 public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, MediaPlaylistParser.Builder> {
     private final MapInfoParser mapInfoParser = new MapInfoParser();
     private final ByteRangeParser byteRangeParser = new ByteRangeParser();
     private final SegmentKeyParser segmentKeyParser = new SegmentKeyParser();
 
-    protected static class Builder {
-        private final MediaPlaylist.Builder playlistBuilder = MediaPlaylist.builder();
-        private MediaSegment.Builder segmentBuilder = MediaSegment.builder();
-    }
-
     @Override
-    protected Builder newBuilder() {
+    Builder newBuilder() {
         return new Builder();
     }
 
     @Override
-    protected void onTag(Builder builderWrapper, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+    void onTag(Builder builderWrapper, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
         MediaPlaylist.Builder builder = builderWrapper.playlistBuilder;
         MediaSegment.Builder mediaSegmentBuilder = builderWrapper.segmentBuilder;
 
@@ -95,19 +114,19 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
     }
 
     @Override
-    protected void onURI(Builder builderWrapper, String uri) {
+    void onURI(Builder builderWrapper, String uri) {
         builderWrapper.segmentBuilder.uri(uri);
         builderWrapper.playlistBuilder.addMediaSegments(builderWrapper.segmentBuilder.build());
         builderWrapper.segmentBuilder = MediaSegment.builder();
     }
 
     @Override
-    protected MediaPlaylist build(Builder builderWrapper) {
+    MediaPlaylist build(Builder builderWrapper) {
         return builderWrapper.playlistBuilder.build();
     }
 
     @Override
-    protected void write(MediaPlaylist playlist, StringBuilder stringBuilder) {
+    void write(MediaPlaylist playlist, StringBuilder stringBuilder) {
         if (playlist.iFramesOnly()) {
             stringBuilder.append(EXT_X_I_FRAMES_ONLY).append("\n");
         }
@@ -156,5 +175,13 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
 
         // <URI>
         stringBuilder.append(mediaSegment.uri()).append('\n');
+    }
+
+    /**
+     * Wrapper class for playlist and segment builders
+     */
+    static class Builder {
+        private final MediaPlaylist.Builder playlistBuilder = MediaPlaylist.builder();
+        private MediaSegment.Builder segmentBuilder = MediaSegment.builder();
     }
 }

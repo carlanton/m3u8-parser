@@ -5,6 +5,13 @@ import org.immutables.value.Value;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * I-Frame variant stream (EXT-X-I-FRAME-STREAM-INF)
+ *
+ * @see <a href="https://tools.ietf.org/html/rfc8216#section-4.3.4.3" target="_blank">
+ * RFC 8216 - 4.3.4.3.  EXT-X-I-FRAME-STREAM-INF</a>
+ * @see Variant
+ */
 @Value.Immutable
 public interface IFrameVariant {
     String uri();

@@ -4,7 +4,6 @@ import io.lindstrom.m3u8.model.Playlist;
 
 import java.io.*;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -12,16 +11,17 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import static io.lindstrom.m3u8.Tags.*;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 abstract class AbstractPlaylistParser<T extends Playlist, B> {
     public T readPlaylist(InputStream inputStream) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, UTF_8))) {
             return readPlaylist(reader);
         }
     }
 
     public T readPlaylist(Path path) throws IOException {
-        try (BufferedReader reader = Files.newBufferedReader(path)) {
+        try (BufferedReader reader = Files.newBufferedReader(path, UTF_8)) {
             return readPlaylist(reader);
         }
     }
@@ -56,14 +56,14 @@ abstract class AbstractPlaylistParser<T extends Playlist, B> {
             }
         };
 
-        return parse(lineIterator);
+        return readPlaylist(lineIterator);
     }
 
     public T readPlaylist(String string) throws PlaylistParserException {
-        return parse(Arrays.asList(string.split("\n")).iterator());
+        return readPlaylist(Arrays.asList(string.split("\n")).iterator());
     }
 
-    public T parse(Iterator<String> lineIterator) throws PlaylistParserException {
+    public T readPlaylist(Iterator<String> lineIterator) throws PlaylistParserException {
         // All playlists must start with the tag #EXTM3U. According to the RFC this must be on the first line,
         // but some examples allow empty lines before the tag.
         boolean extM3uFound = false;
@@ -123,7 +123,7 @@ abstract class AbstractPlaylistParser<T extends Playlist, B> {
     }
 
     public byte[] writePlaylistAsBytes(T playlist) {
-        return writePlaylistAsString(playlist).getBytes(StandardCharsets.UTF_8);
+        return writePlaylistAsString(playlist).getBytes(UTF_8);
     }
 
     public ByteBuffer writePlaylistAsByteBuffer(T playlist) {

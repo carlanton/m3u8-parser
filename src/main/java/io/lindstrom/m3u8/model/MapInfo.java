@@ -4,6 +4,12 @@ import org.immutables.value.Value;
 
 import java.util.Optional;
 
+/**
+ * Map Info (EXT-X-MAP)
+ *
+ * @see <a href="https://tools.ietf.org/html/rfc8216#section-4.3.2.5" target="_blank">
+ * RFC 8216 - 4.3.2.5.  EXT-X-MAP</a>
+ */
 @Value.Immutable
 public interface MapInfo {
     String uri();

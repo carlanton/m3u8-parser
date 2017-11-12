@@ -7,6 +7,30 @@ import java.util.Iterator;
 
 import static io.lindstrom.m3u8.Tags.*;
 
+/**
+ * MasterPlaylistParser can read and write Master Playlists according to RFC 8216 (HTTP Live Streaming).
+ * <p>
+ * Example usage:
+ * <pre>
+ * {@code
+ * MasterPlaylistParser parser = new MasterPlaylistParser();
+ *
+ * // Parse playlist
+ * MasterPlaylist playlist = parser.readPlaylist(Paths.get("path/to/master.m3u8"));
+ *
+ * // Update playlist version
+ * MasterPlaylist updated = MasterPlaylist.builder()
+ *                                        .from(playlist)
+ *                                        .version(2)
+ *                                        .build();
+ *
+ * // Write playlist to standard out
+ * System.out.println(parser.writePlaylistAsString(updated));
+ * }
+ * </pre>
+ *
+ * This implementation is re-usable and thread safe.
+ */
 public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist, MasterPlaylist.Builder> {
     private final VariantParser variantParser = new VariantParser();
     private final IFrameParser iFrameParser = new IFrameParser();

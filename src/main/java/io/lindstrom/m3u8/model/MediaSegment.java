@@ -5,6 +5,9 @@ import org.immutables.value.Value;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
+/**
+ * Media Segment interface
+ */
 @Value.Immutable
 public interface MediaSegment {
     double duration();
