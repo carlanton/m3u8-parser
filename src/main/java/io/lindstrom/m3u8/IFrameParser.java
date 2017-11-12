@@ -1,8 +1,6 @@
 package io.lindstrom.m3u8;
 
 import io.lindstrom.m3u8.model.IFrameVariant;
-import io.lindstrom.m3u8.util.AttributeListBuilder;
-import io.lindstrom.m3u8.util.ParserUtils;
 
 import java.util.Map;
 

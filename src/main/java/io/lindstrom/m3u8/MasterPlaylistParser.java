@@ -31,7 +31,7 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
             case EXT_X_STREAM_INF:
                 String uriLine = lineIterator.next();
                 if (uriLine == null || uriLine.startsWith("#")) {
-                    throw new RuntimeException("Expected URI, got " + uriLine);
+                    throw new PlaylistParserException("Expected URI, got " + uriLine);
                 }
                 builder.addVariants(variantParser.parse(attributes,
                         Collections.singletonMap(URI, uriLine)));
@@ -48,16 +48,16 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
             case EXT_X_SESSION_DATA:
             case EXT_X_SESSION_KEY:
             case EXT_X_START:
-                throw new UnsupportedOperationException("Tag not implemented: " + prefix);
+                throw new PlaylistParserException("Tag not implemented: " + prefix);
 
             default:
-                throw new RuntimeException("Invalid line: " + prefix);
+                throw new PlaylistParserException("Invalid line: " + prefix);
         }
     }
 
     @Override
-    void onURI(MasterPlaylist.Builder builder, String uri) {
-        throw new IllegalStateException("Unexpected URI in master playlist");
+    void onURI(MasterPlaylist.Builder builder, String uri) throws PlaylistParserException {
+        throw new PlaylistParserException("Unexpected URI in master playlist");
     }
 
     @Override

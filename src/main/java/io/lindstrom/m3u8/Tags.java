@@ -34,9 +34,6 @@ class Tags {
     static final String KEYFORMAT = "KEYFORMAT";
     static final String KEYFORMATVERSIONS = "KEYFORMATVERSIONS";
 
-
-
-
     // 4.3.2.5 EXT-X-MAP
     static final String EXT_X_MAP = "#EXT-X-MAP";
     static final String BYTERANGE = "BYTERANGE";
@@ -122,4 +119,7 @@ class Tags {
 
     // 4.3.5.2 EXT-X-START
     static final String EXT_X_START = "#EXT-X-START";
+
+    static final String YES = "YES";
+    static final String NO = "NO";
 }

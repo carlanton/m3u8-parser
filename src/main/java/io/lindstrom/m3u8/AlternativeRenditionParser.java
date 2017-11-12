@@ -2,8 +2,6 @@ package io.lindstrom.m3u8;
 
 import io.lindstrom.m3u8.model.AlternativeRendition;
 import io.lindstrom.m3u8.model.MediaType;
-import io.lindstrom.m3u8.util.AttributeListBuilder;
-import io.lindstrom.m3u8.util.ParserUtils;
 
 import java.util.Map;
 
@@ -58,7 +56,7 @@ class AlternativeRenditionParser extends AbstractLineParser<AlternativeRendition
                     builder.channels(ParserUtils.split(value, "/"));
                     break;
                 default:
-                    throw new RuntimeException("Unknown key " + key);
+                    throw new PlaylistParserException("Unknown key " + key);
             }
         }
         return builder.build();
@@ -91,12 +89,12 @@ class AlternativeRenditionParser extends AbstractLineParser<AlternativeRendition
 
     private static boolean yesOrNo(String value) throws PlaylistParserException {
         switch (value) {
-            case "YES":
+            case YES:
                 return true;
-            case "NO":
+            case NO:
                 return false;
             default:
-                throw new PlaylistParserException("Meh");
+                throw new PlaylistParserException("Expected YES or NO, got " + value);
         }
     }
 }

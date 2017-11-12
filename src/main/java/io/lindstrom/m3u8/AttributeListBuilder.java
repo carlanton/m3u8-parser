@@ -1,7 +1,10 @@
-package io.lindstrom.m3u8.util;
+package io.lindstrom.m3u8;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static io.lindstrom.m3u8.Tags.NO;
+import static io.lindstrom.m3u8.Tags.YES;
 
 public class AttributeListBuilder {
     private final List<String> attributes = new ArrayList<>();
@@ -15,7 +18,7 @@ public class AttributeListBuilder {
     }
 
     public void add(String key, boolean value) {
-        attributes.add(String.format("%s=%s", key, value ? "YES" : "NO"));
+        attributes.add(String.format("%s=%s", key, value ? YES : NO));
     }
 
     public void addQuoted(String key, Object value) {

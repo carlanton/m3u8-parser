@@ -64,17 +64,26 @@ abstract class AbstractPlaylistParser<T extends Playlist, B> {
     }
 
     public T parse(Iterator<String> lineIterator) throws PlaylistParserException {
-        if (!(lineIterator.hasNext() && Tags.EXTM3U.equals(lineIterator.next()))) {
-            throw new PlaylistParserException("Invalid playlist. Expected #EXTM3U on first line.");
+        // All playlists must start with the tag #EXTM3U. According to the RFC this must be on the first line,
+        // but some examples allow empty lines before the tag.
+        boolean extM3uFound = false;
+        while (lineIterator.hasNext() && !extM3uFound) {
+            String line = lineIterator.next();
+            if (Tags.EXTM3U.equals(line)) {
+                extM3uFound = true;
+            } else if (!line.isEmpty()) {
+                break; // invalid line  found
+            }
+            // else: line is empty
+        }
+        if (!extM3uFound) {
+            throw new PlaylistParserException("Invalid playlist. Expected #EXTM3U.");
         }
 
         final B builder = newBuilder();
 
         while (lineIterator.hasNext()) {
             String line = lineIterator.next();
-            if (line.isEmpty()) {
-                continue; // ignore blank lines
-            }
 
             if (line.startsWith("#EXT")) {
                 int colonPosition = line.indexOf(':');
@@ -82,13 +91,9 @@ abstract class AbstractPlaylistParser<T extends Playlist, B> {
                 String attributes = colonPosition > 0 ? line.substring(colonPosition + 1) : "";
 
                 onTag(builder, prefix, attributes, lineIterator);
+            } else if (!(line.startsWith("#") || line.isEmpty())) {
+                onURI(builder, line);
             }
-
-            if (line.startsWith("#")) {
-                continue; // ignore comments
-            }
-
-            onURI(builder, line);
         }
 
         return build(builder);
@@ -98,7 +103,7 @@ abstract class AbstractPlaylistParser<T extends Playlist, B> {
 
     abstract void onTag(B builder, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException;
 
-    abstract void onURI(B builder, String uri);
+    abstract void onURI(B builder, String uri) throws PlaylistParserException;
 
     abstract T build(B builder);
 

@@ -2,8 +2,6 @@ package io.lindstrom.m3u8;
 
 import io.lindstrom.m3u8.model.Resolution;
 import io.lindstrom.m3u8.model.Variant;
-import io.lindstrom.m3u8.util.AttributeListBuilder;
-import io.lindstrom.m3u8.util.ParserUtils;
 
 import java.util.Map;
 
@@ -62,34 +60,40 @@ class VariantParser extends AbstractLineParser<Variant> {
     }
 
     @Override
-    public void write(Variant value, StringBuilder stringBuilder) {
-        super.write(value, stringBuilder);
-        stringBuilder.append(value.uri()).append('\n');
+    public void write(Variant variant, StringBuilder stringBuilder) {
+        super.write(variant, stringBuilder);
+        stringBuilder.append(variant.uri()).append('\n');
     }
 
     @Override
-    protected String writeAttributes(Variant variantStream) {
+    protected String writeAttributes(Variant variant) {
         AttributeListBuilder attributes = new AttributeListBuilder();
 
-        attributes.add(Tags.BANDWIDTH, String.valueOf(variantStream.bandwidth()));
-        variantStream.averageBandwidth().ifPresent(value -> attributes.add(Tags.AVERAGE_BANDWIDTH, String.valueOf(value)));
-        if (!variantStream.codecs().isEmpty()) {
-            attributes.addQuoted(Tags.CODECS, String.join(",", variantStream.codecs()));
+        attributes.add(Tags.BANDWIDTH, String.valueOf(variant.bandwidth()));
+        variant.averageBandwidth().ifPresent(value -> attributes.add(Tags.AVERAGE_BANDWIDTH, String.valueOf(value)));
+        if (!variant.codecs().isEmpty()) {
+            attributes.addQuoted(Tags.CODECS, String.join(",", variant.codecs()));
         }
-        variantStream.resolution().ifPresent(value -> attributes.add(Tags.RESOLUTION, writeResolution(value)));
-        variantStream.frameRate().ifPresent(value -> attributes.add(Tags.FRAME_RATE, String.format("%.3f", value)));
-        variantStream.hdcpLevel().ifPresent(value -> attributes.add(Tags.HDCP_LEVEL, value));
-        variantStream.audio().ifPresent(value -> attributes.addQuoted(Tags.AUDIO, value));
-        variantStream.video().ifPresent(value -> attributes.addQuoted(Tags.VIDEO, value));
-        variantStream.subtitles().ifPresent(value -> attributes.addQuoted(Tags.SUBTITLES, value));
-        variantStream.closedCaptions().ifPresent(value -> attributes.addQuoted(Tags.CLOSED_CAPTIONS, value));
+        variant.resolution().ifPresent(value -> attributes.add(Tags.RESOLUTION, writeResolution(value)));
+        variant.frameRate().ifPresent(value -> attributes.add(Tags.FRAME_RATE, String.format("%.3f", value)));
+        variant.hdcpLevel().ifPresent(value -> attributes.add(Tags.HDCP_LEVEL, value));
+        variant.audio().ifPresent(value -> attributes.addQuoted(Tags.AUDIO, value));
+        variant.video().ifPresent(value -> attributes.addQuoted(Tags.VIDEO, value));
+        variant.subtitles().ifPresent(value -> attributes.addQuoted(Tags.SUBTITLES, value));
+        variant.closedCaptions().ifPresent(value -> attributes.addQuoted(Tags.CLOSED_CAPTIONS, value));
 
         return attributes.toString();
     }
 
-    static Resolution parseResolution(String string) {
+    static Resolution parseResolution(String string) throws PlaylistParserException {
         String[] fields = string.split("x");
-        return Resolution.of(Integer.parseInt(fields[0]), Integer.parseInt(fields[1]));
+        Resolution resolution;
+        try {
+            resolution = Resolution.of(Integer.parseInt(fields[0]), Integer.parseInt(fields[1]));
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+            throw new PlaylistParserException("Invalid resolution: " + string);
+        }
+        return resolution;
     }
 
     static String writeResolution(Resolution resolution) {

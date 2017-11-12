@@ -116,8 +116,8 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
                 stringBuilder.append(EXT_X_PLAYLIST_TYPE).append(":")
                         .append(value.toString()).append('\n'));
 
-        stringBuilder.append(String.format("%s:%d\n", EXT_X_TARGETDURATION, playlist.targetDuration()));
-        stringBuilder.append(String.format("%s:%d\n", EXT_X_MEDIA_SEQUENCE, playlist.mediaSequence()));
+        stringBuilder.append(String.format("%s:%d%n", EXT_X_TARGETDURATION, playlist.targetDuration()));
+        stringBuilder.append(String.format("%s:%d%n", EXT_X_MEDIA_SEQUENCE, playlist.mediaSequence()));
 
         playlist.mediaSegments().forEach(mediaSegment ->
                 writeMediaSegment(mediaSegment, stringBuilder));

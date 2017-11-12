@@ -2,7 +2,6 @@ package io.lindstrom.m3u8;
 
 import io.lindstrom.m3u8.model.KeyMethod;
 import io.lindstrom.m3u8.model.SegmentKey;
-import io.lindstrom.m3u8.util.AttributeListBuilder;
 
 import java.util.Map;
 

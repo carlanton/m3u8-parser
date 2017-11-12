@@ -1,7 +1,6 @@
 package io.lindstrom.m3u8;
 
 import io.lindstrom.m3u8.model.MapInfo;
-import io.lindstrom.m3u8.util.AttributeListBuilder;
 
 import java.util.Map;
 
