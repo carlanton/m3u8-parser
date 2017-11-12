@@ -40,7 +40,7 @@ public class MasterPlaylistParserTest {
                                 .addCodecs("avc1.4d401f", "mp4a.40.2")
                                 .bandwidth(900000)
                                 .uri("v1.m3u8")
-                                .resolution(Resolution.of(1280, 720))
+                                .resolution(1280, 720)
                                 .build())
                 .build();
 

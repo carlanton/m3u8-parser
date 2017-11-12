@@ -79,5 +79,8 @@ public interface Variant {
     }
 
     class Builder extends VariantBuilder {
+        public Builder resolution(int width, int height) {
+            return resolution(Resolution.of(width, height));
+        }
     }
 }

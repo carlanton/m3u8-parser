@@ -6,7 +6,7 @@ A simple HLS playlist parser for Java.
 The goal of this project was to implement parsers and a consistent Java object model
 according to [RFC 8216 HTTP Live Streaming](https://tools.ietf.org/html/rfc8216).
 
-This parser is very similar to iHeartRadio's [open-m3u8](https://github.com/iheartradio/open-m3u8). The main differences:
+This parser is very similar to iHeartRadio's [open-m3u8](https://github.com/iheartradio/open-m3u8). The main differences are:
  * m3u8-parser does not try to validate playlists. You are responsible for creating valid playlists.
  * m3u8-parser uses java.util.Optional instead of `null`.
  * m3u8-parser uses [Immutables](https://immutables.github.io/) to generate all builders.
@@ -50,7 +50,7 @@ MasterPlaylist playlist = MasterPlaylist.builder()
                                 .addCodecs("avc1.4d401f", "mp4a.40.2")
                                 .bandwidth(900000)
                                 .uri("v1.m3u8")
-                                .resolution(Resolution.of(1280, 720))
+                                .resolution(1280, 720)
                                 .build())
                 .build();
 
