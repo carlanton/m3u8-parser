@@ -1,10 +1,10 @@
-package io.lindstrom.m3u8;
+package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.IFrameVariant;
 
 import java.util.Map;
 
-import static io.lindstrom.m3u8.Tags.*;
+import static io.lindstrom.m3u8.parser.Tags.*;
 
 class IFrameParser extends AbstractLineParser<IFrameVariant> {
     IFrameParser() {
@@ -12,7 +12,7 @@ class IFrameParser extends AbstractLineParser<IFrameVariant> {
     }
 
     @Override
-    protected IFrameVariant parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
+    IFrameVariant parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
         IFrameVariant.Builder builder = IFrameVariant.builder();
         for (Map.Entry<String, String> entry : attributes.entrySet()) {
             String key = entry.getKey();
@@ -47,7 +47,7 @@ class IFrameParser extends AbstractLineParser<IFrameVariant> {
     }
 
     @Override
-    protected String writeAttributes(IFrameVariant iFramePlaylist) {
+    String writeAttributes(IFrameVariant iFramePlaylist) {
         AttributeListBuilder attributes = new AttributeListBuilder();
 
         attributes.addQuoted(Tags.URI, iFramePlaylist.uri());

@@ -1,11 +1,11 @@
-package io.lindstrom.m3u8;
+package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.KeyMethod;
 import io.lindstrom.m3u8.model.SegmentKey;
 
 import java.util.Map;
 
-import static io.lindstrom.m3u8.Tags.*;
+import static io.lindstrom.m3u8.parser.Tags.*;
 
 class SegmentKeyParser extends AbstractLineParser<SegmentKey> {
     SegmentKeyParser() {
@@ -13,7 +13,7 @@ class SegmentKeyParser extends AbstractLineParser<SegmentKey> {
     }
 
     @Override
-    protected SegmentKey parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
+    SegmentKey parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
         SegmentKey.Builder builder = SegmentKey.builder();
         builder.method(KeyMethod.parse(attributes.get(METHOD)));
 
@@ -34,7 +34,7 @@ class SegmentKeyParser extends AbstractLineParser<SegmentKey> {
     }
 
     @Override
-    protected String writeAttributes(SegmentKey segmentKey) {
+    String writeAttributes(SegmentKey segmentKey) {
         AttributeListBuilder attributes = new AttributeListBuilder();
         attributes.add(METHOD, segmentKey.method());
         segmentKey.uri().ifPresent(uri -> attributes.addQuoted(URI, uri));

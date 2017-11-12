@@ -1,4 +1,4 @@
-package io.lindstrom.m3u8;
+package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.Resolution;
 import io.lindstrom.m3u8.model.Variant;

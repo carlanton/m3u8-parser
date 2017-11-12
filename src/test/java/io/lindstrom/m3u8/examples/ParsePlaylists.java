@@ -1,6 +1,6 @@
 package io.lindstrom.m3u8.examples;
 
-import io.lindstrom.m3u8.MasterPlaylistParser;
+import io.lindstrom.m3u8.parser.MasterPlaylistParser;
 import io.lindstrom.m3u8.model.MasterPlaylist;
 import org.junit.Test;
 

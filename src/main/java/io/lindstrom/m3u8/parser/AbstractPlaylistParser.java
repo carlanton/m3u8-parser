@@ -1,4 +1,4 @@
-package io.lindstrom.m3u8;
+package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.Playlist;
 
@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static io.lindstrom.m3u8.Tags.*;
+import static io.lindstrom.m3u8.parser.Tags.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 abstract class AbstractPlaylistParser<T extends Playlist, B> {

@@ -1,6 +1,9 @@
-package io.lindstrom.m3u8;
+package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.*;
+import io.lindstrom.m3u8.parser.MasterPlaylistParser;
+import io.lindstrom.m3u8.parser.MediaPlaylistParser;
+import io.lindstrom.m3u8.parser.PlaylistParserException;
 import org.junit.Test;
 
 import java.nio.file.Path;

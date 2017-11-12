@@ -1,4 +1,4 @@
-package io.lindstrom.m3u8;
+package io.lindstrom.m3u8.parser;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-abstract class AbstractLineParser<T> implements Parser<T> {
+abstract class AbstractLineParser<T> {
     private static final Pattern ATTRIBUTE_LIST_PATTERN = Pattern.compile("([A-Z0-9\\-]+)=(?:(?:\"([^\"]+)\")|([^,]+))");
     private final String tag;
 
@@ -14,20 +14,17 @@ abstract class AbstractLineParser<T> implements Parser<T> {
         this.tag = tag;
     }
 
-    @Override
-    public void write(T value, StringBuilder stringBuilder) {
+    void write(T value, StringBuilder stringBuilder) {
         stringBuilder.append(tag).append(':');
         stringBuilder.append(writeAttributes(value));
         stringBuilder.append('\n');
     }
 
-    @Override
-    public T parse(String attributes) throws PlaylistParserException {
+    T parse(String attributes) throws PlaylistParserException {
         return parse(attributes, Collections.emptyMap());
     }
 
-    @Override
-    public T parse(String attributes, Map<String, String> moreAttributes) throws PlaylistParserException {
+    T parse(String attributes, Map<String, String> moreAttributes) throws PlaylistParserException {
         if (attributes.isEmpty()) {
             return parseAttributes(Collections.emptyMap());
         } else {
@@ -37,13 +34,11 @@ abstract class AbstractLineParser<T> implements Parser<T> {
         }
     }
 
-    protected T parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
-        throw new UnsupportedOperationException("Not implemented");
-    }
+    abstract T parseAttributes(Map<String, String> attributes) throws PlaylistParserException;
 
-    protected abstract String writeAttributes(T value);
+    abstract String writeAttributes(T value);
 
-    static Map<String, String> parseAttributes(String attributeList) {
+    Map<String, String> parseAttributes(String attributeList) {
         Matcher matcher = ATTRIBUTE_LIST_PATTERN.matcher(attributeList);
         Map<String, String> attributes = new HashMap<>();
         while (matcher.find()) {

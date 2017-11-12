@@ -1,6 +1,7 @@
-package io.lindstrom.m3u8;
+package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.MasterPlaylist;
+import io.lindstrom.m3u8.model.MediaPlaylist;
+import io.lindstrom.m3u8.parser.MediaPlaylistParser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -18,19 +19,20 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.runners.Parameterized.Parameter;
 
 @RunWith(Parameterized.class)
-public class MasterPlaylistReadAndWrite {
-    private final MasterPlaylistParser masterPlaylistParser = new MasterPlaylistParser();
+public class MediaPlaylistReadAndWrite {
+    private final MediaPlaylistParser mediaPlaylistParser = new MediaPlaylistParser();
 
     @Parameters
     public static List<Path> data() throws IOException {
         Path resources = Paths.get("src/test/resources/");
-        List<Path> media = Files.list(resources.resolve("master")).collect(Collectors.toList());
+        List<Path> media = Files.list(resources.resolve("media")).collect(Collectors.toList());
 
         media.addAll(Stream.of(
-                "masterPlaylist.m3u8",
-                "masterPlaylistWithAlternativeAudio.m3u8",
-                "masterPlaylistWithAlternativeVideo.m3u8",
-                "masterPlaylistWithIFrames.m3u8")
+                "liveMediaPlaylist.m3u8",
+                "negativeDurationMediaPlaylist.m3u8",
+                "playlistWithEncryptedMediaSegments.m3u8",
+                "simpleMediaPlaylist.m3u8",
+                "withDiscontinuity.m3u8")
                 .map(resources.resolve("open-m3u8")::resolve)
                 .collect(Collectors.toList()));
 
@@ -42,7 +44,7 @@ public class MasterPlaylistReadAndWrite {
 
     @Test
     public void readAndWrite() throws Exception {
-        MasterPlaylist playlist = masterPlaylistParser.readPlaylist(playlistPath);
-        assertEquals(playlist, masterPlaylistParser.readPlaylist(masterPlaylistParser.writePlaylistAsString(playlist)));
+        MediaPlaylist playlist = mediaPlaylistParser.readPlaylist(playlistPath);
+        assertEquals(playlist, mediaPlaylistParser.readPlaylist(mediaPlaylistParser.writePlaylistAsString(playlist)));
     }
 }

@@ -1,20 +1,21 @@
-package io.lindstrom.m3u8;
+package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.SegmentMap;
 
 import java.util.Map;
 
-import static io.lindstrom.m3u8.Tags.*;
+import static io.lindstrom.m3u8.parser.Tags.*;
 
 class SegmentMapParser extends AbstractLineParser<SegmentMap> {
-    private final ByteRangeParser byteRangeParser = new ByteRangeParser();
+    private final ByteRangeParser byteRangeParser;
 
-    SegmentMapParser() {
+    SegmentMapParser(ByteRangeParser byteRangeParser) {
         super(EXT_X_MAP);
+        this.byteRangeParser = byteRangeParser;
     }
 
     @Override
-    protected SegmentMap parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
+    SegmentMap parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
         SegmentMap.Builder builder = SegmentMap.builder()
                 .uri(attributes.get(URI));
 
@@ -26,7 +27,7 @@ class SegmentMapParser extends AbstractLineParser<SegmentMap> {
     }
 
     @Override
-    protected String writeAttributes(SegmentMap segmentMap) {
+    String writeAttributes(SegmentMap segmentMap) {
         AttributeListBuilder attributes = new AttributeListBuilder();
         attributes.addQuoted(URI, segmentMap.uri());
         segmentMap.byteRange().map(byteRangeParser::writeAttributes).ifPresent(value ->

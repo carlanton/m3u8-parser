@@ -1,11 +1,11 @@
-package io.lindstrom.m3u8;
+package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.AlternativeRendition;
 import io.lindstrom.m3u8.model.MediaType;
 
 import java.util.Map;
 
-import static io.lindstrom.m3u8.Tags.*;
+import static io.lindstrom.m3u8.parser.Tags.*;
 
 class AlternativeRenditionParser extends AbstractLineParser<AlternativeRendition> {
     AlternativeRenditionParser() {
@@ -13,7 +13,7 @@ class AlternativeRenditionParser extends AbstractLineParser<AlternativeRendition
     }
 
     @Override
-    protected AlternativeRendition parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
+    AlternativeRendition parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
         AlternativeRendition.Builder builder = AlternativeRendition.builder();
         for (Map.Entry<String, String> entry : attributes.entrySet()) {
             String key = entry.getKey();
@@ -63,7 +63,7 @@ class AlternativeRenditionParser extends AbstractLineParser<AlternativeRendition
     }
 
     @Override
-    protected String writeAttributes(AlternativeRendition alternativeRendition) {
+    String writeAttributes(AlternativeRendition alternativeRendition) {
         AttributeListBuilder attributes = new AttributeListBuilder();
 
         attributes.add(Tags.TYPE, alternativeRendition.type());

@@ -1,7 +1,8 @@
-package io.lindstrom.m3u8;
+package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.KeyMethod;
 import io.lindstrom.m3u8.model.SegmentKey;
+import io.lindstrom.m3u8.parser.SegmentKeyParser;
 import org.junit.Test;
 
 import static io.lindstrom.m3u8.model.KeyMethod.AES_128;

@@ -1,11 +1,11 @@
-package io.lindstrom.m3u8;
+package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.MasterPlaylist;
 
 import java.util.Collections;
 import java.util.Iterator;
 
-import static io.lindstrom.m3u8.Tags.*;
+import static io.lindstrom.m3u8.parser.Tags.*;
 
 /**
  * MasterPlaylistParser can read and write Master Playlists according to RFC 8216 (HTTP Live Streaming).

@@ -1,4 +1,4 @@
-package io.lindstrom.m3u8;
+package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.MediaPlaylist;
 import io.lindstrom.m3u8.model.MediaSegment;
@@ -7,7 +7,7 @@ import io.lindstrom.m3u8.model.PlaylistType;
 import java.time.OffsetDateTime;
 import java.util.Iterator;
 
-import static io.lindstrom.m3u8.Tags.*;
+import static io.lindstrom.m3u8.parser.Tags.*;
 
 /**
  * MediaPlaylistParser can read and write Media Playlists according to RFC 8216 (HTTP Live Streaming).
@@ -34,8 +34,8 @@ import static io.lindstrom.m3u8.Tags.*;
  * This implementation is re-usable and thread safe.
  */
 public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, MediaPlaylistParser.Builder> {
-    private final SegmentMapParser segmentMapParser = new SegmentMapParser();
     private final ByteRangeParser byteRangeParser = new ByteRangeParser();
+    private final SegmentMapParser segmentMapParser = new SegmentMapParser(byteRangeParser);
     private final SegmentKeyParser segmentKeyParser = new SegmentKeyParser();
 
     @Override

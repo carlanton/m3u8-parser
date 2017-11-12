@@ -1,4 +1,4 @@
-package io.lindstrom.m3u8;
+package io.lindstrom.m3u8.parser;
 
 class Tags {
     // https://tools.ietf.org/html/rfc8216

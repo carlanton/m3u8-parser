@@ -1,11 +1,12 @@
-package io.lindstrom.m3u8;
+package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.ByteRange;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static io.lindstrom.m3u8.Tags.EXT_X_BYTERANGE;
+import static io.lindstrom.m3u8.parser.Tags.EXT_X_BYTERANGE;
 
 class ByteRangeParser extends AbstractLineParser<ByteRange> {
     private static final Pattern BYTE_RANGE_PATTERN = Pattern.compile("(\\d+)(?:@(\\d+))?");
@@ -15,7 +16,7 @@ class ByteRangeParser extends AbstractLineParser<ByteRange> {
     }
 
     @Override
-    public ByteRange parse(String attributes) throws PlaylistParserException {
+    ByteRange parse(String attributes) throws PlaylistParserException {
         Matcher matcher = BYTE_RANGE_PATTERN.matcher(attributes);
         if (!matcher.matches()) {
             throw new PlaylistParserException("Invalid byte range " + attributes);
@@ -29,7 +30,12 @@ class ByteRangeParser extends AbstractLineParser<ByteRange> {
     }
 
     @Override
-    protected String writeAttributes(ByteRange byteRange) {
+    ByteRange parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
+        throw new IllegalStateException();
+    }
+
+    @Override
+    String writeAttributes(ByteRange byteRange) {
         return byteRange.length() +
                 byteRange.offset().map(offset -> "@" + offset).orElse("");
     }

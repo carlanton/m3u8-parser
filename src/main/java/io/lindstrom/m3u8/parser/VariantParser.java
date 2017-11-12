@@ -1,11 +1,11 @@
-package io.lindstrom.m3u8;
+package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.Resolution;
 import io.lindstrom.m3u8.model.Variant;
 
 import java.util.Map;
 
-import static io.lindstrom.m3u8.Tags.*;
+import static io.lindstrom.m3u8.parser.Tags.*;
 
 class VariantParser extends AbstractLineParser<Variant> {
     VariantParser() {
@@ -13,7 +13,7 @@ class VariantParser extends AbstractLineParser<Variant> {
     }
 
     @Override
-    protected Variant parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
+    Variant parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
         Variant.Builder builder = Variant.builder();
         for (Map.Entry<String, String> entry : attributes.entrySet()) {
             String key = entry.getKey();
@@ -66,7 +66,7 @@ class VariantParser extends AbstractLineParser<Variant> {
     }
 
     @Override
-    protected String writeAttributes(Variant variant) {
+    String writeAttributes(Variant variant) {
         AttributeListBuilder attributes = new AttributeListBuilder();
 
         attributes.add(Tags.BANDWIDTH, String.valueOf(variant.bandwidth()));

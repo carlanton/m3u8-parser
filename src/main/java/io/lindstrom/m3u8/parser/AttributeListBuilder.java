@@ -1,10 +1,10 @@
-package io.lindstrom.m3u8;
+package io.lindstrom.m3u8.parser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.lindstrom.m3u8.Tags.NO;
-import static io.lindstrom.m3u8.Tags.YES;
+import static io.lindstrom.m3u8.parser.Tags.NO;
+import static io.lindstrom.m3u8.parser.Tags.YES;
 
 class AttributeListBuilder {
     private final List<String> attributes = new ArrayList<>();
