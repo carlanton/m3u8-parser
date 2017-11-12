@@ -5,13 +5,13 @@ import org.immutables.value.Value;
 import java.util.Optional;
 
 /**
- * Map Info (EXT-X-MAP)
+ * Segment map (EXT-X-MAP)
  *
  * @see <a href="https://tools.ietf.org/html/rfc8216#section-4.3.2.5" target="_blank">
  * RFC 8216 - 4.3.2.5.  EXT-X-MAP</a>
  */
 @Value.Immutable
-public interface MapInfo {
+public interface SegmentMap {
     String uri();
 
     Optional<ByteRange> byteRange();
@@ -20,16 +20,16 @@ public interface MapInfo {
         return new Builder();
     }
 
-    class Builder extends MapInfoBuilder {
+    class Builder extends SegmentMapBuilder {
     }
 
-    static MapInfo of(String uri) {
+    static SegmentMap of(String uri) {
         return builder()
                 .uri(uri)
                 .build();
     }
 
-    static MapInfo of(String uri, ByteRange byteRange) {
+    static SegmentMap of(String uri, ByteRange byteRange) {
         return builder()
                 .uri(uri)
                 .byteRange(byteRange)

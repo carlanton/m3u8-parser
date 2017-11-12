@@ -20,7 +20,7 @@ public interface MediaSegment {
 
     Optional<OffsetDateTime> programDateTime();
 
-    Optional<MapInfo> mapInfo();
+    Optional<SegmentMap> segmentMap();
 
     Optional<SegmentKey> segmentKey();
 

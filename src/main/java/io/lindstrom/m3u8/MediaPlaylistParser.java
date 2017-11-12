@@ -34,7 +34,7 @@ import static io.lindstrom.m3u8.Tags.*;
  * This implementation is re-usable and thread safe.
  */
 public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, MediaPlaylistParser.Builder> {
-    private final MapInfoParser mapInfoParser = new MapInfoParser();
+    private final SegmentMapParser segmentMapParser = new SegmentMapParser();
     private final ByteRangeParser byteRangeParser = new ByteRangeParser();
     private final SegmentKeyParser segmentKeyParser = new SegmentKeyParser();
 
@@ -86,7 +86,7 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
                 break;
 
             case EXT_X_MAP:
-                mediaSegmentBuilder.mapInfo(mapInfoParser.parse(attributes));
+                mediaSegmentBuilder.segmentMap(segmentMapParser.parse(attributes));
                 break;
 
             case EXT_X_ENDLIST:
@@ -160,7 +160,7 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
                 .append('\n'));
 
         // EXT-X-MAP
-        mediaSegment.mapInfo().ifPresent(mapInfo -> mapInfoParser.write(mapInfo, stringBuilder));
+        mediaSegment.segmentMap().ifPresent(map -> segmentMapParser.write(map, stringBuilder));
 
         // EXTINF
         stringBuilder.append(String.format("%s:%.5f,", EXTINF, mediaSegment.duration()));
