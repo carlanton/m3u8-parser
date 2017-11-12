@@ -10,7 +10,7 @@ This parser is very similar to iHeartRadio's [open-m3u8](https://github.com/ihea
  * m3u8-parser does not try to validate playlists. You are responsible for creating valid playlists.
  * m3u8-parser uses java.util.Optional instead of `null`.
  * m3u8-parser uses [Immutables](https://immutables.github.io/) to generate all builders.
- * The parser objects are thread safe & re-usable and could used as a singleton (like Jackson's ObjectMapper).
+ * The parser objects are thread safe & reusable and could used as a singleton (like Jackson's ObjectMapper).
  * m3u8-parser requires Java 8 or later.
 
 ## Artifacts

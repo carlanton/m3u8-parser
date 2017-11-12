@@ -29,7 +29,7 @@ import static io.lindstrom.m3u8.parser.Tags.*;
  * }
  * </pre>
  *
- * This implementation is re-usable and thread safe.
+ * This implementation is reusable and thread safe.
  */
 public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist, MasterPlaylist.Builder> {
     private final VariantParser variantParser = new VariantParser();
