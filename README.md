@@ -103,3 +103,35 @@ MediaPlaylist updated = MediaPlaylist.builder()
 // Write playlist to standard out
 System.out.println(parser.writePlaylistAsString(updated));
 ```
+
+## Supported tags
+The following tags should be fully supported:
+```
+EXTM3U
+EXT-X-VERSION
+EXTINF
+EXT-X-BYTERANGE
+EXT-X-DISCONTINUITY
+EXT-X-KEY
+EXT-X-MAP
+EXT-X-PROGRAM-DATE-TIME
+EXT-X-TARGETDURATION
+EXT-X-MEDIA-SEQUENCE
+EXT-X-ENDLIST
+EXT-X-PLAYLIST-TYPE
+EXT-X-I-FRAMES-ONLY
+EXT-X-MEDIA
+EXT-X-STREAM-INF
+EXT-X-I-FRAME-STREAM-INF
+EXT-X-INDEPENDENT-SEGMENTS
+```
+
+The following tags are currently not implemented:
+```
+EXT-X-SESSION-DATA
+EXT-X-SESSION-KEY
+EXT-X-DISCONTINUITY-SEQUENCE
+EXT-X-DATERANGE
+EXT-X-START
+```
+
