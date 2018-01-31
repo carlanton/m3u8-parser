@@ -10,19 +10,19 @@ class AttributeListBuilder {
     private final List<String> attributes = new ArrayList<>();
 
     public void add(String key, Enum<?> value) {
-        attributes.add(String.format("%s=%s", key, value));
-    }
-
-    public void add(String key, String value) {
-        attributes.add(String.format("%s=%s", key, value));
+        add(key, value.toString());
     }
 
     public void add(String key, boolean value) {
-        attributes.add(String.format("%s=%s", key, value ? YES : NO));
+        add(key, value ? YES : NO);
     }
 
     public void addQuoted(String key, Object value) {
-        attributes.add(String.format("%s=\"%s\"", key, value));
+        add(key, "\"" + value + "\"");
+    }
+
+    public void add(String key, String value) {
+        attributes.add(key + "=" + value);
     }
 
     @Override

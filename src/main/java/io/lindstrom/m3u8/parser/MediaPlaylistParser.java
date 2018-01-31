@@ -135,8 +135,8 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
                 stringBuilder.append(EXT_X_PLAYLIST_TYPE).append(":")
                         .append(value.toString()).append('\n'));
 
-        stringBuilder.append(String.format("%s:%d%n", EXT_X_TARGETDURATION, playlist.targetDuration()));
-        stringBuilder.append(String.format("%s:%d%n", EXT_X_MEDIA_SEQUENCE, playlist.mediaSequence()));
+        stringBuilder.append(EXT_X_TARGETDURATION).append(":").append(playlist.targetDuration()).append("\n");
+        stringBuilder.append(EXT_X_MEDIA_SEQUENCE).append(":").append(playlist.mediaSequence()).append("\n");
 
         playlist.mediaSegments().forEach(mediaSegment ->
                 writeMediaSegment(mediaSegment, stringBuilder));
@@ -163,7 +163,7 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
         mediaSegment.segmentMap().ifPresent(map -> segmentMapParser.write(map, stringBuilder));
 
         // EXTINF
-        stringBuilder.append(String.format("%s:%.5f,", EXTINF, mediaSegment.duration()));
+        stringBuilder.append(EXTINF).append(":").append(mediaSegment.duration()).append(",");
         mediaSegment.title().ifPresent(stringBuilder::append);
         stringBuilder.append('\n');
 

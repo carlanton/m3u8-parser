@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 
 public class VariantParserTest {
     private final VariantParser parser = new VariantParser();
-    private final String attributes = "BANDWIDTH=123456789,AVERAGE-BANDWIDTH=12345678,CODECS=\"a,b,c\",RESOLUTION=1024x768,FRAME-RATE=50.000,HDCP-LEVEL=0,AUDIO=\"audio\",VIDEO=\"video\",SUBTITLES=\"subtitles\",CLOSED-CAPTIONS=\"cc\"";
+    private final String attributes = "BANDWIDTH=123456789,AVERAGE-BANDWIDTH=12345678,CODECS=\"a,b,c\",RESOLUTION=1024x768,FRAME-RATE=50.0,HDCP-LEVEL=0,AUDIO=\"audio\",VIDEO=\"video\",SUBTITLES=\"subtitles\",CLOSED-CAPTIONS=\"cc\"";
     private final Variant variant = Variant.builder()
             .uri("uri")
             .bandwidth(123456789)

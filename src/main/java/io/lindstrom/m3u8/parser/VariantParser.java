@@ -75,7 +75,7 @@ class VariantParser extends AbstractLineParser<Variant> {
             attributes.addQuoted(Tags.CODECS, String.join(",", variant.codecs()));
         }
         variant.resolution().ifPresent(value -> attributes.add(Tags.RESOLUTION, writeResolution(value)));
-        variant.frameRate().ifPresent(value -> attributes.add(Tags.FRAME_RATE, String.format("%.3f", value)));
+        variant.frameRate().ifPresent(value -> attributes.add(Tags.FRAME_RATE, Double.toString(value)));
         variant.hdcpLevel().ifPresent(value -> attributes.add(Tags.HDCP_LEVEL, value));
         variant.audio().ifPresent(value -> attributes.addQuoted(Tags.AUDIO, value));
         variant.video().ifPresent(value -> attributes.addQuoted(Tags.VIDEO, value));
@@ -97,6 +97,6 @@ class VariantParser extends AbstractLineParser<Variant> {
     }
 
     static String writeResolution(Resolution resolution) {
-        return String.format("%dx%d", resolution.width(), resolution.height());
+        return resolution.width() + "x" + resolution.height();
     }
 }
