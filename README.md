@@ -12,7 +12,7 @@ This parser is very similar to iHeartRadio's [open-m3u8](https://github.com/ihea
  * m3u8-parser does not try to validate playlists. You are responsible for creating valid playlists.
  * m3u8-parser uses java.util.Optional instead of `null`.
  * m3u8-parser uses [Immutables](https://immutables.github.io/) to generate all builders.
- * The parser objects are thread safe & reusable and could used as a singleton (like Jackson's ObjectMapper).
+ * The parser objects are thread safe & reusable and could be used as a singleton (like Jackson's ObjectMapper).
  * m3u8-parser requires Java 8 or later.
 
 ## Artifacts
@@ -21,13 +21,13 @@ Maven:
 <dependency>
     <groupId>io.lindstrom</groupId>
     <artifactId>m3u8-parser</artifactId>
-    <version>0.4</version>
+    <version>0.5</version>
 </dependency>
 ```
 
 Gradle:
 ```
-compile 'io.lindstrom:m3u8-parser:0.4'
+compile 'io.lindstrom:m3u8-parser:0.5'
 ```
 
 ## Usage
@@ -35,32 +35,32 @@ compile 'io.lindstrom:m3u8-parser:0.4'
 ### Create master playlist
 ```java
 MasterPlaylist playlist = MasterPlaylist.builder()
-                .version(4)
-                .independentSegments(true)
-                .addAlternativeRenditions(AlternativeRendition.builder()
-                        .type(MediaType.AUDIO)
-                        .name("Default audio")
-                        .groupId("AUDIO")
-                        .build())
-                .addVariants(
-                        Variant.builder()
-                                .addCodecs("avc1.4d401f", "mp4a.40.2")
-                                .bandwidth(900000)
-                                .uri("v0.m3u8")
-                                .build(),
-                        Variant.builder()
-                                .addCodecs("avc1.4d401f", "mp4a.40.2")
-                                .bandwidth(900000)
-                                .uri("v1.m3u8")
-                                .resolution(1280, 720)
-                                .build())
-                .build();
+    .version(4)
+    .independentSegments(true)
+    .addAlternativeRenditions(AlternativeRendition.builder()
+        .type(MediaType.AUDIO)
+        .name("Default audio")
+        .groupId("AUDIO")
+        .build())
+    .addVariants(
+        Variant.builder()
+            .addCodecs("avc1.4d401f", "mp4a.40.2")
+            .bandwidth(900000)
+            .uri("v0.m3u8")
+            .build(),
+        Variant.builder()
+            .addCodecs("avc1.4d401f", "mp4a.40.2")
+            .bandwidth(900000)
+            .uri("v1.m3u8")
+            .resolution(1280, 720)
+            .build())
+    .build();
 
 MasterPlaylistParser parser = new MasterPlaylistParser();
 System.out.println(parser.writePlaylistAsString(playlist));
 ```
 
-This code should produce the following playlist:
+This code should produce the following master playlist:
 ```
 #EXTM3U
 #EXT-X-VERSION:4
@@ -70,6 +70,48 @@ This code should produce the following playlist:
 v0.m3u8
 #EXT-X-STREAM-INF:BANDWIDTH=900000,CODECS="avc1.4d401f,mp4a.40.2",RESOLUTION=1280x720
 v1.m3u8
+```
+
+
+### Create media playlist
+```java
+MediaPlaylist mediaPlaylist = MediaPlaylist.builder()
+    .version(3)
+    .targetDuration(10)
+    .mediaSequence(1)
+    .ongoing(false)
+    .addMediaSegments(
+        MediaSegment.builder()
+            .duration(9.009)
+            .uri("http://media.example.com/first.ts")
+            .build(),
+        MediaSegment.builder()
+            .duration(9.009)
+            .uri("http://media.example.com/second.ts")
+            .build(),
+        MediaSegment.builder()
+            .duration(3.003)
+            .uri("http://media.example.com/third.ts")
+            .build())
+    .build();
+
+MediaPlaylistParser parser = new MediaPlaylistParser();
+System.out.println(parser.writePlaylistAsString(mediaPlaylist));
+```
+
+This code should produce the following media playlist:
+```
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:10
+#EXT-X-MEDIA-SEQUENCE:1
+#EXTINF:9.009,
+http://media.example.com/first.ts
+#EXTINF:9.009,
+http://media.example.com/second.ts
+#EXTINF:3.003,
+http://media.example.com/third.ts
+#EXT-X-ENDLIST
 ```
 
 ### Parse master playlist
