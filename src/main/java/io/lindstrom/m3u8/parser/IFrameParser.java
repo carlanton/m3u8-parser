@@ -39,6 +39,9 @@ class IFrameParser extends AbstractLineParser<IFrameVariant> {
                 case VIDEO:
                     builder.video(value);
                     break;
+                case PROGRAM_ID:
+                    builder.programId(Integer.parseInt(value));
+                    break;
                 default:
                     throw new PlaylistParserException("Unknown key " + key);
             }
@@ -59,6 +62,7 @@ class IFrameParser extends AbstractLineParser<IFrameVariant> {
         iFramePlaylist.resolution().ifPresent(value -> attributes.add(Tags.RESOLUTION, VariantParser.writeResolution(value)));
         iFramePlaylist.hdcpLevel().ifPresent(value -> attributes.add(Tags.HDCP_LEVEL, value));
         iFramePlaylist.video().ifPresent(value -> attributes.addQuoted(Tags.VIDEO, value));
+        iFramePlaylist.programId().ifPresent(value -> attributes.add(Tags.PROGRAM_ID, Integer.toString(value)));
 
         return attributes.toString();
     }

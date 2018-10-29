@@ -74,6 +74,11 @@ public interface Variant {
      */
     String uri();
 
+    /**
+     * @return variant attribute PROGRAM-ID
+     */
+    Optional<Integer> programId();
+
     static Builder builder() {
         return new Builder();
     }

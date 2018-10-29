@@ -99,6 +99,7 @@ class Tags {
     static final String VIDEO = "VIDEO";
     static final String SUBTITLES = "SUBTITLES";
     static final String CLOSED_CAPTIONS = "CLOSED-CAPTIONS";
+    static final String PROGRAM_ID = "PROGRAM-ID";
 
     // 4.3.4.3 EXT-X-I-FRAME-STREAM-INF
     static final String EXT_X_I_FRAME_STREAM_INF = "#EXT-X-I-FRAME-STREAM-INF";

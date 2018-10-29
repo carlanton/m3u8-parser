@@ -28,6 +28,8 @@ public interface IFrameVariant {
 
     Optional<String> video();
 
+    Optional<Integer> programId();
+
     static Builder builder() {
         return new Builder();
     }

@@ -52,6 +52,9 @@ class VariantParser extends AbstractLineParser<Variant> {
                 case CLOSED_CAPTIONS:
                     builder.closedCaptions(value);
                     break;
+                case PROGRAM_ID:
+                    builder.programId(Integer.parseInt(value));
+                    break;
                 default:
                     throw new PlaylistParserException("Unknown key " + key);
             }
@@ -81,6 +84,7 @@ class VariantParser extends AbstractLineParser<Variant> {
         variant.video().ifPresent(value -> attributes.addQuoted(Tags.VIDEO, value));
         variant.subtitles().ifPresent(value -> attributes.addQuoted(Tags.SUBTITLES, value));
         variant.closedCaptions().ifPresent(value -> attributes.addQuoted(Tags.CLOSED_CAPTIONS, value));
+        variant.programId().ifPresent(value -> attributes.add(Tags.PROGRAM_ID, Integer.toString(value)));
 
         return attributes.toString();
     }
