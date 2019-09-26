@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import java.util.*;
 
-import static io.lindstrom.m3u8.parser.Tags.CLOSED_CAPTIONS;
 import static org.junit.Assert.assertEquals;
 
 public class VariantParserTest {
@@ -36,7 +35,7 @@ public class VariantParserTest {
         Map<String, String> additionalAttributes = new HashMap<>();
 
         additionalAttributes.put(Tags.URI, "uri");
-        additionalAttributes.put(CLOSED_CAPTIONS, "NONE");
+        additionalAttributes.put(Tags.CLOSED_CAPTIONS, "NONE");
 
         final Variant variantLocal = Variant.builder().from(variant)
                 .closedCaptionsNone(true)
