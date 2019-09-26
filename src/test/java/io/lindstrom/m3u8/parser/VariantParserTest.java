@@ -4,9 +4,9 @@ import io.lindstrom.m3u8.model.Resolution;
 import io.lindstrom.m3u8.model.Variant;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 
+import static io.lindstrom.m3u8.parser.Tags.CLOSED_CAPTIONS;
 import static org.junit.Assert.assertEquals;
 
 public class VariantParserTest {
@@ -28,6 +28,22 @@ public class VariantParserTest {
     @Test
     public void parseAttributes() throws Exception {
         assertEquals(variant, parser.parse(attributes, Collections.singletonMap(Tags.URI, "uri")));
+    }
+
+    @Test
+    public void parseAttributesClosedCaptionsNone() throws Exception {
+
+        Map<String, String> additionalAttributes = new HashMap<>();
+
+        additionalAttributes.put(Tags.URI, "uri");
+        additionalAttributes.put(CLOSED_CAPTIONS, "NONE");
+
+        final Variant variantLocal = Variant.builder().from(variant)
+                .closedCaptionsNone(true)
+                .closedCaptions(Optional.empty())
+                .build();
+
+        assertEquals(variantLocal, parser.parse(attributes, additionalAttributes));
     }
 
     @Test

@@ -70,6 +70,11 @@ public interface Variant {
     Optional<String> closedCaptions();
 
     /**
+     * @return Set to true to get CLOSED-CAPTIONS=NONE
+     */
+    Optional<Boolean> closedCaptionsNone();
+
+    /**
      * @return URI to the media playlist
      */
     String uri();
