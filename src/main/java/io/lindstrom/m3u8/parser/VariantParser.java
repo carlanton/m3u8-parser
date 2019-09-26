@@ -8,6 +8,8 @@ import java.util.Map;
 import static io.lindstrom.m3u8.parser.Tags.*;
 
 class VariantParser extends AbstractLineParser<Variant> {
+    private static final String NONE = "NONE";
+
     VariantParser() {
         super(EXT_X_STREAM_INF);
     }
@@ -50,7 +52,7 @@ class VariantParser extends AbstractLineParser<Variant> {
                     builder.subtitles(value);
                     break;
                 case CLOSED_CAPTIONS:
-                    if (value.equals("NONE")) {
+                    if (value.equals(NONE)) {
                         builder.closedCaptionsNone(true);
                     } else {
                         builder.closedCaptions(value);
@@ -87,13 +89,14 @@ class VariantParser extends AbstractLineParser<Variant> {
         variant.audio().ifPresent(value -> attributes.addQuoted(Tags.AUDIO, value));
         variant.video().ifPresent(value -> attributes.addQuoted(Tags.VIDEO, value));
         variant.subtitles().ifPresent(value -> attributes.addQuoted(Tags.SUBTITLES, value));
-        variant.programId().ifPresent(value -> attributes.add(Tags.PROGRAM_ID, Integer.toString(value)));
 
-        if (variant.closedCaptionsNone().isPresent() && variant.closedCaptionsNone().get()) {
-            attributes.add(Tags.CLOSED_CAPTIONS, "NONE");
+        if (variant.closedCaptionsNone().orElse(false)) {
+            attributes.add(Tags.CLOSED_CAPTIONS, NONE);
         } else {
             variant.closedCaptions().ifPresent(value -> attributes.addQuoted(Tags.CLOSED_CAPTIONS, value));
         }
+
+        variant.programId().ifPresent(value -> attributes.add(Tags.PROGRAM_ID, Integer.toString(value)));
 
         return attributes.toString();
     }
