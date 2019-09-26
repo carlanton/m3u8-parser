@@ -50,7 +50,11 @@ class VariantParser extends AbstractLineParser<Variant> {
                     builder.subtitles(value);
                     break;
                 case CLOSED_CAPTIONS:
-                    builder.closedCaptions(value);
+                    if (value.equals("NONE")) {
+                        builder.closedCaptionsNone(true);
+                    } else {
+                        builder.closedCaptions(value);
+                    }
                     break;
                 case PROGRAM_ID:
                     builder.programId(Integer.parseInt(value));
@@ -83,8 +87,13 @@ class VariantParser extends AbstractLineParser<Variant> {
         variant.audio().ifPresent(value -> attributes.addQuoted(Tags.AUDIO, value));
         variant.video().ifPresent(value -> attributes.addQuoted(Tags.VIDEO, value));
         variant.subtitles().ifPresent(value -> attributes.addQuoted(Tags.SUBTITLES, value));
-        variant.closedCaptions().ifPresent(value -> attributes.addQuoted(Tags.CLOSED_CAPTIONS, value));
         variant.programId().ifPresent(value -> attributes.add(Tags.PROGRAM_ID, Integer.toString(value)));
+
+        if (variant.closedCaptionsNone().isPresent() && variant.closedCaptionsNone().get()) {
+            attributes.add(Tags.CLOSED_CAPTIONS, "NONE");
+        } else {
+            variant.closedCaptions().ifPresent(value -> attributes.addQuoted(Tags.CLOSED_CAPTIONS, value));
+        }
 
         return attributes.toString();
     }

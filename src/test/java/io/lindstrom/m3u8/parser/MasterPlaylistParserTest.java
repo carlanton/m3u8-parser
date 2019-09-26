@@ -40,6 +40,7 @@ public class MasterPlaylistParserTest {
                         Variant.builder()
                                 .addCodecs("avc1.4d401f", "mp4a.40.2")
                                 .bandwidth(900000)
+                                .closedCaptionsNone(true)
                                 .uri("v1.m3u8")
                                 .resolution(1280, 720)
                                 .build())
@@ -51,7 +52,7 @@ public class MasterPlaylistParserTest {
                 "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"AUDIO\",NAME=\"Default audio\"\n" +
                 "#EXT-X-STREAM-INF:BANDWIDTH=900000,CODECS=\"avc1.4d401f,mp4a.40.2\"\n" +
                 "v0.m3u8\n" +
-                "#EXT-X-STREAM-INF:BANDWIDTH=900000,CODECS=\"avc1.4d401f,mp4a.40.2\",RESOLUTION=1280x720\n" +
+                "#EXT-X-STREAM-INF:BANDWIDTH=900000,CODECS=\"avc1.4d401f,mp4a.40.2\",RESOLUTION=1280x720,CLOSED-CAPTIONS=NONE\n" +
                 "v1.m3u8\n";
 
         assertEquals(expected, parser.writePlaylistAsString(playlist));
