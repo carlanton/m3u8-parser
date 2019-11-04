@@ -5,7 +5,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 public interface CueIn {
 
-    Double id();
+    String id();
 
 
     static Builder builder() {

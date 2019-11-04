@@ -18,7 +18,7 @@ public class CueInParser extends AbstractLineParser<CueIn> {
         CueIn.Builder builder = CueIn.builder();
 
 
-        builder.id(Double.valueOf(attributes.get("ID")));
+        builder.id(attributes.get("ID"));
 
         return builder.build();
 
