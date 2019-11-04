@@ -16,6 +16,8 @@ public class CueTagsSupport implements TagsSupport {
     );
 
     private final CueOutParser cueOutParser = new CueOutParser();
+    private final CueInParser cueInParser = new CueInParser();
+    private final CueSpanParser cueSpanParser = new CueSpanParser();
     @Override
     public boolean supports(String prefix) {
         return SUPPORTED_TAGS.contains(prefix);
@@ -29,9 +31,11 @@ public class CueTagsSupport implements TagsSupport {
                 cueOutParser.parse(attributes);
             break;
             case EXT_X_CUE_IN:
+                cueInParser.parse(attributes);
+                break;
 
-            break;
             case EXT_X_CUE_SPAN:
+                cueSpanParser.parse(attributes);
 
             break;
 

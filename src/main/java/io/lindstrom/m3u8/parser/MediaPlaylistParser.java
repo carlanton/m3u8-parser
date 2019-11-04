@@ -1,17 +1,7 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.MediaPlaylist;
 import io.lindstrom.m3u8.model.MediaSegment;
-import io.lindstrom.m3u8.model.PlaylistType;
 import io.lindstrom.m3u8.model.StandardMediaPlaylist;
-
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.function.Supplier;
-
-import static io.lindstrom.m3u8.parser.Tags.*;
 
 /**
  * MediaPlaylistParser can read and write Media Playlists according to RFC 8216 (HTTP Live Streaming).
