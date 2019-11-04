@@ -4,6 +4,7 @@ import io.lindstrom.m3u8.model.MediaPlaylist;
 import io.lindstrom.m3u8.model.MediaSegment;
 import io.lindstrom.m3u8.model.PlaylistType;
 import io.lindstrom.m3u8.model.StandardMediaPlaylist;
+import io.lindstrom.m3u8.model.StandardMediaPlaylistBuilder;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ class AbstractMediaPlaylistParser<P extends MediaPlaylist> extends AbstractPlayl
 
     @Override
     void onTag(MediaPlaylistCreator<P> builderWrapper, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
-        StandardMediaPlaylist.Builder builder = builderWrapper.playlistBuilder();
+        StandardMediaPlaylistBuilder builder = builderWrapper.playlistBuilder();
         MediaSegment.Builder mediaSegmentBuilder = builderWrapper.segmentBuilder();
 
         switch (prefix) {
@@ -186,8 +187,8 @@ class AbstractMediaPlaylistParser<P extends MediaPlaylist> extends AbstractPlayl
     /**
      * Wrapper class for playlist and segment builders
      */
-    static class Builder implements PlaylistFactory<MediaPlaylist>, PlaylistBuilder<StandardMediaPlaylist> {
-        private final StandardMediaPlaylist.Builder playlistBuilder = StandardMediaPlaylist.builder();
+    static class Builder implements PlaylistFactory<MediaPlaylist>, PlaylistBuildersContainer<StandardMediaPlaylist> {
+        private final StandardMediaPlaylistBuilder playlistBuilder = StandardMediaPlaylist.builder();
         private MediaSegment.Builder segmentBuilder = MediaSegment.builder();
 
         @Override

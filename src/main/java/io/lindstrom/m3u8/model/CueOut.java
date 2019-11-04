@@ -5,7 +5,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 public interface CueOut {
     Double duration();
-    Double id();
+    String id();
     String cue();
 
 

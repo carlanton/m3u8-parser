@@ -1,7 +1,5 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.MediaPlaylist;
-
 public interface TagsSupport {
     public static final TagsSupport IGNORE_NON_STANDARD_TAGS = new TagsSupport() {
         @Override
@@ -10,12 +8,12 @@ public interface TagsSupport {
         }
 
         @Override
-        public void process(String prefix, String attributes, MediaPlaylistBuilder builder) {
+        public void process(String prefix, String attributes, MediaPlaylistBuildersContainer builder) {
             //NOOP
         }
     };
 
     boolean supports(String prefix);
 
-    void process(String prefix, String attributes, MediaPlaylistBuilder builder) throws PlaylistParserException;
+    void process(String prefix, String attributes, MediaPlaylistBuildersContainer builder) throws PlaylistParserException;
 }

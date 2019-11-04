@@ -6,11 +6,11 @@ import org.immutables.value.Value;
 public interface AdSmartMediaPlaylist extends MediaPlaylist {
     CueOut cueOut();
 
-    static AdSmartMediaPlaylist.Builder builder() {
-        return new AdSmartMediaPlaylist.Builder();
+    static AdSmartMediaPlaylistBuilder builder() {
+        return new AdSmartMediaPlaylistBuilder();
     }
 
-    class Builder extends AdSmartMediaPlaylistBuilder {
-
+    abstract class Builder implements MediaPlaylistBuilder {
     }
+
 }

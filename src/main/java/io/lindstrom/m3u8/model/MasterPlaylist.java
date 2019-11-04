@@ -1,6 +1,5 @@
 package io.lindstrom.m3u8.model;
 
-import io.lindstrom.m3u8.parser.PlaylistBuilder;
 import io.lindstrom.m3u8.parser.PlaylistCreator;
 import org.immutables.value.Value;
 

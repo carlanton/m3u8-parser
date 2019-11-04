@@ -17,7 +17,7 @@ public class CueOutParser extends AbstractLineParser<CueOut> {
 
 
         builder.duration(Double.valueOf(attributes.get("DURATION")));
-        builder.id(Double.valueOf(attributes.get("ID")));
+        builder.id(attributes.get("ID"));
         builder.cue(attributes.get("CUE"));
 
         return builder.build();

@@ -1,7 +1,5 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.MediaPlaylist;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,7 +22,7 @@ public class CueTagsSupport implements TagsSupport {
     }
 
     @Override
-    public void process(String prefix, String attributes, MediaPlaylistBuilder builder) throws PlaylistParserException {
+    public void process(String prefix, String attributes, MediaPlaylistBuildersContainer builder) throws PlaylistParserException {
 
         switch(prefix){
             case EXT_X_CUE_OUT:

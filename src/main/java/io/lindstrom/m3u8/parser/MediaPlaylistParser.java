@@ -1,6 +1,7 @@
 package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.MediaSegment;
+import io.lindstrom.m3u8.model.StandardMediaPlaylistBuilder;
 import io.lindstrom.m3u8.model.StandardMediaPlaylist;
 
 /**
@@ -37,7 +38,7 @@ public class MediaPlaylistParser extends AbstractMediaPlaylistParser<StandardMed
      * Wrapper class for playlist and segment builders
      */
     static class Builder implements MediaPlaylistCreator<StandardMediaPlaylist> {
-        private final StandardMediaPlaylist.Builder playlistBuilder = StandardMediaPlaylist.builder();
+        private final StandardMediaPlaylistBuilder playlistBuilder = StandardMediaPlaylist.builder();
         private MediaSegment.Builder segmentBuilder = MediaSegment.builder();
 
         @Override
@@ -47,7 +48,7 @@ public class MediaPlaylistParser extends AbstractMediaPlaylistParser<StandardMed
 
 
         @Override
-        public StandardMediaPlaylist.Builder playlistBuilder() {
+        public StandardMediaPlaylistBuilder playlistBuilder() {
             return playlistBuilder;
         }
 

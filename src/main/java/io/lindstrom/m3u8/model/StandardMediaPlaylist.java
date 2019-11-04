@@ -4,10 +4,11 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 public interface StandardMediaPlaylist extends MediaPlaylist {
-    static Builder builder() {
-        return new Builder();
+    static StandardMediaPlaylistBuilder builder() {
+        return new StandardMediaPlaylistBuilder();
     }
 
-    class Builder extends StandardMediaPlaylistBuilder {
+    abstract class Builder implements MediaPlaylistBuilder {
     }
+
 }
