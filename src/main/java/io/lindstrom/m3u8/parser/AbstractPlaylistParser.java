@@ -1,5 +1,6 @@
 package io.lindstrom.m3u8.parser;
 
+import io.lindstrom.m3u8.model.MasterPlaylist;
 import io.lindstrom.m3u8.model.Playlist;
 
 import java.io.*;
@@ -13,7 +14,8 @@ import java.util.NoSuchElementException;
 import static io.lindstrom.m3u8.parser.Tags.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-abstract class AbstractPlaylistParser<T extends Playlist, B> {
+abstract class AbstractPlaylistParser<T extends Playlist, B extends PlaylistCreator<T>> {
+
     public T readPlaylist(InputStream inputStream) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, UTF_8))) {
             return readPlaylist(reader);
@@ -105,7 +107,9 @@ abstract class AbstractPlaylistParser<T extends Playlist, B> {
 
     abstract void onURI(B builder, String uri) throws PlaylistParserException;
 
-    abstract T build(B builder);
+    T build(B factory){
+       return factory.create();
+    }
 
     abstract void write(T playlist, StringBuilder stringBuilder);
 

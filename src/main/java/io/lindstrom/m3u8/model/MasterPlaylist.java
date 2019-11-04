@@ -1,5 +1,7 @@
 package io.lindstrom.m3u8.model;
 
+import io.lindstrom.m3u8.parser.PlaylistBuilder;
+import io.lindstrom.m3u8.parser.PlaylistCreator;
 import org.immutables.value.Value;
 
 import java.util.List;
@@ -41,6 +43,10 @@ public interface MasterPlaylist extends Playlist {
         return new Builder();
     }
 
-    class Builder extends MasterPlaylistBuilder {
+    class Builder extends MasterPlaylistBuilder implements PlaylistCreator<MasterPlaylist> {
+        @Override
+        public MasterPlaylist create() {
+            return build();
+        }
     }
 }

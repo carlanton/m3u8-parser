@@ -1,6 +1,7 @@
 package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.MasterPlaylist;
+import io.lindstrom.m3u8.model.MediaPlaylist;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -40,6 +41,7 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
     MasterPlaylist.Builder newBuilder() {
         return MasterPlaylist.builder();
     }
+
 
     @Override
     void onTag(MasterPlaylist.Builder builder, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
@@ -84,10 +86,6 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
         throw new PlaylistParserException("Unexpected URI in master playlist");
     }
 
-    @Override
-    MasterPlaylist build(MasterPlaylist.Builder builder) {
-        return builder.build();
-    }
 
     @Override
     void write(MasterPlaylist playlist, StringBuilder stringBuilder) {

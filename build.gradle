@@ -7,7 +7,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 ext {
-    ideaGeneratedSources = file('out/production/classes/generated')
+    ideaGeneratedSources = file('build/classes/java/main')
 }
 
 idea.module {

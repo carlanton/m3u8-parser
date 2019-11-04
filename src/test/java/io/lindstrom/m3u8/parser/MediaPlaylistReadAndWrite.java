@@ -1,12 +1,14 @@
 package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.MediaPlaylist;
+import io.lindstrom.m3u8.model.StandardMediaPlaylist;
 import io.lindstrom.m3u8.parser.MediaPlaylistParser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,7 +27,9 @@ public class MediaPlaylistReadAndWrite {
     @Parameters
     public static List<Path> data() throws IOException {
         Path resources = Paths.get("src/test/resources/");
-        List<Path> media = Files.list(resources.resolve("media")).collect(Collectors.toList());
+        List<Path> media = Files.list(resources.resolve("media"))
+                .filter(path -> path.toFile().isFile())
+                .collect(Collectors.toList());
 
         media.addAll(Stream.of(
                 "liveMediaPlaylist.m3u8",
@@ -44,7 +48,7 @@ public class MediaPlaylistReadAndWrite {
 
     @Test
     public void readAndWrite() throws Exception {
-        MediaPlaylist playlist = mediaPlaylistParser.readPlaylist(playlistPath);
+        StandardMediaPlaylist  playlist = mediaPlaylistParser.readPlaylist(playlistPath);
         assertEquals(playlist, mediaPlaylistParser.readPlaylist(mediaPlaylistParser.writePlaylistAsString(playlist)));
     }
 }
