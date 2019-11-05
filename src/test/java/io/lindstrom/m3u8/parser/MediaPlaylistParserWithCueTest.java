@@ -15,6 +15,11 @@ public class MediaPlaylistParserWithCueTest {
         AdSmartMediaPlaylist standardMediaPlaylist = parser.readPlaylist(Paths.get("src/test/resources/media/cue/cue1.m3u8"));
 
         Assertions.assertThat(standardMediaPlaylist.mediaSegments()).isNotEmpty();
+        Assertions.assertThat(standardMediaPlaylist.adSmart()).isNotNull();
+        Assertions.assertThat(standardMediaPlaylist.adSmart().cueOut()).isNotNull();
+        Assertions.assertThat(standardMediaPlaylist.adSmart().cueOut().cue()).isNotNull();
+        Assertions.assertThat(standardMediaPlaylist.adSmart().cueOut().id()).isNotNull();
+
     }
 
     @Test
@@ -22,6 +27,20 @@ public class MediaPlaylistParserWithCueTest {
         AdSmartMediaPlaylist standardMediaPlaylist = parser.readPlaylist(Paths.get("src/test/resources/media/cue/cue2.m3u8"));
 
         Assertions.assertThat(standardMediaPlaylist.mediaSegments()).isNotEmpty();
+
+        Assertions.assertThat(standardMediaPlaylist.adSmart()).isNotNull();
+        Assertions.assertThat(standardMediaPlaylist.adSmart().cueOut()).isNotNull();
+        Assertions.assertThat(standardMediaPlaylist.adSmart().cueOut().cue()).isNotNull();
+        Assertions.assertThat(standardMediaPlaylist.adSmart().cueOut().id()).isNotNull();
+
+        Assertions.assertThat(standardMediaPlaylist.adSmart().cueSpan()).isNotNull();
+        Assertions.assertThat(standardMediaPlaylist.adSmart().cueSpan().get(0).id()).isNotNull();
+        Assertions.assertThat(standardMediaPlaylist.adSmart().cueSpan().get(1).id()).isNotNull();
+        Assertions.assertThat(standardMediaPlaylist.adSmart().cueSpan().get(0).timeFromSignal()).isNotNull();
+        Assertions.assertThat(standardMediaPlaylist.adSmart().cueSpan().get(1).timeFromSignal()).isNotNull();
+
+        Assertions.assertThat(standardMediaPlaylist.adSmart().cueIn()).isNotNull();
+        Assertions.assertThat(standardMediaPlaylist.adSmart().cueIn().id()).isNotNull();
     }
 
     @Test
@@ -29,6 +48,8 @@ public class MediaPlaylistParserWithCueTest {
         AdSmartMediaPlaylist standardMediaPlaylist = parser.readPlaylist(Paths.get("src/test/resources/media/cue/cue3.m3u8"));
 
         Assertions.assertThat(standardMediaPlaylist.mediaSegments()).isNotEmpty();
+        Assertions.assertThat(standardMediaPlaylist.adSmart().cueIn()).isNotNull();
+        Assertions.assertThat(standardMediaPlaylist.adSmart().cueIn().id()).isNotNull();
     }
 
     @Test

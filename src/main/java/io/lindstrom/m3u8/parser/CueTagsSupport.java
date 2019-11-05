@@ -1,15 +1,18 @@
 package io.lindstrom.m3u8.parser;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import io.lindstrom.m3u8.model.AdSmart;
 import io.lindstrom.m3u8.model.AdSmartBuilder;
+import io.lindstrom.m3u8.model.CueSpan;
 
 public class CueTagsSupport implements TagsSupport {
     public static final String EXT_X_CUE_OUT ="#EXT-X-CUE-OUT";
     public static final String EXT_X_CUE_SPAN ="#EXT-X-CUE-SPAN";
     public static final String EXT_X_CUE_IN ="#EXT-X-CUE-IN";
+    private List<CueSpan> cueSpans = new ArrayList<>();
     private static final List<String> SUPPORTED_TAGS = Arrays.asList(
             EXT_X_CUE_OUT,
             EXT_X_CUE_SPAN,
@@ -38,7 +41,8 @@ public class CueTagsSupport implements TagsSupport {
                 break;
 
             case EXT_X_CUE_SPAN:
-                cueSpanParser.parse(attributes);
+                cueSpans.add(cueSpanParser.parse(attributes));
+                builder.cueSpan(cueSpans);
 
             break;
 
