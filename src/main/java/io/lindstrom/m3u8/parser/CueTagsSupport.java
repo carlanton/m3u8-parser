@@ -3,6 +3,9 @@ package io.lindstrom.m3u8.parser;
 import java.util.Arrays;
 import java.util.List;
 
+import io.lindstrom.m3u8.model.AdSmart;
+import io.lindstrom.m3u8.model.AdSmartBuilder;
+
 public class CueTagsSupport implements TagsSupport {
     public static final String EXT_X_CUE_OUT ="#EXT-X-CUE-OUT";
     public static final String EXT_X_CUE_SPAN ="#EXT-X-CUE-SPAN";
@@ -22,14 +25,16 @@ public class CueTagsSupport implements TagsSupport {
     }
 
     @Override
-    public void process(String prefix, String attributes, MediaPlaylistBuildersContainer builder) throws PlaylistParserException {
+    public void process(String prefix, String attributes, MediaPlaylistBuildersContainer container) throws PlaylistParserException {
+
+        AdSmartBuilder builder =  (AdSmartBuilder) container.builderByType(AdSmartBuilder.class);
 
         switch(prefix){
             case EXT_X_CUE_OUT:
-                cueOutParser.parse(attributes);
+                builder.cueOut(cueOutParser.parse(attributes));
             break;
             case EXT_X_CUE_IN:
-                cueInParser.parse(attributes);
+                builder.cueIn(cueInParser.parse(attributes));
                 break;
 
             case EXT_X_CUE_SPAN:
@@ -39,4 +44,5 @@ public class CueTagsSupport implements TagsSupport {
 
         }
     }
+
 }

@@ -7,7 +7,6 @@ public interface CueIn {
 
     String id();
 
-
     static Builder builder() {
         return new Builder();
     }

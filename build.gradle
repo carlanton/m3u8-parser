@@ -23,6 +23,8 @@ repositories {
 
 dependencies {
     compileOnly 'org.immutables:value:2.5.6'
+    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
+
     testCompile 'junit:junit:4.12'
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.14.0'
 

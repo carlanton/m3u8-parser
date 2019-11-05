@@ -10,5 +10,7 @@ public interface MediaPlaylistBuildersContainer<T> extends PlaylistBuildersConta
 
     void newSegmentBuilder(MediaSegment.Builder builder);
 
-
+    default <C> C builderByType(Class<C> clazz){
+        throw new IllegalArgumentException("Couldn't find desired builder");
+    }
 }

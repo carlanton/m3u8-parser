@@ -184,18 +184,4 @@ class AbstractMediaPlaylistParser<P extends MediaPlaylist> extends AbstractPlayl
         stringBuilder.append(mediaSegment.uri()).append('\n');
     }
 
-    /**
-     * Wrapper class for playlist and segment builders
-     */
-    static class Builder implements PlaylistFactory<MediaPlaylist>, PlaylistBuildersContainer<StandardMediaPlaylist> {
-        private final StandardMediaPlaylistBuilder playlistBuilder = StandardMediaPlaylist.builder();
-        private MediaSegment.Builder segmentBuilder = MediaSegment.builder();
-
-        @Override
-        public StandardMediaPlaylist create() {
-            return playlistBuilder.build();
-        }
-
-
-    }
 }

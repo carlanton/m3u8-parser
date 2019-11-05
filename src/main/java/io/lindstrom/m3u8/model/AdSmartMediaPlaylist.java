@@ -4,7 +4,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 public interface AdSmartMediaPlaylist extends MediaPlaylist {
-    CueOut cueOut();
+    AdSmart adSmart();
 
     static AdSmartMediaPlaylistBuilder builder() {
         return new AdSmartMediaPlaylistBuilder();
