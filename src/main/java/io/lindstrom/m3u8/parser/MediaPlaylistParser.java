@@ -30,7 +30,7 @@ import io.lindstrom.m3u8.model.StandardMediaPlaylist;
  */
 public class MediaPlaylistParser extends AbstractMediaPlaylistParser<StandardMediaPlaylist> {
 
-    MediaPlaylistParser() {
+    public MediaPlaylistParser() {
         super(() -> new Builder());
     }
 
