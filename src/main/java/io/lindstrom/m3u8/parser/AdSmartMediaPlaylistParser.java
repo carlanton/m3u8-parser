@@ -6,7 +6,7 @@ import io.lindstrom.m3u8.model.AdSmartMediaPlaylistBuilder;
 
 public class AdSmartMediaPlaylistParser extends AbstractMediaPlaylistParser<AdSmartMediaPlaylist> {
 
-    AdSmartMediaPlaylistParser() {
+    public AdSmartMediaPlaylistParser() {
 
         super(() -> new Builder());
         addOptionalTagsSupport(new CueTagsSupport());
