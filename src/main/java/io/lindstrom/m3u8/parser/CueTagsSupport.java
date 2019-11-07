@@ -35,6 +35,7 @@ public class CueTagsSupport implements TagsSupport {
         switch(prefix){
             case EXT_X_CUE_OUT:
                 builder.cueOut(cueOutParser.parse(attributes));
+
             break;
             case EXT_X_CUE_IN:
                 builder.cueIn(cueInParser.parse(attributes));
