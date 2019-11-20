@@ -1,9 +1,13 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.parser.MediaPlaylistParser;
 import org.junit.Test;
 
 import java.nio.file.Paths;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
 
 public class MediaPlaylistParserTest {
     private final MediaPlaylistParser parser = new MediaPlaylistParser();
@@ -31,5 +35,32 @@ public class MediaPlaylistParserTest {
     @Test
     public void parse5() throws Exception {
         parser.readPlaylist(Paths.get("src/test/resources/media/variant.m3u8"));
+    }
+
+    @Test
+    public void programDateTimeFormat() throws PlaylistParserException {
+        assertEquals(Optional.of(OffsetDateTime.of(2017, 10, 21, 15, 0, 10, 157000000, ZoneOffset.UTC)),
+                parser.readPlaylist(String.join("\n",
+                        "#EXTM3U",
+                        "#EXT-X-TARGETDURATION:10",
+                        "#EXT-X-PROGRAM-DATE-TIME:2017-10-21T15:00:10.157Z",
+                        "#EXTINF:10",
+                        "1.ts")).mediaSegments().get(0).programDateTime());
+
+        assertEquals(Optional.of(OffsetDateTime.of(2022, 3, 17, 23, 0, 0, 0, ZoneOffset.UTC)),
+                parser.readPlaylist(String.join("\n",
+                        "#EXTM3U",
+                        "#EXT-X-TARGETDURATION:10",
+                        "#EXT-X-PROGRAM-DATE-TIME:2022-03-17T23:00:00.000+0000",
+                        "#EXTINF:10",
+                        "1.ts")).mediaSegments().get(0).programDateTime());
+
+        assertEquals(Optional.of(OffsetDateTime.of(2020, 1, 1, 15, 0, 0, 0, ZoneOffset.ofHoursMinutes(5, 30))),
+                parser.readPlaylist(String.join("\n",
+                        "#EXTM3U",
+                        "#EXT-X-TARGETDURATION:10",
+                        "#EXT-X-PROGRAM-DATE-TIME:2020-01-01T15:00:00.000+05:30",
+                        "#EXTINF:10",
+                        "1.ts")).mediaSegments().get(0).programDateTime());
     }
 }

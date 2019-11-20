@@ -5,6 +5,8 @@ import io.lindstrom.m3u8.model.MediaSegment;
 import io.lindstrom.m3u8.model.PlaylistType;
 
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.Iterator;
 
 import static io.lindstrom.m3u8.parser.Tags.*;
@@ -34,6 +36,13 @@ import static io.lindstrom.m3u8.parser.Tags.*;
  * This implementation is reusable and thread safe.
  */
 public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, MediaPlaylistParser.Builder> {
+    private static final DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder()
+            .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            .optionalStart().appendOffset("+HH:MM", "+00:00").optionalEnd()
+            .optionalStart().appendOffset("+HHMM", "+0000").optionalEnd()
+            .optionalStart().appendOffset("+HH", "Z").optionalEnd()
+            .toFormatter();
+
     private final ByteRangeParser byteRangeParser = new ByteRangeParser();
     private final SegmentMapParser segmentMapParser = new SegmentMapParser(byteRangeParser);
     private final SegmentKeyParser segmentKeyParser = new SegmentKeyParser();
@@ -82,7 +91,7 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
                 break;
 
             case EXT_X_PROGRAM_DATE_TIME:
-                mediaSegmentBuilder.programDateTime(OffsetDateTime.parse(attributes));
+                mediaSegmentBuilder.programDateTime(OffsetDateTime.parse(attributes, FORMATTER));
                 break;
 
             case EXT_X_MAP:
