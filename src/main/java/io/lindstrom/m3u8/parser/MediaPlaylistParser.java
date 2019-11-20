@@ -110,13 +110,16 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
                 mediaSegmentBuilder.segmentKey(segmentKeyParser.parse(attributes));
                 break;
 
+            case EXT_X_START:
+                builder.startTimeOffset(startTimeOffsetParser.parse(attributes));
+                break;
+
             case EXT_X_DISCONTINUITY:
                 mediaSegmentBuilder.discontinuity(true);
                 break;
 
             case EXT_X_DISCONTINUITY_SEQUENCE:
             case EXT_X_DATERANGE:
-            case EXT_X_START:
             default:
                 throw new PlaylistParserException("Tag not implemented: " + prefix);
         }

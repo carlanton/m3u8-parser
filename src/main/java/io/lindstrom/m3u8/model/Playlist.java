@@ -31,4 +31,12 @@ public interface Playlist {
     default boolean independentSegments() {
         return false;
     }
+
+    /**
+     * The playlist start time offset.
+     * @return start time offset
+     * @see <a href="https://tools.ietf.org/html/rfc8216#section-4.3.5.2" target="_blank">
+     * RFC 8216 - 4.3.5.2.  EXT-X-START</a>
+     */
+    Optional<StartTimeOffset> startTimeOffset();
 }

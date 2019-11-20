@@ -14,6 +14,8 @@ import static io.lindstrom.m3u8.parser.Tags.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 abstract class AbstractPlaylistParser<T extends Playlist, B> {
+    final StartTimeOffsetParser startTimeOffsetParser = new StartTimeOffsetParser();
+
     public T readPlaylist(InputStream inputStream) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, UTF_8))) {
             return readPlaylist(reader);
@@ -117,6 +119,8 @@ abstract class AbstractPlaylistParser<T extends Playlist, B> {
         if (playlist.independentSegments()) {
             stringBuilder.append(EXT_X_INDEPENDENT_SEGMENTS).append('\n');
         }
+
+        playlist.startTimeOffset().ifPresent(value -> startTimeOffsetParser.write(value, stringBuilder));
 
         write(playlist, stringBuilder);
         return stringBuilder.toString();

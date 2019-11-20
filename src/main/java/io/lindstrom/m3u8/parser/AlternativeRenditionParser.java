@@ -38,13 +38,13 @@ class AlternativeRenditionParser extends AbstractLineParser<AlternativeRendition
                     builder.name(value);
                     break;
                 case DEFAULT:
-                    builder.defaultRendition(yesOrNo(value));
+                    builder.defaultRendition(ParserUtils.yesOrNo(value));
                     break;
                 case AUTOSELECT:
-                    builder.autoSelect(yesOrNo(value));
+                    builder.autoSelect(ParserUtils.yesOrNo(value));
                     break;
                 case FORCED:
-                    builder.forced(yesOrNo(value));
+                    builder.forced(ParserUtils.yesOrNo(value));
                     break;
                 case INSTREAM_ID:
                     builder.inStreamId(value);
@@ -87,14 +87,4 @@ class AlternativeRenditionParser extends AbstractLineParser<AlternativeRendition
         return attributes.toString();
     }
 
-    private static boolean yesOrNo(String value) throws PlaylistParserException {
-        switch (value) {
-            case YES:
-                return true;
-            case NO:
-                return false;
-            default:
-                throw new PlaylistParserException("Expected YES or NO, got " + value);
-        }
-    }
 }

@@ -69,9 +69,12 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
                 builder.independentSegments(true);
                 break;
 
+            case EXT_X_START:
+                builder.startTimeOffset(startTimeOffsetParser.parse(attributes));
+                break;
+
             case EXT_X_SESSION_DATA:
             case EXT_X_SESSION_KEY:
-            case EXT_X_START:
                 throw new PlaylistParserException("Tag not implemented: " + prefix);
 
             default:

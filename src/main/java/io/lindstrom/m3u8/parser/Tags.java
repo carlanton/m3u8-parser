@@ -120,6 +120,8 @@ class Tags {
 
     // 4.3.5.2 EXT-X-START
     static final String EXT_X_START = "#EXT-X-START";
+    static final String TIME_OFFSET = "TIME-OFFSET";
+    static final String PRECISE = "PRECISE";
 
     static final String YES = "YES";
     static final String NO = "NO";
