@@ -94,7 +94,7 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
                 break;
 
             case EXT_X_MEDIA_SEQUENCE:
-                builder.mediaSequence(Integer.parseInt(attributes));
+                builder.mediaSequence(Long.parseLong(attributes));
                 break;
 
             case EXT_X_KEY:
