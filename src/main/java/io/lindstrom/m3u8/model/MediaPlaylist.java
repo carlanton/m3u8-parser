@@ -22,6 +22,11 @@ public interface MediaPlaylist extends Playlist {
         return true;
     }
 
+    @Value.Default
+    default boolean allowCache() {
+        return true;
+    }
+
     Optional<PlaylistType> playlistType();
 
     @Value.Default
