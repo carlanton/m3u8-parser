@@ -66,7 +66,7 @@ class Tags {
     // 4.3.3.6 EXT-X-I-FRAMES-ONLY
     static final String EXT_X_I_FRAMES_ONLY = "#EXT-X-I-FRAMES-ONLY";
 
-    static final String EXT_X_ALLOW_CACHE = "EXT_X_ALLOW_CACHE";
+    static final String EXT_X_ALLOW_CACHE = "EXT-X-ALLOW-CACHE";
 
 
     /*

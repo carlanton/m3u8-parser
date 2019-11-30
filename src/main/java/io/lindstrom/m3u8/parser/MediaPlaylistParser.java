@@ -119,7 +119,8 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
                 break;
 
             case EXT_X_ALLOW_CACHE:
-                builder.allowChache(ParserUtils.yesOrNo(attributes));
+                builder.allowCache(ParserUtils.yesOrNo(attributes));
+                break;
 
             case EXT_X_DISCONTINUITY_SEQUENCE:
             case EXT_X_DATERANGE:
