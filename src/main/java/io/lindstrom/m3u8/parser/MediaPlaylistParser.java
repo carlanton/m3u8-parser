@@ -118,6 +118,10 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
                 mediaSegmentBuilder.discontinuity(true);
                 break;
 
+            case EXT_X_ALLOW_CACHE:
+                builder.allowCache(ParserUtils.yesOrNo(attributes));
+                break;
+
             case EXT_X_DISCONTINUITY_SEQUENCE:
             case EXT_X_DATERANGE:
             default:
@@ -142,6 +146,11 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
         if (playlist.iFramesOnly()) {
             stringBuilder.append(EXT_X_I_FRAMES_ONLY).append("\n");
         }
+
+        playlist.allowCache().ifPresent(value ->
+            stringBuilder.append(EXT_X_ALLOW_CACHE).append(":")
+                    .append(value ? YES : NO).append("\n")
+        );
 
         playlist.playlistType().ifPresent(value ->
                 stringBuilder.append(EXT_X_PLAYLIST_TYPE).append(":")
