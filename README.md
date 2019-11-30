@@ -1,5 +1,5 @@
 # m3u8-parser
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.lindstrom/m3u8-parser/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.lindstrom/m3u8-parser)
+[![Build Status](https://travis-ci.org/carlanton/m3u8-parser.svg?branch=master)](https://travis-ci.org/carlanton/m3u8-parser) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.lindstrom/m3u8-parser/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.lindstrom/m3u8-parser)
 [![Javadocs](https://www.javadoc.io/badge/io.lindstrom/m3u8-parser.svg)](https://www.javadoc.io/doc/io.lindstrom/m3u8-parser)
 
 
@@ -169,6 +169,7 @@ EXT-X-STREAM-INF
 EXT-X-I-FRAME-STREAM-INF
 EXT-X-INDEPENDENT-SEGMENTS
 EXT-X-START
+EXT-X-ALLOW-CACHE
 ```
 
 The following tags are currently not implemented:
