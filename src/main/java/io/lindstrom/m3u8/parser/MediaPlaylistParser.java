@@ -147,8 +147,10 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
             stringBuilder.append(EXT_X_I_FRAMES_ONLY).append("\n");
         }
 
-        String allowCacheBool = playlist.allowCache() ? YES : NO;
-        stringBuilder.append(EXT_X_ALLOW_CACHE).append(":").append(allowCacheBool).append("\n");
+        playlist.allowCache().ifPresent(value ->
+            stringBuilder.append(EXT_X_ALLOW_CACHE).append(":")
+                    .append(value ? YES : NO).append("\n")
+        );
 
         playlist.playlistType().ifPresent(value ->
                 stringBuilder.append(EXT_X_PLAYLIST_TYPE).append(":")
