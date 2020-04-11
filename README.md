@@ -180,3 +180,5 @@ EXT-X-DISCONTINUITY-SEQUENCE
 EXT-X-DATERANGE
 ```
 
+## Android
+This library uses `java.time.*` which requires [core library desugaring](https://developer.android.com/studio/preview/features#j8-desugar) when running on Android API level < 26.
