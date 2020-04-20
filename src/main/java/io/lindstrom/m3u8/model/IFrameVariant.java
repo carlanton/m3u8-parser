@@ -29,11 +29,16 @@ public interface IFrameVariant {
     Optional<String> video();
 
     Optional<Integer> programId();
-
+    
+    Optional<VideoRange> videoRange();
+    
     static Builder builder() {
         return new Builder();
     }
 
     class Builder extends IFrameVariantBuilder {
+        public Builder videoRange(String value) {
+            return videoRange(VideoRange.valueOf(value));
+        }
     }
 }
