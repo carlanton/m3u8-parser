@@ -61,6 +61,9 @@ class VariantParser extends AbstractLineParser<Variant> {
                 case PROGRAM_ID:
                     builder.programId(Integer.parseInt(value));
                     break;
+                case VIDEO_RANGE:
+                    builder.videoRange(value);
+                    break;
                 default:
                     throw new PlaylistParserException("Unknown key " + key);
             }
@@ -97,6 +100,7 @@ class VariantParser extends AbstractLineParser<Variant> {
         }
 
         variant.programId().ifPresent(value -> attributes.add(Tags.PROGRAM_ID, Integer.toString(value)));
+        variant.videoRange().ifPresent(value -> attributes.add(VIDEO_RANGE, value));
 
         return attributes.toString();
     }

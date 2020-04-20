@@ -2,6 +2,7 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.Resolution;
 import io.lindstrom.m3u8.model.Variant;
+import io.lindstrom.m3u8.model.VideoRange;
 import org.junit.Test;
 
 import java.util.*;
@@ -10,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 
 public class VariantParserTest {
     private final VariantParser parser = new VariantParser();
-    private final String attributes = "BANDWIDTH=123456789,AVERAGE-BANDWIDTH=12345678,CODECS=\"a,b,c\",RESOLUTION=1024x768,FRAME-RATE=50.0,HDCP-LEVEL=0,AUDIO=\"audio\",VIDEO=\"video\",SUBTITLES=\"subtitles\",CLOSED-CAPTIONS=\"cc\"";
+    private final String attributes = "BANDWIDTH=123456789,AVERAGE-BANDWIDTH=12345678,CODECS=\"a,b,c\",RESOLUTION=1024x768,FRAME-RATE=50.0,HDCP-LEVEL=0,AUDIO=\"audio\",VIDEO=\"video\",SUBTITLES=\"subtitles\",CLOSED-CAPTIONS=\"cc\",VIDEO-RANGE=SDR";
     private final Variant variant = Variant.builder()
             .uri("uri")
             .bandwidth(123456789)
@@ -19,6 +20,7 @@ public class VariantParserTest {
             .resolution(Resolution.of(1024, 768))
             .frameRate(50)
             .hdcpLevel("0")
+            .videoRange(VideoRange.SDR)
             .audio("audio")
             .video("video")
             .subtitles("subtitles")
