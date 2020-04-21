@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 abstract class AbstractLineParser<T> {
-    private static final Pattern ATTRIBUTE_LIST_PATTERN = Pattern.compile("([A-Z0-9\\-]+)=(?:(?:\"([^\"]+)\")|([^,]+))");
+    static final Pattern ATTRIBUTE_LIST_PATTERN = Pattern.compile("([A-Z0-9\\-]+)=(?:(?:\"([^\"]+)\")|([^,]+))");
     private final String tag;
 
     AbstractLineParser(String tag) {
@@ -38,7 +38,7 @@ abstract class AbstractLineParser<T> {
 
     abstract String writeAttributes(T value);
 
-    Map<String, String> parseAttributes(String attributeList) {
+    private Map<String, String> parseAttributes(String attributeList) {
         Matcher matcher = ATTRIBUTE_LIST_PATTERN.matcher(attributeList);
         Map<String, String> attributes = new HashMap<>();
         while (matcher.find()) {
