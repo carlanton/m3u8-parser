@@ -84,6 +84,11 @@ public interface Variant {
      */
     Optional<Integer> programId();
 
+    /**
+     * @return variant attribute VIDEO-RANGE
+     */
+    Optional<VideoRange> videoRange();
+
     static Builder builder() {
         return new Builder();
     }
@@ -91,6 +96,10 @@ public interface Variant {
     class Builder extends VariantBuilder {
         public Builder resolution(int width, int height) {
             return resolution(Resolution.of(width, height));
+        }
+        
+        public Builder videoRange(String value) {
+            return videoRange(VideoRange.valueOf(value));
         }
     }
 }
