@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
 import static io.lindstrom.m3u8.parser.Tags.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-abstract class AbstractPlaylistParser<T extends Playlist, B> {
+public abstract class AbstractPlaylistParser<T extends Playlist, B> {
     final StartTimeOffsetParser startTimeOffsetParser = new StartTimeOffsetParser();
 
     public T readPlaylist(InputStream inputStream) throws IOException {
