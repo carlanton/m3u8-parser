@@ -3,79 +3,68 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.DateRange;
 
 import java.time.OffsetDateTime;
-import java.util.Map;
 
 import static io.lindstrom.m3u8.parser.Tags.*;
 
-public class DateRangeParser extends AbstractLineParser<DateRange> {
+class DateRangeParser extends AbstractTagParser<DateRange, DateRange.Builder> {
     DateRangeParser() {
         super(EXT_X_DATERANGE);
     }
 
     @Override
-    DateRange parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
-        DateRange.Builder builder = DateRange.builder();
+    void onAttribute(String attribute, String value, DateRange.Builder builder) throws PlaylistParserException {
+        switch (attribute) {
+            case ID:
+                builder.id(value);
+                break;
 
-        for (Map.Entry<String, String> entry : attributes.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            switch (key) {
-                case ID:
-                    builder.id(value);
-                    break;
+            case CLASS:
+                builder.classAttribute(value);
+                break;
 
-                case CLASS:
-                    builder.classAttribute(value);
-                    break;
+            case START_DATE:
+                builder.startDate(OffsetDateTime.parse(value, MediaPlaylistParser.FORMATTER));
+                break;
 
-                case START_DATE:
-                    builder.startDate(OffsetDateTime.parse(value, MediaPlaylistParser.FORMATTER));
-                    break;
+            case END_DATE:
+                builder.endDate(OffsetDateTime.parse(value, MediaPlaylistParser.FORMATTER));
+                break;
 
-                case END_DATE:
-                    builder.endDate(OffsetDateTime.parse(value, MediaPlaylistParser.FORMATTER));
-                    break;
+            case DURATION:
+                builder.duration(Double.parseDouble(value));
+                break;
 
-                case DURATION:
-                    builder.duration(Double.parseDouble(value));
-                    break;
+            case PLANNED_DURATION:
+                builder.plannedDuration(Double.parseDouble(value));
+                break;
 
-                case PLANNED_DURATION:
-                    builder.plannedDuration(Double.parseDouble(value));
-                    break;
+            case SCTE35_CMD:
+                builder.scte35Cmd(value);
+                break;
 
-                case SCTE35_CMD:
-                    builder.scte35Cmd(value);
-                    break;
+            case SCTE35_OUT:
+                builder.scte35Out(value);
+                break;
 
-                case SCTE35_OUT:
-                    builder.scte35Out(value);
-                    break;
+            case SCTE35_IN:
+                builder.scte35In(value);
+                break;
 
-                case SCTE35_IN:
-                    builder.scte35In(value);
-                    break;
+            case END_ON_NEXT:
+                builder.endOnNext(ParserUtils.yesOrNo(value));
+                break;
 
-                case END_ON_NEXT:
-                    builder.endOnNext(ParserUtils.yesOrNo(value));
-                    break;
-
-                default:
-                    if (key.startsWith("X-")) {
-                        builder.putClientAttributes(key, value);
-                    } else {
-                        throw new PlaylistParserException("Unknown key " + key);
-                    }
-            }
+            default:
+                if (attribute.startsWith("X-")) {
+                    builder.putClientAttributes(attribute, value);
+                } else {
+                    throw new PlaylistParserException("Unknown attribute " + attribute);
+                }
         }
-
-        return builder.build();
     }
 
     @Override
-    String writeAttributes(DateRange dateRange) {
-        AttributeListBuilder attributes = new AttributeListBuilder();
-
+    void write(DateRange dateRange, AttributeListBuilder attributes) {
         attributes.addQuoted(ID, dateRange.id());
         dateRange.classAttribute().ifPresent(v -> attributes.addQuoted(CLASS, v));
         attributes.addQuoted(START_DATE, dateRange.startDate().toString());
@@ -93,7 +82,15 @@ public class DateRangeParser extends AbstractLineParser<DateRange> {
         if (dateRange.endOnNext()) {
             attributes.add(END_ON_NEXT, YES);
         }
+    }
 
-        return attributes.toString();
+    @Override
+    DateRange.Builder newBuilder() {
+        return DateRange.builder();
+    }
+
+    @Override
+    DateRange build(DateRange.Builder builder) {
+        return builder.build();
     }
 }

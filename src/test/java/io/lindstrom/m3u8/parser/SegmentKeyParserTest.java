@@ -2,12 +2,9 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.KeyMethod;
 import io.lindstrom.m3u8.model.SegmentKey;
-import io.lindstrom.m3u8.parser.SegmentKeyParser;
 import org.junit.Test;
 
-import static io.lindstrom.m3u8.model.KeyMethod.AES_128;
-import static io.lindstrom.m3u8.model.KeyMethod.NONE;
-import static io.lindstrom.m3u8.model.KeyMethod.SAMPLE_AES;
+import static io.lindstrom.m3u8.model.KeyMethod.*;
 import static org.junit.Assert.assertEquals;
 
 public class SegmentKeyParserTest {
@@ -34,7 +31,7 @@ public class SegmentKeyParserTest {
 
     @Test
     public void writeAttributes() throws Exception {
-        assertEquals(attributes, parser.writeAttributes(key));
+        assertEquals(attributes, writeAttributes(key));
     }
 
     @Test
@@ -46,14 +43,20 @@ public class SegmentKeyParserTest {
 
     @Test
     public void writeMethods() throws Exception {
-        assertEquals("METHOD=AES-128", parser.writeAttributes(SegmentKey.builder()
+        assertEquals("METHOD=AES-128", writeAttributes(SegmentKey.builder()
                 .method(KeyMethod.AES_128)
                 .build()));
-        assertEquals("METHOD=SAMPLE-AES", parser.writeAttributes(SegmentKey.builder()
+        assertEquals("METHOD=SAMPLE-AES", writeAttributes(SegmentKey.builder()
                 .method(KeyMethod.SAMPLE_AES)
                 .build()));
-        assertEquals("METHOD=NONE", parser.writeAttributes(SegmentKey.builder()
+        assertEquals("METHOD=NONE", writeAttributes(SegmentKey.builder()
                 .method(KeyMethod.NONE)
                 .build()));
+    }
+
+    private String writeAttributes(SegmentKey segmentKey) {
+        AttributeListBuilder attributeListBuilder = new AttributeListBuilder();
+        parser.write(segmentKey, attributeListBuilder);
+        return attributeListBuilder.toString();
     }
 }

@@ -3,11 +3,9 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.Resolution;
 import io.lindstrom.m3u8.model.Variant;
 
-import java.util.Map;
-
 import static io.lindstrom.m3u8.parser.Tags.*;
 
-class VariantParser extends AbstractLineParser<Variant> {
+class VariantParser extends AbstractTagParser<Variant, Variant.Builder> {
     private static final String NONE = "NONE";
 
     VariantParser() {
@@ -15,72 +13,75 @@ class VariantParser extends AbstractLineParser<Variant> {
     }
 
     @Override
-    Variant parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
-        Variant.Builder builder = Variant.builder();
-        for (Map.Entry<String, String> entry : attributes.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            switch (key) {
-                case URI:
-                    builder.uri(value);
-                    break;
-                case BANDWIDTH:
-                    builder.bandwidth(Long.parseLong(value));
-                    break;
-                case AVERAGE_BANDWIDTH:
-                    builder.averageBandwidth(Long.parseLong(value));
-                    break;
-                case CODECS:
-                    builder.codecs(ParserUtils.split(value, ","));
-                    break;
-                case RESOLUTION:
-                    builder.resolution(parseResolution(value));
-                    break;
-                case FRAME_RATE:
-                    builder.frameRate(Double.parseDouble(value));
-                    break;
-                case HDCP_LEVEL:
-                    builder.hdcpLevel(value);
-                    break;
-                case AUDIO:
-                    builder.audio(value);
-                    break;
-                case VIDEO:
-                    builder.video(value);
-                    break;
-                case SUBTITLES:
-                    builder.subtitles(value);
-                    break;
-                case CLOSED_CAPTIONS:
-                    if (value.equals(NONE)) {
-                        builder.closedCaptionsNone(true);
-                    } else {
-                        builder.closedCaptions(value);
-                    }
-                    break;
-                case PROGRAM_ID:
-                    builder.programId(Integer.parseInt(value));
-                    break;
-                case VIDEO_RANGE:
-                    builder.videoRange(value);
-                    break;
-                default:
-                    throw new PlaylistParserException("Unknown key " + key);
-            }
+    void onAttribute(String attribute, String value, Variant.Builder builder) throws PlaylistParserException {
+        switch (attribute) {
+            case BANDWIDTH:
+                builder.bandwidth(Long.parseLong(value));
+                break;
+            case AVERAGE_BANDWIDTH:
+                builder.averageBandwidth(Long.parseLong(value));
+                break;
+            case CODECS:
+                builder.codecs(ParserUtils.split(value, ","));
+                break;
+            case RESOLUTION:
+                builder.resolution(parseResolution(value));
+                break;
+            case FRAME_RATE:
+                builder.frameRate(Double.parseDouble(value));
+                break;
+            case HDCP_LEVEL:
+                builder.hdcpLevel(value);
+                break;
+            case AUDIO:
+                builder.audio(value);
+                break;
+            case VIDEO:
+                builder.video(value);
+                break;
+            case SUBTITLES:
+                builder.subtitles(value);
+                break;
+            case CLOSED_CAPTIONS:
+                if (value.equals(NONE)) {
+                    builder.closedCaptionsNone(true);
+                } else {
+                    builder.closedCaptions(value);
+                }
+                break;
+            case PROGRAM_ID:
+                builder.programId(Integer.parseInt(value));
+                break;
+            case VIDEO_RANGE:
+                builder.videoRange(value);
+                break;
+            default:
+                throw new PlaylistParserException("Unknown attribute " + attribute);
         }
+    }
+
+    @Override
+    void onUri(String uri, Variant.Builder builder) {
+        builder.uri(uri);
+    }
+
+    @Override
+    void writeUri(Variant value, StringBuilder stringBuilder) {
+        stringBuilder.append(value.uri()).append("\n");
+    }
+
+    @Override
+    Variant.Builder newBuilder() {
+        return Variant.builder();
+    }
+
+    @Override
+    Variant build(Variant.Builder builder) {
         return builder.build();
     }
 
     @Override
-    public void write(Variant variant, StringBuilder stringBuilder) {
-        super.write(variant, stringBuilder);
-        stringBuilder.append(variant.uri()).append('\n');
-    }
-
-    @Override
-    String writeAttributes(Variant variant) {
-        AttributeListBuilder attributes = new AttributeListBuilder();
-
+    void write(Variant variant, AttributeListBuilder attributes) {
         attributes.add(Tags.BANDWIDTH, String.valueOf(variant.bandwidth()));
         variant.averageBandwidth().ifPresent(value -> attributes.add(Tags.AVERAGE_BANDWIDTH, String.valueOf(value)));
         if (!variant.codecs().isEmpty()) {
@@ -101,8 +102,6 @@ class VariantParser extends AbstractLineParser<Variant> {
 
         variant.programId().ifPresent(value -> attributes.add(Tags.PROGRAM_ID, Integer.toString(value)));
         variant.videoRange().ifPresent(value -> attributes.add(VIDEO_RANGE, value));
-
-        return attributes.toString();
     }
 
     static Resolution parseResolution(String string) throws PlaylistParserException {

@@ -1,8 +1,7 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.MasterPlaylist;
+import io.lindstrom.m3u8.model.*;
 
-import java.util.Collections;
 import java.util.Iterator;
 
 import static io.lindstrom.m3u8.parser.Tags.*;
@@ -32,11 +31,11 @@ import static io.lindstrom.m3u8.parser.Tags.*;
  * This implementation is reusable and thread safe.
  */
 public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist, MasterPlaylist.Builder> {
-    private final VariantParser variantParser = new VariantParser();
-    private final IFrameParser iFrameParser = new IFrameParser();
-    private final AlternativeRenditionParser alternativeRenditionParser = new AlternativeRenditionParser();
-    private final SessionDataParser sessionDataParser = new SessionDataParser();
-    private final SegmentKeyParser sessionKeyParser = new SegmentKeyParser(EXT_X_SESSION_KEY);
+    private final TagParser<Variant> variantParser = new VariantParser();
+    private final TagParser<IFrameVariant> iFrameParser = new IFrameParser();
+    private final TagParser<AlternativeRendition> alternativeRenditionParser = new AlternativeRenditionParser();
+    private final TagParser<SessionData> sessionDataParser = new SessionDataParser();
+    private final TagParser<SegmentKey> sessionKeyParser = new SegmentKeyParser(EXT_X_SESSION_KEY);
 
     @Override
     MasterPlaylist.Builder newBuilder() {
@@ -59,8 +58,7 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
                 if (uriLine == null || uriLine.startsWith("#")) {
                     throw new PlaylistParserException("Expected URI, got " + uriLine);
                 }
-                builder.addVariants(variantParser.parse(attributes,
-                        Collections.singletonMap(URI, uriLine)));
+                builder.addVariants(variantParser.parse(attributes, uriLine));
                 break;
 
             case EXT_X_I_FRAME_STREAM_INF:

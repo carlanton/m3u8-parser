@@ -3,69 +3,59 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.AlternativeRendition;
 import io.lindstrom.m3u8.model.MediaType;
 
-import java.util.Map;
-
 import static io.lindstrom.m3u8.parser.Tags.*;
 
-class AlternativeRenditionParser extends AbstractLineParser<AlternativeRendition> {
+class AlternativeRenditionParser extends AbstractTagParser<AlternativeRendition, AlternativeRendition.Builder> {
     AlternativeRenditionParser() {
         super(EXT_X_MEDIA);
     }
 
     @Override
-    AlternativeRendition parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
-        AlternativeRendition.Builder builder = AlternativeRendition.builder();
-        for (Map.Entry<String, String> entry : attributes.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            switch (key) {
-                case TYPE:
-                    builder.type(MediaType.parse(value));
-                    break;
-                case URI:
-                    builder.uri(value);
-                    break;
-                case GROUP_ID:
-                    builder.groupId(value);
-                    break;
-                case LANGUAGE:
-                    builder.language(value);
-                    break;
-                case ASSOC_LANGUAGE:
-                    builder.assocLanguage(value);
-                    break;
-                case NAME:
-                    builder.name(value);
-                    break;
-                case DEFAULT:
-                    builder.defaultRendition(ParserUtils.yesOrNo(value));
-                    break;
-                case AUTOSELECT:
-                    builder.autoSelect(ParserUtils.yesOrNo(value));
-                    break;
-                case FORCED:
-                    builder.forced(ParserUtils.yesOrNo(value));
-                    break;
-                case INSTREAM_ID:
-                    builder.inStreamId(value);
-                    break;
-                case CHARACTERISTICS:
-                    builder.characteristics(ParserUtils.split(value, ","));
-                    break;
-                case CHANNELS:
-                    builder.channels(ParserUtils.split(value, "/"));
-                    break;
-                default:
-                    throw new PlaylistParserException("Unknown key " + key);
-            }
+    void onAttribute(String attribute, String value, AlternativeRendition.Builder builder) throws PlaylistParserException {
+        switch (attribute) {
+            case TYPE:
+                builder.type(MediaType.parse(value));
+                break;
+            case URI:
+                builder.uri(value);
+                break;
+            case GROUP_ID:
+                builder.groupId(value);
+                break;
+            case LANGUAGE:
+                builder.language(value);
+                break;
+            case ASSOC_LANGUAGE:
+                builder.assocLanguage(value);
+                break;
+            case NAME:
+                builder.name(value);
+                break;
+            case DEFAULT:
+                builder.defaultRendition(ParserUtils.yesOrNo(value));
+                break;
+            case AUTOSELECT:
+                builder.autoSelect(ParserUtils.yesOrNo(value));
+                break;
+            case FORCED:
+                builder.forced(ParserUtils.yesOrNo(value));
+                break;
+            case INSTREAM_ID:
+                builder.inStreamId(value);
+                break;
+            case CHARACTERISTICS:
+                builder.characteristics(ParserUtils.split(value, ","));
+                break;
+            case CHANNELS:
+                builder.channels(ParserUtils.split(value, "/"));
+                break;
+            default:
+                throw new PlaylistParserException("Unknown key " + attribute);
         }
-        return builder.build();
     }
 
     @Override
-    String writeAttributes(AlternativeRendition alternativeRendition) {
-        AttributeListBuilder attributes = new AttributeListBuilder();
-
+    void write(AlternativeRendition alternativeRendition, AttributeListBuilder attributes) {
         attributes.add(Tags.TYPE, alternativeRendition.type());
         alternativeRendition.uri().ifPresent(uri -> attributes.addQuoted(Tags.URI, uri));
         attributes.addQuoted(Tags.GROUP_ID, alternativeRendition.groupId());
@@ -84,7 +74,15 @@ class AlternativeRenditionParser extends AbstractLineParser<AlternativeRendition
         if (!alternativeRendition.channels().isEmpty()) {
             attributes.addQuoted(Tags.CHANNELS, String.join("/", alternativeRendition.channels()));
         }
-        return attributes.toString();
     }
 
+    @Override
+    AlternativeRendition.Builder newBuilder() {
+        return AlternativeRendition.builder();
+    }
+
+    @Override
+    AlternativeRendition build(AlternativeRendition.Builder builder) {
+        return builder.build();
+    }
 }

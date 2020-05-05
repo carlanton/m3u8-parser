@@ -1,8 +1,6 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.MediaPlaylist;
-import io.lindstrom.m3u8.model.MediaSegment;
-import io.lindstrom.m3u8.model.PlaylistType;
+import io.lindstrom.m3u8.model.*;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -43,10 +41,10 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
             .optionalStart().appendOffset("+HH", "Z").optionalEnd()
             .toFormatter();
 
-    private final ByteRangeParser byteRangeParser = new ByteRangeParser();
-    private final SegmentMapParser segmentMapParser = new SegmentMapParser(byteRangeParser);
-    private final SegmentKeyParser segmentKeyParser = new SegmentKeyParser();
-    private final DateRangeParser dateRangeParser = new DateRangeParser();
+    private final ByteRangeParser byteRangeParser = new ByteRangeParser(); // TODO?
+    private final TagParser<SegmentMap> segmentMapParser = new SegmentMapParser(byteRangeParser);
+    private final TagParser<SegmentKey> segmentKeyParser = new SegmentKeyParser();
+    private final TagParser<DateRange> dateRangeParser = new DateRangeParser();
 
     @Override
     Builder newBuilder() {

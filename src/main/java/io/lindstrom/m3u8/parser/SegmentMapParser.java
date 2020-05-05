@@ -2,11 +2,9 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.SegmentMap;
 
-import java.util.Map;
-
 import static io.lindstrom.m3u8.parser.Tags.*;
 
-class SegmentMapParser extends AbstractLineParser<SegmentMap> {
+class SegmentMapParser extends AbstractTagParser<SegmentMap, SegmentMap.Builder> {
     private final ByteRangeParser byteRangeParser;
 
     SegmentMapParser(ByteRangeParser byteRangeParser) {
@@ -15,23 +13,33 @@ class SegmentMapParser extends AbstractLineParser<SegmentMap> {
     }
 
     @Override
-    SegmentMap parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
-        SegmentMap.Builder builder = SegmentMap.builder()
-                .uri(attributes.get(URI));
-
-        if (attributes.containsKey(BYTERANGE)) {
-            builder.byteRange(byteRangeParser.parse(attributes.get(BYTERANGE)));
+    void onAttribute(String attribute, String value, SegmentMap.Builder builder) throws PlaylistParserException {
+        switch (attribute) {
+            case URI:
+                builder.uri(value);
+                break;
+            case BYTERANGE:
+                builder.byteRange(byteRangeParser.parse(value));
+                break;
+            default:
+                throw new PlaylistParserException("Unknown attribute: " + attribute);
         }
-
-        return builder.build();
     }
 
     @Override
-    String writeAttributes(SegmentMap segmentMap) {
-        AttributeListBuilder attributes = new AttributeListBuilder();
+    void write(SegmentMap segmentMap, AttributeListBuilder attributes) {
         attributes.addQuoted(URI, segmentMap.uri());
         segmentMap.byteRange().map(byteRangeParser::writeAttributes).ifPresent(value ->
                 attributes.addQuoted(BYTERANGE, value));
-        return attributes.toString();
+    }
+
+    @Override
+    SegmentMap.Builder newBuilder() {
+        return SegmentMap.builder();
+    }
+
+    @Override
+    SegmentMap build(SegmentMap.Builder builder) {
+        return builder.build();
     }
 }

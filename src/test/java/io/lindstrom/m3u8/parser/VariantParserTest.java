@@ -28,23 +28,17 @@ public class VariantParserTest {
             .build();
     @Test
     public void parseAttributes() throws Exception {
-        assertEquals(variant, parser.parse(attributes, Collections.singletonMap(Tags.URI, "uri")));
+        assertEquals(variant, parser.parse(attributes, "uri"));
     }
 
     @Test
     public void parseAttributesClosedCaptionsNone() throws Exception {
-
-        Map<String, String> additionalAttributes = new HashMap<>();
-
-        additionalAttributes.put(Tags.URI, "uri");
-        additionalAttributes.put(Tags.CLOSED_CAPTIONS, "NONE");
-
         final Variant variantLocal = Variant.builder().from(variant)
                 .closedCaptionsNone(true)
                 .closedCaptions(Optional.empty())
                 .build();
 
-        assertEquals(variantLocal, parser.parse(attributes, additionalAttributes));
+        assertEquals(variantLocal, parser.parse(attributes.replace("\"cc\"", "NONE"), "uri"));
     }
 
     @Test
@@ -56,11 +50,6 @@ public class VariantParserTest {
                         + attributes
                         + "\nuri\n",
                 stringBuilder.toString());
-    }
-
-    @Test(expected = PlaylistParserException.class)
-    public void invalidAttribute() throws Exception {
-        parser.parseAttributes(Collections.singletonMap("INVALID", "value"));
     }
 
     @Test(expected = PlaylistParserException.class)
