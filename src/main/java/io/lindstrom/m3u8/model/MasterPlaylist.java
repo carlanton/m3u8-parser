@@ -37,6 +37,15 @@ public interface MasterPlaylist extends Playlist {
      */
     List<IFrameVariant> iFrameVariants();
 
+    /**
+     * A list of arbitrary session data.
+     *
+     * @return list of session data
+     * @see <a href="https://tools.ietf.org/html/rfc8216#section-4.3.4.4" target="_blank">
+     * RFC 8216 - 4.3.4.4.  EXT-X-SESSION-DATA</a>
+     */
+    List<SessionData> sessionData();
+
     static Builder builder() {
         return new Builder();
     }

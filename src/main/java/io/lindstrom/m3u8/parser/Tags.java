@@ -108,6 +108,8 @@ class Tags {
 
     // 4.3.4.4 EXT_X_SESSION_DATA
     static final String EXT_X_SESSION_DATA = "#EXT-X-SESSION-DATA";
+    static final String DATA_ID= "DATA-ID";
+    static final String VALUE = "VALUE";
 
     // 4.3.4.5 EXT-X-SESSION-KEY
     static final String EXT_X_SESSION_KEY = "#EXT-X-SESSION-KEY";
