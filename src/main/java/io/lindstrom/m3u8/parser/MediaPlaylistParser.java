@@ -36,7 +36,7 @@ import static io.lindstrom.m3u8.parser.Tags.*;
  * This implementation is reusable and thread safe.
  */
 public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, MediaPlaylistParser.Builder> {
-    private static final DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder()
+    static final DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder()
             .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
             .optionalStart().appendOffset("+HH:MM", "+00:00").optionalEnd()
             .optionalStart().appendOffset("+HHMM", "+0000").optionalEnd()
@@ -46,6 +46,7 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
     private final ByteRangeParser byteRangeParser = new ByteRangeParser();
     private final SegmentMapParser segmentMapParser = new SegmentMapParser(byteRangeParser);
     private final SegmentKeyParser segmentKeyParser = new SegmentKeyParser();
+    private final DateRangeParser dateRangeParser = new DateRangeParser();
 
     @Override
     Builder newBuilder() {
@@ -94,6 +95,10 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
                 mediaSegmentBuilder.programDateTime(OffsetDateTime.parse(attributes, FORMATTER));
                 break;
 
+            case EXT_X_DATERANGE:
+                mediaSegmentBuilder.dateRange(dateRangeParser.parse(attributes));
+                break;
+
             case EXT_X_MAP:
                 mediaSegmentBuilder.segmentMap(segmentMapParser.parse(attributes));
                 break;
@@ -126,7 +131,6 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
                 builder.allowCache(ParserUtils.yesOrNo(attributes));
                 break;
 
-            case EXT_X_DATERANGE:
             default:
                 throw new PlaylistParserException("Tag not implemented: " + prefix);
         }
@@ -187,6 +191,9 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
                 .append(EXT_X_PROGRAM_DATE_TIME).append(':')
                 .append(value)
                 .append('\n'));
+
+        // EXT-X-DATERANGE
+        mediaSegment.dateRange().ifPresent(value -> dateRangeParser.write(value, stringBuilder));
 
         // EXT-X-MAP
         mediaSegment.segmentMap().ifPresent(map -> segmentMapParser.write(map, stringBuilder));

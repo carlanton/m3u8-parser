@@ -172,11 +172,11 @@ EXT-X-ALLOW-CACHE
 EXT-X-SESSION-DATA
 EXT-X-SESSION-KEY
 EXT-X-DISCONTINUITY-SEQUENCE
+EXT-X-DATERANGE
 ```
 
 The following tags are currently not implemented:
 ```
-EXT-X-DATERANGE
 ```
 
 ## Android
