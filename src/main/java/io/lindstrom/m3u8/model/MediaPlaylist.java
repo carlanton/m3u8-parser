@@ -18,6 +18,11 @@ public interface MediaPlaylist extends Playlist {
     }
 
     @Value.Default
+    default long discontinuitySequence() {
+        return 0;
+    }
+
+    @Value.Default
     default boolean ongoing() {
         return true;
     }
@@ -32,6 +37,7 @@ public interface MediaPlaylist extends Playlist {
     }
 
     List<MediaSegment> mediaSegments();
+
 
     static Builder builder() {
         return new Builder();

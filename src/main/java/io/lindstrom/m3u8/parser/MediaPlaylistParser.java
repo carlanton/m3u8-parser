@@ -106,6 +106,10 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
                 builder.mediaSequence(Long.parseLong(attributes));
                 break;
 
+            case EXT_X_DISCONTINUITY_SEQUENCE:
+                builder.discontinuitySequence(Long.parseLong(attributes));
+                break;
+
             case EXT_X_KEY:
                 mediaSegmentBuilder.segmentKey(segmentKeyParser.parse(attributes));
                 break;
@@ -122,7 +126,6 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
                 builder.allowCache(ParserUtils.yesOrNo(attributes));
                 break;
 
-            case EXT_X_DISCONTINUITY_SEQUENCE:
             case EXT_X_DATERANGE:
             default:
                 throw new PlaylistParserException("Tag not implemented: " + prefix);
@@ -158,6 +161,11 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
 
         stringBuilder.append(EXT_X_TARGETDURATION).append(":").append(playlist.targetDuration()).append("\n");
         stringBuilder.append(EXT_X_MEDIA_SEQUENCE).append(":").append(playlist.mediaSequence()).append("\n");
+
+        if (playlist.discontinuitySequence() != 0) {
+            stringBuilder.append(EXT_X_DISCONTINUITY_SEQUENCE).append(":")
+                    .append(playlist.discontinuitySequence()).append("\n");
+        }
 
         playlist.mediaSegments().forEach(mediaSegment ->
                 writeMediaSegment(mediaSegment, stringBuilder));
