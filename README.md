@@ -24,7 +24,6 @@ Maven:
     <version>0.11</version>
 </dependency>
 ```
-
 Gradle:
 ```
 compile 'io.lindstrom:m3u8-parser:0.11'
@@ -170,14 +169,14 @@ EXT-X-I-FRAME-STREAM-INF
 EXT-X-INDEPENDENT-SEGMENTS
 EXT-X-START
 EXT-X-ALLOW-CACHE
-```
-
-The following tags are currently not implemented:
-```
 EXT-X-SESSION-DATA
 EXT-X-SESSION-KEY
 EXT-X-DISCONTINUITY-SEQUENCE
 EXT-X-DATERANGE
+```
+
+The following tags are currently not implemented:
+```
 ```
 
 ## Android

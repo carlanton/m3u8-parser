@@ -35,6 +35,8 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
     private final VariantParser variantParser = new VariantParser();
     private final IFrameParser iFrameParser = new IFrameParser();
     private final AlternativeRenditionParser alternativeRenditionParser = new AlternativeRenditionParser();
+    private final SessionDataParser sessionDataParser = new SessionDataParser();
+    private final SegmentKeyParser sessionKeyParser = new SegmentKeyParser(EXT_X_SESSION_KEY);
 
     @Override
     MasterPlaylist.Builder newBuilder() {
@@ -74,8 +76,12 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
                 break;
 
             case EXT_X_SESSION_DATA:
+                builder.addSessionData(sessionDataParser.parse(attributes));
+                break;
+
             case EXT_X_SESSION_KEY:
-                throw new PlaylistParserException("Tag not implemented: " + prefix);
+                builder.addSessionKeys(sessionKeyParser.parse(attributes));
+                break;
 
             default:
                 throw new PlaylistParserException("Invalid line: " + prefix);
@@ -102,5 +108,11 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
 
         playlist.iFrameVariants()
                 .forEach(value -> iFrameParser.write(value, stringBuilder));
+
+        playlist.sessionData()
+                .forEach(value -> sessionDataParser.write(value, stringBuilder));
+
+        playlist.sessionKeys()
+                .forEach(value -> sessionKeyParser.write(value, stringBuilder));
     }
 }

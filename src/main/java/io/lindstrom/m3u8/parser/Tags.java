@@ -43,6 +43,17 @@ class Tags {
 
     // 4.3.2.7 EXT-X-DATERANGE
     static final String EXT_X_DATERANGE = "#EXT-X-DATERANGE";
+    static final String ID = "ID";
+    static final String CLASS = "CLASS";
+    static final String START_DATE = "START-DATE";
+    static final String END_DATE = "END-DATE";
+    static final String DURATION = "DURATION";
+    static final String PLANNED_DURATION = "PLANNED-DURATION";
+    static final String SCTE35_CMD = "SCTE35-CMD";
+    static final String SCTE35_OUT = "SCTE35-OUT";
+    static final String SCTE35_IN = "SCTE35-IN";
+    static final String END_ON_NEXT = "END-ON-NEXT";
+
 
     /*
      * 4.3.3 Media Playlist Tags
@@ -108,6 +119,8 @@ class Tags {
 
     // 4.3.4.4 EXT_X_SESSION_DATA
     static final String EXT_X_SESSION_DATA = "#EXT-X-SESSION-DATA";
+    static final String DATA_ID= "DATA-ID";
+    static final String VALUE = "VALUE";
 
     // 4.3.4.5 EXT-X-SESSION-KEY
     static final String EXT_X_SESSION_KEY = "#EXT-X-SESSION-KEY";
