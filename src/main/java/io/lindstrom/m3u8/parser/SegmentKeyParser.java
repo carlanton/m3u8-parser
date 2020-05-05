@@ -12,6 +12,10 @@ class SegmentKeyParser extends AbstractLineParser<SegmentKey> {
         super(EXT_X_KEY);
     }
 
+    SegmentKeyParser(String tag) {
+        super(tag);
+    }
+
     @Override
     SegmentKey parseAttributes(Map<String, String> attributes) throws PlaylistParserException {
         SegmentKey.Builder builder = SegmentKey.builder();

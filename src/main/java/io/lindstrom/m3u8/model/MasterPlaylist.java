@@ -46,6 +46,15 @@ public interface MasterPlaylist extends Playlist {
      */
     List<SessionData> sessionData();
 
+    /**
+     * A list of encryption keys used in media playlists.
+     *
+     * @return list of encryption keys
+     * @see <a href="https://tools.ietf.org/html/rfc8216#section-4.3.4.5" target="_blank">
+     * RFC 8216 - 4.3.4.5.  EXT-X-SESSION-KEY</a>
+     */
+    List<SegmentKey> sessionKeys();
+
     static Builder builder() {
         return new Builder();
     }
