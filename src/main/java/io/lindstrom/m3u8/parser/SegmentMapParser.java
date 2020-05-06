@@ -2,44 +2,42 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.SegmentMap;
 
-import static io.lindstrom.m3u8.parser.Tags.*;
+import static io.lindstrom.m3u8.parser.Tags.EXT_X_MAP;
 
-class SegmentMapParser extends AbstractTagParser<SegmentMap, SegmentMap.Builder> {
-    private final ByteRangeParser byteRangeParser;
-
-    SegmentMapParser(ByteRangeParser byteRangeParser) {
-        super(EXT_X_MAP);
-        this.byteRangeParser = byteRangeParser;
-    }
-
-    @Override
-    void onAttribute(String attribute, String value, SegmentMap.Builder builder) throws PlaylistParserException {
-        switch (attribute) {
-            case URI:
-                builder.uri(value);
-                break;
-            case BYTERANGE:
-                builder.byteRange(byteRangeParser.parse(value));
-                break;
-            default:
-                throw new PlaylistParserException("Unknown attribute: " + attribute);
+enum SegmentMapParser implements AttributeParser<SegmentMap, SegmentMap.Builder> {
+    URI {
+        @Override
+        public void read(SegmentMap.Builder builder, String value) throws PlaylistParserException {
+            builder.uri(value);
         }
-    }
 
-    @Override
-    void write(SegmentMap segmentMap, AttributeListBuilder attributes) {
-        attributes.addQuoted(URI, segmentMap.uri());
-        segmentMap.byteRange().map(byteRangeParser::writeAttributes).ifPresent(value ->
-                attributes.addQuoted(BYTERANGE, value));
-    }
+        @Override
+        public void write(AttributeListBuilder attributes, SegmentMap value) {
+            attributes.addQuoted(name(), value.uri());
+        }
+    },
 
-    @Override
-    SegmentMap.Builder newBuilder() {
-        return SegmentMap.builder();
-    }
+    BYTERANGE {
+        @Override
+        public void read(SegmentMap.Builder builder, String value) throws PlaylistParserException {
+            builder.byteRange(byteRangeParser.parse(value));
+        }
 
-    @Override
-    SegmentMap build(SegmentMap.Builder builder) {
-        return builder.build();
+        @Override
+        public void write(AttributeListBuilder attributes, SegmentMap value) {
+            value.byteRange().map(byteRangeParser::writeAttributes).ifPresent(v ->
+                    attributes.addQuoted(name(), v));
+        }
+    };
+
+    private static final ByteRangeParser byteRangeParser = new ByteRangeParser();
+
+    static TagParser<SegmentMap> parser() {
+        return new DefaultTagParser<>(
+                EXT_X_MAP,
+                SegmentMapParser.class,
+                builder -> builder.build(),
+                SegmentMap::builder
+        );
     }
 }

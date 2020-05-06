@@ -2,70 +2,123 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.IFrameVariant;
 
-import static io.lindstrom.m3u8.parser.Tags.*;
-
-class IFrameParser extends AbstractTagParser<IFrameVariant, IFrameVariant.Builder> {
-    IFrameParser() {
-        super(EXT_X_I_FRAME_STREAM_INF);
-    }
-
-    @Override
-    void onAttribute(String attribute, String value, IFrameVariant.Builder builder) throws PlaylistParserException {
-        switch (attribute) {
-            case URI:
-                builder.uri(value);
-                break;
-            case BANDWIDTH:
-                builder.bandwidth(Long.parseLong(value));
-                break;
-            case AVERAGE_BANDWIDTH:
-                builder.averageBandwidth(Long.parseLong(value));
-                break;
-            case CODECS:
-                builder.codecs(ParserUtils.split(value, ","));
-                break;
-            case RESOLUTION:
-                builder.resolution(VariantParser.parseResolution(value));
-                break;
-            case HDCP_LEVEL:
-                builder.hdcpLevel(value);
-                break;
-            case VIDEO:
-                builder.video(value);
-                break;
-            case PROGRAM_ID:
-                builder.programId(Integer.parseInt(value));
-                break;
-            case VIDEO_RANGE:
-                builder.videoRange(value);
-                break;
-            default:
-                throw new PlaylistParserException("Unknown attribute " + attribute);
+enum IFrameParser implements AttributeParser<IFrameVariant, IFrameVariant.Builder> {
+    URI {
+        @Override
+        public void read(IFrameVariant.Builder builder, String value) {
+            builder.uri(value);
         }
-    }
 
-    @Override
-    void write(IFrameVariant iFramePlaylist, AttributeListBuilder attributes) {
-        attributes.addQuoted(Tags.URI, iFramePlaylist.uri());
-        attributes.add(Tags.BANDWIDTH, String.valueOf(iFramePlaylist.bandwidth()));
-        iFramePlaylist.averageBandwidth().ifPresent(value -> attributes.add(Tags.AVERAGE_BANDWIDTH, String.valueOf(value)));
-        if (!iFramePlaylist.codecs().isEmpty()) {
-            attributes.addQuoted(Tags.CODECS, String.join(",", iFramePlaylist.codecs()));
+        @Override
+        public void write(AttributeListBuilder attributes, IFrameVariant value) {
+            attributes.addQuoted(name(), value.uri());
         }
-        iFramePlaylist.resolution().ifPresent(value -> attributes.add(Tags.RESOLUTION, VariantParser.writeResolution(value)));
-        iFramePlaylist.hdcpLevel().ifPresent(value -> attributes.add(Tags.HDCP_LEVEL, value));
-        iFramePlaylist.video().ifPresent(value -> attributes.addQuoted(Tags.VIDEO, value));
-        iFramePlaylist.programId().ifPresent(value -> attributes.add(Tags.PROGRAM_ID, Integer.toString(value)));
-        iFramePlaylist.videoRange().ifPresent(value -> attributes.add(VIDEO_RANGE, value));
-    }
+    },
 
-    @Override
-    IFrameVariant.Builder newBuilder() {
-        return IFrameVariant.builder();
-    }
+    BANDWIDTH {
+        @Override
+        public void read(IFrameVariant.Builder builder, String value) {
+            builder.bandwidth(Long.parseLong(value));
+        }
 
-    @Override
-    IFrameVariant build(IFrameVariant.Builder builder) {
-        return builder.build();
+        @Override
+        public void write(AttributeListBuilder attributes, IFrameVariant value) {
+            attributes.add(name(), String.valueOf(value.bandwidth()));
+        }
+    },
+
+    AVERAGE_BANDWIDTH {
+        @Override
+        public void read(IFrameVariant.Builder builder, String value) {
+            builder.averageBandwidth(Long.parseLong(value));
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, IFrameVariant value) {
+            value.averageBandwidth().ifPresent(v -> attributes.add(key(), String.valueOf(v)));
+        }
+    },
+
+    CODECS {
+        @Override
+        public void read(IFrameVariant.Builder builder, String value) {
+            builder.codecs(ParserUtils.split(value, ","));
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, IFrameVariant value) {
+            if (!value.codecs().isEmpty()) {
+                attributes.addQuoted(name(), String.join(",", value.codecs()));
+            }
+        }
+    },
+
+    RESOLUTION {
+        @Override
+        public void read(IFrameVariant.Builder builder, String value) throws PlaylistParserException {
+            builder.resolution(ParserUtils.parseResolution(value));
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, IFrameVariant value) {
+            value.resolution().ifPresent(v -> attributes.add(key(), ParserUtils.writeResolution(v)));
+        }
+    },
+
+    HDCP_LEVEL {
+        @Override
+        public void read(IFrameVariant.Builder builder, String value) {
+            builder.hdcpLevel(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, IFrameVariant value) {
+            value.hdcpLevel().ifPresent(v -> attributes.add(key(), v));
+        }
+    },
+
+    VIDEO {
+        @Override
+        public void read(IFrameVariant.Builder builder, String value) {
+            builder.video(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, IFrameVariant value) {
+            value.video().ifPresent(v -> attributes.addQuoted(name(), v));
+        }
+    },
+
+    PROGRAM_ID {
+        @Override
+        public void read(IFrameVariant.Builder builder, String value) {
+            builder.programId(Integer.parseInt(value));
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, IFrameVariant value) {
+            value.programId().ifPresent(v -> attributes.add(key(), Integer.toString(v)));
+        }
+    },
+
+    VIDEO_RANGE {
+        @Override
+        public void read(IFrameVariant.Builder builder, String value) {
+            builder.videoRange(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, IFrameVariant value) {
+            value.videoRange().ifPresent(v -> attributes.add(key(), v));
+        }
+    };
+
+    static TagParser<IFrameVariant> parser() {
+        return new DefaultTagParser<>(
+                Tags.EXT_X_I_FRAME_STREAM_INF,
+                IFrameParser.class,
+                builder -> builder.build(),
+                IFrameVariant::builder
+        );
     }
 }

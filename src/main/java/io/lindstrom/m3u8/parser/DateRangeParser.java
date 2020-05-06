@@ -4,93 +4,152 @@ import io.lindstrom.m3u8.model.DateRange;
 
 import java.time.OffsetDateTime;
 
-import static io.lindstrom.m3u8.parser.Tags.*;
+import static io.lindstrom.m3u8.parser.Tags.EXT_X_DATERANGE;
+import static io.lindstrom.m3u8.parser.Tags.YES;
 
-class DateRangeParser extends AbstractTagParser<DateRange, DateRange.Builder> {
-    DateRangeParser() {
-        super(EXT_X_DATERANGE);
-    }
+enum DateRangeParser implements AttributeParser<DateRange, DateRange.Builder> {
 
-    @Override
-    void onAttribute(String attribute, String value, DateRange.Builder builder) throws PlaylistParserException {
-        switch (attribute) {
-            case ID:
-                builder.id(value);
-                break;
-
-            case CLASS:
-                builder.classAttribute(value);
-                break;
-
-            case START_DATE:
-                builder.startDate(OffsetDateTime.parse(value, MediaPlaylistParser.FORMATTER));
-                break;
-
-            case END_DATE:
-                builder.endDate(OffsetDateTime.parse(value, MediaPlaylistParser.FORMATTER));
-                break;
-
-            case DURATION:
-                builder.duration(Double.parseDouble(value));
-                break;
-
-            case PLANNED_DURATION:
-                builder.plannedDuration(Double.parseDouble(value));
-                break;
-
-            case SCTE35_CMD:
-                builder.scte35Cmd(value);
-                break;
-
-            case SCTE35_OUT:
-                builder.scte35Out(value);
-                break;
-
-            case SCTE35_IN:
-                builder.scte35In(value);
-                break;
-
-            case END_ON_NEXT:
-                builder.endOnNext(ParserUtils.yesOrNo(value));
-                break;
-
-            default:
-                if (attribute.startsWith("X-")) {
-                    builder.putClientAttributes(attribute, value);
-                } else {
-                    throw new PlaylistParserException("Unknown attribute " + attribute);
-                }
+    ID {
+        @Override
+        public void read(DateRange.Builder builder, String value) {
+            builder.id(value);
         }
-    }
 
-    @Override
-    void write(DateRange dateRange, AttributeListBuilder attributes) {
-        attributes.addQuoted(ID, dateRange.id());
-        dateRange.classAttribute().ifPresent(v -> attributes.addQuoted(CLASS, v));
-        attributes.addQuoted(START_DATE, dateRange.startDate().toString());
-        dateRange.endDate().ifPresent(v -> attributes.addQuoted(END_DATE, v.toString()));
-        dateRange.duration().ifPresent(v -> attributes.add(DURATION, Double.toString(v)));
-        dateRange.plannedDuration().ifPresent(v -> attributes.add(PLANNED_DURATION, Double.toString(v)));
-
-        // TODO: support client attribute types (quoted-string, hexadecimal-sequence & decimal-floating-point)
-        dateRange.clientAttributes().forEach(attributes::addQuoted);
-
-        dateRange.scte35Cmd().ifPresent(v -> attributes.add(SCTE35_CMD, v));
-        dateRange.scte35Out().ifPresent(v -> attributes.add(SCTE35_OUT, v));
-        dateRange.scte35In().ifPresent(v -> attributes.add(SCTE35_IN, v));
-
-        if (dateRange.endOnNext()) {
-            attributes.add(END_ON_NEXT, YES);
+        @Override
+        public void write(AttributeListBuilder attributes, DateRange value) {
+            attributes.addQuoted(name(), value.id());
         }
-    }
+    },
 
-    @Override
-    DateRange.Builder newBuilder() {
-        return DateRange.builder();
-    }
+    CLASS {
+        @Override
+        public void read(DateRange.Builder builder, String value) {
+            builder.classAttribute(value);
+        }
 
-    @Override
-    DateRange build(DateRange.Builder builder) {
-        return builder.build();
+        @Override
+        public void write(AttributeListBuilder attributes, DateRange value) {
+            value.classAttribute().ifPresent(v -> attributes.addQuoted(name(), v));
+        }
+    },
+
+    START_DATE {
+        @Override
+        public void read(DateRange.Builder builder, String value) {
+            builder.startDate(OffsetDateTime.parse(value, MediaPlaylistParser.FORMATTER));
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, DateRange value) {
+            attributes.addQuoted(key(), value.startDate().toString());
+        }
+    },
+
+    END_DATE {
+        @Override
+        public void read(DateRange.Builder builder, String value) {
+            builder.endDate(OffsetDateTime.parse(value, MediaPlaylistParser.FORMATTER));
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, DateRange value) {
+            value.endDate().ifPresent(v -> attributes.addQuoted(key(), v.toString()));
+        }
+    },
+
+    DURATION {
+        @Override
+        public void read(DateRange.Builder builder, String value) {
+            builder.duration(Double.parseDouble(value));
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, DateRange value) {
+            value.duration().ifPresent(v -> attributes.add(name(), Double.toString(v)));
+        }
+    },
+
+    PLANNED_DURATION {
+        @Override
+        public void read(DateRange.Builder builder, String value) {
+            builder.plannedDuration(Double.parseDouble(value));
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, DateRange value) {
+            value.plannedDuration().ifPresent(v -> attributes.add(key(), Double.toString(v)));
+        }
+    },
+
+    SCTE35_CMD {
+        @Override
+        public void read(DateRange.Builder builder, String value) {
+            builder.scte35Cmd(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, DateRange value) {
+            value.scte35Cmd().ifPresent(v -> attributes.add(key(), v));
+        }
+    },
+
+    SCTE35_OUT {
+        @Override
+        public void read(DateRange.Builder builder, String value) throws PlaylistParserException {
+            builder.scte35Out(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, DateRange value) {
+            value.scte35Out().ifPresent(v -> attributes.add(key(), v));
+        }
+    },
+
+    SCTE35_IN {
+        @Override
+        public void read(DateRange.Builder builder, String value) {
+            builder.scte35In(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, DateRange value) {
+            value.scte35In().ifPresent(v -> attributes.add(key(), v));
+        }
+    },
+
+    END_ON_NEXT {
+        @Override
+        public void read(DateRange.Builder builder, String value) throws PlaylistParserException {
+            builder.endOnNext(ParserUtils.yesOrNo(value));
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, DateRange value) {
+            if (value.endOnNext()) {
+                attributes.add(key(), YES);
+            }
+        }
+    },
+
+    CUSTOM {
+        @Override
+        public void read(DateRange.Builder builder, String value) {
+            throw new IllegalStateException();
+        }
+
+        @Override
+        public void read(DateRange.Builder builder, String key, String value) {
+            builder.putClientAttributes(key, value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, DateRange value) {
+            // TODO: support client attribute types (quoted-string, hexadecimal-sequence & decimal-floating-point)
+            value.clientAttributes().forEach(attributes::addQuoted);
+        }
+    };
+
+    static TagParser<DateRange> parser() {
+        return new DefaultTagParser<>(EXT_X_DATERANGE, DateRangeParser.class, builder -> builder.build(), DateRange::builder);
     }
 }

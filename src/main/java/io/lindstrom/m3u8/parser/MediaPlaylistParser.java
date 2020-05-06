@@ -42,9 +42,9 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
             .toFormatter();
 
     private final ByteRangeParser byteRangeParser = new ByteRangeParser(); // TODO?
-    private final TagParser<SegmentMap> segmentMapParser = new SegmentMapParser(byteRangeParser);
-    private final TagParser<SegmentKey> segmentKeyParser = new SegmentKeyParser();
-    private final TagParser<DateRange> dateRangeParser = new DateRangeParser();
+    private final TagParser<SegmentMap> segmentMapParser = SegmentMapParser.parser();
+    private final TagParser<SegmentKey> segmentKeyParser = SegmentKeyParser.parser(EXT_X_KEY);
+    private final TagParser<DateRange> dateRangeParser = DateRangeParser.parser();
 
     @Override
     Builder newBuilder() {

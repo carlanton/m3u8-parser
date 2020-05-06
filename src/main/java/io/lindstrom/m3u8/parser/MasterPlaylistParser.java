@@ -31,11 +31,12 @@ import static io.lindstrom.m3u8.parser.Tags.*;
  * This implementation is reusable and thread safe.
  */
 public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist, MasterPlaylist.Builder> {
-    private final TagParser<Variant> variantParser = new VariantParser();
-    private final TagParser<IFrameVariant> iFrameParser = new IFrameParser();
-    private final TagParser<AlternativeRendition> alternativeRenditionParser = new AlternativeRenditionParser();
-    private final TagParser<SessionData> sessionDataParser = new SessionDataParser();
-    private final TagParser<SegmentKey> sessionKeyParser = new SegmentKeyParser(EXT_X_SESSION_KEY);
+    private final TagParser<Variant> variantParser = VariantParser.parser();
+    private final TagParser<IFrameVariant> iFrameParser = IFrameParser.parser();
+    private final TagParser<AlternativeRendition> alternativeRenditionParser = AlternativeRenditionParser.parser();
+    private final TagParser<SessionData> sessionDataParser = SessionDataParser.parser();
+    private final TagParser<SegmentKey> sessionKeyParser = SegmentKeyParser.parser(EXT_X_SESSION_KEY);
+
 
     @Override
     MasterPlaylist.Builder newBuilder() {

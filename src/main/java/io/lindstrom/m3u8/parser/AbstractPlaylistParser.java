@@ -1,6 +1,7 @@
 package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.Playlist;
+import io.lindstrom.m3u8.model.StartTimeOffset;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -14,7 +15,7 @@ import static io.lindstrom.m3u8.parser.Tags.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public abstract class AbstractPlaylistParser<T extends Playlist, B> {
-    final StartTimeOffsetParser startTimeOffsetParser = new StartTimeOffsetParser();
+    final TagParser<StartTimeOffset> startTimeOffsetParser = StartTimeOffsetParser.parser();
 
     public T readPlaylist(InputStream inputStream) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, UTF_8))) {

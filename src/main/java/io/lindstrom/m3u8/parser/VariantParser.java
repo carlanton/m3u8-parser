@@ -1,121 +1,183 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.Resolution;
 import io.lindstrom.m3u8.model.Variant;
 
-import static io.lindstrom.m3u8.parser.Tags.*;
-
-class VariantParser extends AbstractTagParser<Variant, Variant.Builder> {
-    private static final String NONE = "NONE";
-
-    VariantParser() {
-        super(EXT_X_STREAM_INF);
-    }
-
-    @Override
-    void onAttribute(String attribute, String value, Variant.Builder builder) throws PlaylistParserException {
-        switch (attribute) {
-            case BANDWIDTH:
-                builder.bandwidth(Long.parseLong(value));
-                break;
-            case AVERAGE_BANDWIDTH:
-                builder.averageBandwidth(Long.parseLong(value));
-                break;
-            case CODECS:
-                builder.codecs(ParserUtils.split(value, ","));
-                break;
-            case RESOLUTION:
-                builder.resolution(parseResolution(value));
-                break;
-            case FRAME_RATE:
-                builder.frameRate(Double.parseDouble(value));
-                break;
-            case HDCP_LEVEL:
-                builder.hdcpLevel(value);
-                break;
-            case AUDIO:
-                builder.audio(value);
-                break;
-            case VIDEO:
-                builder.video(value);
-                break;
-            case SUBTITLES:
-                builder.subtitles(value);
-                break;
-            case CLOSED_CAPTIONS:
-                if (value.equals(NONE)) {
-                    builder.closedCaptionsNone(true);
-                } else {
-                    builder.closedCaptions(value);
-                }
-                break;
-            case PROGRAM_ID:
-                builder.programId(Integer.parseInt(value));
-                break;
-            case VIDEO_RANGE:
-                builder.videoRange(value);
-                break;
-            default:
-                throw new PlaylistParserException("Unknown attribute " + attribute);
-        }
-    }
-
-    @Override
-    void onUri(String uri, Variant.Builder builder) {
-        builder.uri(uri);
-    }
-
-    @Override
-    void writeUri(Variant value, StringBuilder stringBuilder) {
-        stringBuilder.append(value.uri()).append("\n");
-    }
-
-    @Override
-    Variant.Builder newBuilder() {
-        return Variant.builder();
-    }
-
-    @Override
-    Variant build(Variant.Builder builder) {
-        return builder.build();
-    }
-
-    @Override
-    void write(Variant variant, AttributeListBuilder attributes) {
-        attributes.add(Tags.BANDWIDTH, String.valueOf(variant.bandwidth()));
-        variant.averageBandwidth().ifPresent(value -> attributes.add(Tags.AVERAGE_BANDWIDTH, String.valueOf(value)));
-        if (!variant.codecs().isEmpty()) {
-            attributes.addQuoted(Tags.CODECS, String.join(",", variant.codecs()));
-        }
-        variant.resolution().ifPresent(value -> attributes.add(Tags.RESOLUTION, writeResolution(value)));
-        variant.frameRate().ifPresent(value -> attributes.add(Tags.FRAME_RATE, Double.toString(value)));
-        variant.hdcpLevel().ifPresent(value -> attributes.add(Tags.HDCP_LEVEL, value));
-        variant.audio().ifPresent(value -> attributes.addQuoted(Tags.AUDIO, value));
-        variant.video().ifPresent(value -> attributes.addQuoted(Tags.VIDEO, value));
-        variant.subtitles().ifPresent(value -> attributes.addQuoted(Tags.SUBTITLES, value));
-
-        if (variant.closedCaptionsNone().orElse(false)) {
-            attributes.add(Tags.CLOSED_CAPTIONS, NONE);
-        } else {
-            variant.closedCaptions().ifPresent(value -> attributes.addQuoted(Tags.CLOSED_CAPTIONS, value));
+enum VariantParser implements AttributeParser<Variant, Variant.Builder> {
+    BANDWIDTH {
+        @Override
+        public void read(Variant.Builder builder, String value) {
+            builder.bandwidth(Long.parseLong(value));
         }
 
-        variant.programId().ifPresent(value -> attributes.add(Tags.PROGRAM_ID, Integer.toString(value)));
-        variant.videoRange().ifPresent(value -> attributes.add(VIDEO_RANGE, value));
-    }
-
-    static Resolution parseResolution(String string) throws PlaylistParserException {
-        String[] fields = string.split("x");
-        Resolution resolution;
-        try {
-            resolution = Resolution.of(Integer.parseInt(fields[0]), Integer.parseInt(fields[1]));
-        } catch (NumberFormatException | IndexOutOfBoundsException e) {
-            throw new PlaylistParserException("Invalid resolution: " + string);
+        @Override
+        public void write(AttributeListBuilder attributes, Variant value) {
+            attributes.add(name(), String.valueOf(value.bandwidth()));
         }
-        return resolution;
-    }
+    },
 
-    static String writeResolution(Resolution resolution) {
-        return resolution.width() + "x" + resolution.height();
+    AVERAGE_BANDWIDTH {
+        @Override
+        public void read(Variant.Builder builder, String value) {
+            builder.averageBandwidth(Long.parseLong(value));
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, Variant value) {
+            value.averageBandwidth().ifPresent(v -> attributes.add(key(), String.valueOf(v)));
+        }
+    },
+
+    CODECS {
+        @Override
+        public void read(Variant.Builder builder, String value) {
+            builder.codecs(ParserUtils.split(value, ","));
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, Variant value) {
+            if (!value.codecs().isEmpty()) {
+                attributes.addQuoted(name(), String.join(",", value.codecs()));
+            }
+        }
+    },
+
+    RESOLUTION {
+        @Override
+        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+            builder.resolution(ParserUtils.parseResolution(value));
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, Variant value) {
+            value.resolution().ifPresent(v -> attributes.add(name(), ParserUtils.writeResolution(v)));
+        }
+    },
+
+    FRAME_RATE {
+        @Override
+        public void read(Variant.Builder builder, String value) {
+            builder.frameRate(Double.parseDouble(value));
+
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, Variant value) {
+            value.frameRate().ifPresent(v -> attributes.add(key(), Double.toString(v)));
+        }
+    },
+
+    HDCP_LEVEL {
+        @Override
+        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+            builder.hdcpLevel(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, Variant value) {
+            value.hdcpLevel().ifPresent(v -> attributes.add(key(), v));
+        }
+    },
+
+    AUDIO {
+        @Override
+        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+            builder.audio(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, Variant value) {
+            value.audio().ifPresent(v -> attributes.addQuoted(name(), v));
+        }
+    },
+
+    VIDEO {
+        @Override
+        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+            builder.video(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, Variant value) {
+            value.video().ifPresent(v -> attributes.addQuoted(name(), v));
+        }
+    },
+
+    SUBTITLES {
+        @Override
+        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+            builder.subtitles(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, Variant value) {
+            value.subtitles().ifPresent(v -> attributes.addQuoted(name(), v));
+        }
+    },
+
+    CLOSED_CAPTIONS {
+        private static final String NONE = "NONE";
+
+        @Override
+        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+            if (value.equals(NONE)) {
+                builder.closedCaptionsNone(true);
+            } else {
+                builder.closedCaptions(value);
+            }
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, Variant value) {
+            if (value.closedCaptionsNone().orElse(false)) {
+                attributes.add(key(), NONE);
+            } else {
+                value.closedCaptions().ifPresent(v -> attributes.addQuoted(key(), v));
+            }
+        }
+    },
+
+    PROGRAM_ID {
+        @Override
+        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+            builder.programId(Integer.parseInt(value));
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, Variant value) {
+            value.programId().ifPresent(v -> attributes.add(key(), Integer.toString(v)));
+        }
+    },
+
+    VIDEO_RANGE {
+        @Override
+        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+            builder.videoRange(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, Variant value) {
+            value.videoRange().ifPresent(v -> attributes.add(key(), v));
+        }
+    },
+
+    URI {
+        @Override
+        public void read(Variant.Builder builder, String value) {
+            builder.uri(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, Variant value) {
+            attributes.addRaw("\n" + value.uri());
+        }
+    };
+
+    static TagParser<Variant> parser() {
+        return new DefaultTagParser<>(
+                Tags.EXT_X_STREAM_INF,
+                VariantParser.class,
+                builder -> builder.build(),
+                Variant::builder
+        );
     }
 }

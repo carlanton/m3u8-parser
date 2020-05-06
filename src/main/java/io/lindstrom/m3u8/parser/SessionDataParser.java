@@ -2,52 +2,62 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.SessionData;
 
-import static io.lindstrom.m3u8.parser.Tags.*;
+import static io.lindstrom.m3u8.parser.Tags.EXT_X_SESSION_DATA;
 
-public final class SessionDataParser extends AbstractTagParser<SessionData, SessionData.Builder> {
-    SessionDataParser() {
-        super(EXT_X_SESSION_DATA);
-    }
-
-    @Override
-    void onAttribute(String attribute, String value, SessionData.Builder builder) throws PlaylistParserException {
-        switch (attribute) {
-            case DATA_ID:
-                builder.dataId(value);
-                break;
-
-            case VALUE:
-                builder.value(value);
-                break;
-
-            case URI:
-                builder.uri(value);
-                break;
-
-            case LANGUAGE:
-                builder.language(value);
-                break;
-
-            default:
-                throw new PlaylistParserException("Unknown key " + attribute);
+enum SessionDataParser implements AttributeParser<SessionData, SessionData.Builder> {
+    DATA_ID {
+        @Override
+        public void read(SessionData.Builder builder, String value) {
+            builder.dataId(value);
         }
-    }
 
-    @Override
-    void write(SessionData sessionData, AttributeListBuilder attributes) {
-        attributes.addQuoted(DATA_ID, sessionData.dataId());
-        sessionData.value().ifPresent(v -> attributes.addQuoted(VALUE, v));
-        sessionData.uri().ifPresent(v -> attributes.addQuoted(URI, v));
-        sessionData.language().ifPresent(v -> attributes.addQuoted(LANGUAGE, v));
-    }
+        @Override
+        public void write(AttributeListBuilder attributes, SessionData value) {
+            attributes.addQuoted(key(), value.dataId());
+        }
+    },
 
-    @Override
-    SessionData.Builder newBuilder() {
-        return SessionData.builder();
-    }
+    VALUE {
+        @Override
+        public void read(SessionData.Builder builder, String value) {
+            builder.value(value);
+        }
 
-    @Override
-    SessionData build(SessionData.Builder builder) {
-        return builder.build();
+        @Override
+        public void write(AttributeListBuilder attributes, SessionData value) {
+            value.value().ifPresent(v -> attributes.addQuoted(name(), v));
+        }
+    },
+
+    URI {
+        @Override
+        public void read(SessionData.Builder builder, String value) {
+            builder.uri(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, SessionData value) {
+            value.uri().ifPresent(v -> attributes.addQuoted(name(), v));
+        }
+    },
+
+    LANGUAGE {
+        @Override
+        public void read(SessionData.Builder builder, String value) {
+            builder.language(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, SessionData value) {
+            value.language().ifPresent(v -> attributes.addQuoted(name(), v));
+        }
+    };
+
+    static TagParser<SessionData> parser() {
+        return new DefaultTagParser<>(
+                EXT_X_SESSION_DATA, SessionDataParser.class,
+                builder -> builder.build(),
+                SessionData::builder
+        );
     }
 }

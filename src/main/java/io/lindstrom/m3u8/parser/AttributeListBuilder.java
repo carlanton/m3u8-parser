@@ -1,13 +1,10 @@
 package io.lindstrom.m3u8.parser;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static io.lindstrom.m3u8.parser.Tags.NO;
 import static io.lindstrom.m3u8.parser.Tags.YES;
 
 class AttributeListBuilder {
-    private final List<String> attributes = new ArrayList<>();
+    private final StringBuilder stringBuilder = new StringBuilder();
 
     public void add(String key, Enum<?> value) {
         add(key, value.toString());
@@ -22,11 +19,18 @@ class AttributeListBuilder {
     }
 
     public void add(String key, String value) {
-        attributes.add(key + "=" + value);
+        if (stringBuilder.length() > 0) {
+            stringBuilder.append(",");
+        }
+        stringBuilder.append(key).append("=").append(value);
+    }
+
+    public void addRaw(String string) {
+        stringBuilder.append(string);
     }
 
     @Override
     public String toString() {
-        return String.join(",", attributes);
+        return stringBuilder.toString();
     }
 }

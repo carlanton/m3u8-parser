@@ -3,86 +3,165 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.AlternativeRendition;
 import io.lindstrom.m3u8.model.MediaType;
 
-import static io.lindstrom.m3u8.parser.Tags.*;
+import static io.lindstrom.m3u8.parser.Tags.EXT_X_MEDIA;
 
-class AlternativeRenditionParser extends AbstractTagParser<AlternativeRendition, AlternativeRendition.Builder> {
-    AlternativeRenditionParser() {
-        super(EXT_X_MEDIA);
-    }
-
-    @Override
-    void onAttribute(String attribute, String value, AlternativeRendition.Builder builder) throws PlaylistParserException {
-        switch (attribute) {
-            case TYPE:
-                builder.type(MediaType.parse(value));
-                break;
-            case URI:
-                builder.uri(value);
-                break;
-            case GROUP_ID:
-                builder.groupId(value);
-                break;
-            case LANGUAGE:
-                builder.language(value);
-                break;
-            case ASSOC_LANGUAGE:
-                builder.assocLanguage(value);
-                break;
-            case NAME:
-                builder.name(value);
-                break;
-            case DEFAULT:
-                builder.defaultRendition(ParserUtils.yesOrNo(value));
-                break;
-            case AUTOSELECT:
-                builder.autoSelect(ParserUtils.yesOrNo(value));
-                break;
-            case FORCED:
-                builder.forced(ParserUtils.yesOrNo(value));
-                break;
-            case INSTREAM_ID:
-                builder.inStreamId(value);
-                break;
-            case CHARACTERISTICS:
-                builder.characteristics(ParserUtils.split(value, ","));
-                break;
-            case CHANNELS:
-                builder.channels(ParserUtils.split(value, "/"));
-                break;
-            default:
-                throw new PlaylistParserException("Unknown key " + attribute);
-        }
-    }
-
-    @Override
-    void write(AlternativeRendition alternativeRendition, AttributeListBuilder attributes) {
-        attributes.add(Tags.TYPE, alternativeRendition.type());
-        alternativeRendition.uri().ifPresent(uri -> attributes.addQuoted(Tags.URI, uri));
-        attributes.addQuoted(Tags.GROUP_ID, alternativeRendition.groupId());
-        alternativeRendition.language().ifPresent(value -> attributes.addQuoted(Tags.LANGUAGE, value));
-        alternativeRendition.assocLanguage().ifPresent(value -> attributes.addQuoted(Tags.ASSOC_LANGUAGE, value));
-        attributes.addQuoted(Tags.NAME, alternativeRendition.name());
-        alternativeRendition.defaultRendition().ifPresent(value -> attributes.add(Tags.DEFAULT, value));
-        alternativeRendition.autoSelect().ifPresent(value -> attributes.add(Tags.AUTOSELECT, value));
-        alternativeRendition.forced().ifPresent(value -> attributes.add(Tags.FORCED, value));
-        alternativeRendition.inStreamId().ifPresent(value -> attributes.addQuoted(Tags.INSTREAM_ID, value));
-
-        if (!alternativeRendition.characteristics().isEmpty()) {
-            attributes.addQuoted(Tags.CHARACTERISTICS, String.join(",", alternativeRendition.characteristics()));
+enum AlternativeRenditionParser implements AttributeParser<AlternativeRendition, AlternativeRendition.Builder> {
+    TYPE {
+        @Override
+        public void read(AlternativeRendition.Builder builder, String value) {
+            builder.type(MediaType.parse(value));
         }
 
-        if (!alternativeRendition.channels().isEmpty()) {
-            attributes.addQuoted(Tags.CHANNELS, String.join("/", alternativeRendition.channels()));
+        @Override
+        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
+            attributes.add(key(), value.type());
         }
-    }
+    },
 
-    @Override
-    AlternativeRendition.Builder newBuilder() {
-        return AlternativeRendition.builder();
-    }
+    URI {
+        @Override
+        public void read(AlternativeRendition.Builder builder, String value) {
+            builder.uri(value);
+        }
 
-    @Override
-    AlternativeRendition build(AlternativeRendition.Builder builder) {
-        return builder.build();
+        @Override
+        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
+            value.uri().ifPresent(uri -> attributes.addQuoted(key(), uri));
+        }
+    },
+
+    GROUP_ID {
+        @Override
+        public void read(AlternativeRendition.Builder builder, String value) {
+            builder.groupId(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
+            attributes.addQuoted(key(), value.groupId());
+        }
+    },
+
+    LANGUAGE {
+        @Override
+        public void read(AlternativeRendition.Builder builder, String value) {
+            builder.language(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
+            value.language().ifPresent(v -> attributes.addQuoted(key(), v));
+        }
+    },
+
+    ASSOC_LANGUAGE {
+        @Override
+        public void read(AlternativeRendition.Builder builder, String value) {
+            builder.assocLanguage(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
+            value.assocLanguage().ifPresent(v -> attributes.addQuoted(key(), v));
+        }
+    },
+
+    NAME {
+        @Override
+        public void read(AlternativeRendition.Builder builder, String value) {
+            builder.name(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
+            attributes.addQuoted(name(), value.name());
+        }
+    },
+
+    DEFAULT {
+        @Override
+        public void read(AlternativeRendition.Builder builder, String value) throws PlaylistParserException {
+            builder.defaultRendition(ParserUtils.yesOrNo(value));
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
+            value.defaultRendition().ifPresent(v -> attributes.add(name(), v));
+        }
+    },
+
+    AUTOSELECT {
+        @Override
+        public void read(AlternativeRendition.Builder builder, String value) throws PlaylistParserException {
+            builder.autoSelect(ParserUtils.yesOrNo(value));
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
+            value.autoSelect().ifPresent(v -> attributes.add(name(), v));
+        }
+    },
+
+    FORCED {
+        @Override
+        public void read(AlternativeRendition.Builder builder, String value) throws PlaylistParserException {
+            builder.forced(ParserUtils.yesOrNo(value));
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
+            value.forced().ifPresent(v -> attributes.add(name(), v));
+
+        }
+    },
+
+    INSTREAM_ID {
+        @Override
+        public void read(AlternativeRendition.Builder builder, String value) {
+            builder.inStreamId(value);
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
+            value.inStreamId().ifPresent(v -> attributes.addQuoted(key(), v));
+
+        }
+    },
+
+    CHARACTERISTICS {
+        @Override
+        public void read(AlternativeRendition.Builder builder, String value) {
+            builder.characteristics(ParserUtils.split(value, ","));
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
+            if (!value.characteristics().isEmpty()) {
+                attributes.addQuoted(name(), String.join(",", value.characteristics()));
+            }
+        }
+    },
+
+    CHANNELS {
+        @Override
+        public void read(AlternativeRendition.Builder builder, String value) {
+            builder.channels(ParserUtils.split(value, "/"));
+        }
+
+        @Override
+        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
+            if (!value.channels().isEmpty()) {
+                attributes.addQuoted(name(), String.join("/", value.channels()));
+            }
+        }
+    };
+
+    static TagParser<AlternativeRendition> parser() {
+        return new DefaultTagParser<>(
+                EXT_X_MEDIA,
+                AlternativeRenditionParser.class,
+                builder -> builder.build(),
+                AlternativeRendition::builder
+        );
     }
 }

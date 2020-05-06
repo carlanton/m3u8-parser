@@ -10,7 +10,7 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 
 public class VariantParserTest {
-    private final VariantParser parser = new VariantParser();
+    private final TagParser<Variant> parser = VariantParser.parser();
     private final String attributes = "BANDWIDTH=123456789,AVERAGE-BANDWIDTH=12345678,CODECS=\"a,b,c\",RESOLUTION=1024x768,FRAME-RATE=50.0,HDCP-LEVEL=0,AUDIO=\"audio\",VIDEO=\"video\",SUBTITLES=\"subtitles\",CLOSED-CAPTIONS=\"cc\",VIDEO-RANGE=SDR";
     private final Variant variant = Variant.builder()
             .uri("uri")
@@ -54,21 +54,21 @@ public class VariantParserTest {
 
     @Test(expected = PlaylistParserException.class)
     public void invalidResolution() throws Exception {
-        VariantParser.parseResolution("3");
+        ParserUtils.parseResolution("3");
     }
 
     @Test(expected = PlaylistParserException.class)
     public void invalidResolution2() throws Exception {
-        VariantParser.parseResolution("axb");
+        ParserUtils.parseResolution("axb");
     }
 
     @Test
     public void writeResolution() throws Exception {
-        assertEquals("1024x768", VariantParser.writeResolution(Resolution.of(1024, 768)));
+        assertEquals("1024x768", ParserUtils.writeResolution(Resolution.of(1024, 768)));
     }
 
     @Test
     public void readResolution() throws Exception {
-        assertEquals(Resolution.of(1024, 768), VariantParser.parseResolution("1024x768"));
+        assertEquals(Resolution.of(1024, 768), ParserUtils.parseResolution("1024x768"));
     }
 }

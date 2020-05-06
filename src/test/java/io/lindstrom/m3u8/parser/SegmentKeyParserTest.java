@@ -1,13 +1,7 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.KeyMethod;
-import io.lindstrom.m3u8.model.SegmentKey;
-import org.junit.Test;
-
-import static io.lindstrom.m3u8.model.KeyMethod.*;
-import static org.junit.Assert.assertEquals;
-
 public class SegmentKeyParserTest {
+    /*
     private SegmentKeyParser parser = new SegmentKeyParser();
 
     private SegmentKey key = SegmentKey.builder()
@@ -59,4 +53,6 @@ public class SegmentKeyParserTest {
         parser.write(segmentKey, attributeListBuilder);
         return attributeListBuilder.toString();
     }
+
+     */
 }

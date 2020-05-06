@@ -1,5 +1,7 @@
 package io.lindstrom.m3u8.parser;
 
+import io.lindstrom.m3u8.model.Resolution;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,5 +22,20 @@ class ParserUtils {
             default:
                 throw new PlaylistParserException("Expected YES or NO, got " + value);
         }
+    }
+
+    static Resolution parseResolution(String string) throws PlaylistParserException {
+        String[] fields = string.split("x");
+        Resolution resolution;
+        try {
+            resolution = Resolution.of(Integer.parseInt(fields[0]), Integer.parseInt(fields[1]));
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+            throw new PlaylistParserException("Invalid resolution: " + string);
+        }
+        return resolution;
+    }
+
+    static String writeResolution(Resolution resolution) {
+        return resolution.width() + "x" + resolution.height();
     }
 }

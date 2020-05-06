@@ -4,42 +4,39 @@ import io.lindstrom.m3u8.model.StartTimeOffset;
 
 import static io.lindstrom.m3u8.parser.Tags.*;
 
-class StartTimeOffsetParser extends AbstractTagParser<StartTimeOffset, StartTimeOffset.Builder> {
-    StartTimeOffsetParser() {
-        super(EXT_X_START);
-    }
-
-    @Override
-    void onAttribute(String attribute, String value, StartTimeOffset.Builder builder) throws PlaylistParserException {
-        switch (attribute) {
-            case TIME_OFFSET:
-                builder.timeOffset(Double.parseDouble(value));
-                break;
-
-            case PRECISE:
-                builder.precise(ParserUtils.yesOrNo(value));
-                break;
-
-            default:
-                throw new PlaylistParserException("Unknown attribute " + attribute);
+enum StartTimeOffsetParser implements AttributeParser<StartTimeOffset, StartTimeOffset.Builder> {
+    TIME_OFFSET {
+        @Override
+        public void read(StartTimeOffset.Builder builder, String value) {
+            builder.timeOffset(Double.parseDouble(value));
         }
-    }
 
-    @Override
-    void write(StartTimeOffset startTimeOffset, AttributeListBuilder attributes) {
-        attributes.add(TIME_OFFSET, String.valueOf(startTimeOffset.timeOffset()));
-        if (startTimeOffset.precise()) {
-            attributes.add(PRECISE, YES);
+        @Override
+        public void write(AttributeListBuilder attributes, StartTimeOffset value) {
+            attributes.add(key(), String.valueOf(value.timeOffset()));
         }
-    }
+    },
 
-    @Override
-    StartTimeOffset.Builder newBuilder() {
-        return StartTimeOffset.builder();
-    }
+    PRECISE {
+        @Override
+        public void read(StartTimeOffset.Builder builder, String value) throws PlaylistParserException {
+            builder.precise(ParserUtils.yesOrNo(value));
+        }
 
-    @Override
-    StartTimeOffset build(StartTimeOffset.Builder builder) {
-        return builder.build();
+        @Override
+        public void write(AttributeListBuilder attributes, StartTimeOffset value) {
+            if (value.precise()) {
+                attributes.add(name(), YES);
+            }
+        }
+    };
+
+    static TagParser<StartTimeOffset> parser() {
+        return new DefaultTagParser<>(
+                EXT_X_START,
+                StartTimeOffsetParser.class,
+                builder -> builder.build(),
+                StartTimeOffset::builder
+        );
     }
 }
