@@ -2,7 +2,7 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.SessionData;
 
-enum SessionDataParser implements AttributeMapper<SessionData, SessionData.Builder> {
+enum SessionDataParser implements Attribute<SessionData, SessionData.Builder> {
     DATA_ID {
         @Override
         public void read(SessionData.Builder builder, String value) {

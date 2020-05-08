@@ -1,6 +1,6 @@
 package io.lindstrom.m3u8.parser;
 
-public interface AttributeMapper<T, B> {
+public interface Attribute<T, B> {
     void read(B builder, String value) throws PlaylistParserException;
     void write(AttributeListBuilder attributes, T value);
     String name();

@@ -3,7 +3,7 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.KeyMethod;
 import io.lindstrom.m3u8.model.SegmentKey;
 
-public enum SegmentKeyParser implements AttributeMapper<SegmentKey, SegmentKey.Builder> {
+public enum SegmentKeyParser implements Attribute<SegmentKey, SegmentKey.Builder> {
     METHOD {
         @Override
         public void read(SegmentKey.Builder builder, String value) {

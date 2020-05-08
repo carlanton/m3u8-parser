@@ -2,7 +2,7 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.IFrameVariant;
 
-enum IFrameParser implements AttributeMapper<IFrameVariant, IFrameVariant.Builder> {
+enum IFrameParser implements Attribute<IFrameVariant, IFrameVariant.Builder> {
     URI {
         @Override
         public void read(IFrameVariant.Builder builder, String value) {

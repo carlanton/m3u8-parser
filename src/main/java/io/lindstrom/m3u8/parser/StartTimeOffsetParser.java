@@ -4,7 +4,7 @@ import io.lindstrom.m3u8.model.StartTimeOffset;
 
 import static io.lindstrom.m3u8.parser.Tags.*;
 
-enum StartTimeOffsetParser implements AttributeMapper<StartTimeOffset, StartTimeOffset.Builder> {
+enum StartTimeOffsetParser implements Attribute<StartTimeOffset, StartTimeOffset.Builder> {
     TIME_OFFSET {
         @Override
         public void read(StartTimeOffset.Builder builder, String value) {

@@ -2,7 +2,7 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.Variant;
 
-enum VariantParser implements AttributeMapper<Variant, Variant.Builder> {
+enum VariantParser implements Attribute<Variant, Variant.Builder> {
     BANDWIDTH {
         @Override
         public void read(Variant.Builder builder, String value) {

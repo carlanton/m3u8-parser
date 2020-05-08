@@ -105,11 +105,11 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
 
     abstract B newBuilder();
 
-     abstract void onTag(B builder, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException;
+    abstract void onTag(B builder, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException;
 
-     void onURI(B builder, String uri) throws PlaylistParserException {
-         throw new PlaylistParserException("Unexpected URI in playlist: " + uri);
-     }
+    void onURI(B builder, String uri) throws PlaylistParserException {
+        throw new PlaylistParserException("Unexpected URI in playlist: " + uri);
+    }
 
     abstract T build(B builder);
 
@@ -118,16 +118,10 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
     public String writePlaylistAsString(T playlist) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(EXTM3U).append('\n');
-        playlist.version().ifPresent(version -> stringBuilder.append(EXT_X_VERSION)
-                .append(":").append(version).append('\n'));
-        if (playlist.independentSegments()) {
-            stringBuilder.append(EXT_X_INDEPENDENT_SEGMENTS).append('\n');
-        }
 
         TextBuilder textBuilder = new TextBuilder(stringBuilder);
 
         playlist.startTimeOffset().ifPresent(value -> textBuilder.add(EXT_X_START, value, StartTimeOffsetParser.class));
-
 
         write(playlist, textBuilder);
         return stringBuilder.toString();
@@ -142,9 +136,9 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
     }
 
 
-    static <X, Y, Z extends Enum<Z> & AttributeMapper<X, Y>> Y readAttributes(Class<Z> mapperClass,
-                                                                              String attributes,
-                                                                              Y builder) throws PlaylistParserException {
+    static <X, Y, Z extends Enum<Z> & Attribute<X, Y>> Y readAttributes(Class<Z> mapperClass,
+                                                                        String attributes,
+                                                                        Y builder) throws PlaylistParserException {
         Matcher matcher = ATTRIBUTE_LIST_PATTERN.matcher(attributes);
 
         while (matcher.find()) {
@@ -153,7 +147,7 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
 
             try {
                 if (attribute.startsWith("X-")) {
-                    Enum.valueOf(mapperClass, "CUSTOM").read(builder, attribute, value);
+                    Enum.valueOf(mapperClass, "CLIENT_ATTRIBUTE").read(builder, attribute, value);
                 } else {
                     Enum.valueOf(mapperClass, attribute.replace("-", "_")).read(builder, value);
                 }

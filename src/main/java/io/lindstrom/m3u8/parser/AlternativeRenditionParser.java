@@ -3,7 +3,7 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.AlternativeRendition;
 import io.lindstrom.m3u8.model.MediaType;
 
-enum AlternativeRenditionParser implements AttributeMapper<AlternativeRendition, AlternativeRendition.Builder> {
+enum AlternativeRenditionParser implements Attribute<AlternativeRendition, AlternativeRendition.Builder> {
     TYPE {
         @Override
         public void read(AlternativeRendition.Builder builder, String value) {

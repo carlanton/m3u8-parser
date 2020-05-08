@@ -6,7 +6,7 @@ import java.time.OffsetDateTime;
 
 import static io.lindstrom.m3u8.parser.Tags.YES;
 
-enum DateRangeParser implements AttributeMapper<DateRange, DateRange.Builder> {
+enum DateRangeParser implements Attribute<DateRange, DateRange.Builder> {
     ID {
         @Override
         public void read(DateRange.Builder builder, String value) {
@@ -34,7 +34,7 @@ enum DateRangeParser implements AttributeMapper<DateRange, DateRange.Builder> {
     START_DATE {
         @Override
         public void read(DateRange.Builder builder, String value) {
-            builder.startDate(OffsetDateTime.parse(value, MediaPlaylistParser.FORMATTER));
+            builder.startDate(OffsetDateTime.parse(value, ParserUtils.FORMATTER));
         }
 
         @Override
@@ -46,7 +46,7 @@ enum DateRangeParser implements AttributeMapper<DateRange, DateRange.Builder> {
     END_DATE {
         @Override
         public void read(DateRange.Builder builder, String value) {
-            builder.endDate(OffsetDateTime.parse(value, MediaPlaylistParser.FORMATTER));
+            builder.endDate(OffsetDateTime.parse(value, ParserUtils.FORMATTER));
         }
 
         @Override
@@ -129,7 +129,7 @@ enum DateRangeParser implements AttributeMapper<DateRange, DateRange.Builder> {
         }
     },
 
-    CUSTOM {
+    CLIENT_ATTRIBUTE {
         @Override
         public void read(DateRange.Builder builder, String value) {
             throw new IllegalStateException();
