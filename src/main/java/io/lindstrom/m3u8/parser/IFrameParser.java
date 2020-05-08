@@ -2,7 +2,7 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.IFrameVariant;
 
-enum IFrameParser implements AttributeParser<IFrameVariant, IFrameVariant.Builder> {
+enum IFrameParser implements AttributeMapper<IFrameVariant, IFrameVariant.Builder> {
     URI {
         @Override
         public void read(IFrameVariant.Builder builder, String value) {
@@ -111,14 +111,5 @@ enum IFrameParser implements AttributeParser<IFrameVariant, IFrameVariant.Builde
         public void write(AttributeListBuilder attributes, IFrameVariant value) {
             value.videoRange().ifPresent(v -> attributes.add(key(), v));
         }
-    };
-
-    static TagParser<IFrameVariant> parser() {
-        return new DefaultTagParser<>(
-                Tags.EXT_X_I_FRAME_STREAM_INF,
-                IFrameParser.class,
-                builder -> builder.build(),
-                IFrameVariant::builder
-        );
     }
 }

@@ -2,9 +2,7 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.SegmentMap;
 
-import static io.lindstrom.m3u8.parser.Tags.EXT_X_MAP;
-
-enum SegmentMapParser implements AttributeParser<SegmentMap, SegmentMap.Builder> {
+enum SegmentMapParser implements AttributeMapper<SegmentMap, SegmentMap.Builder> {
     URI {
         @Override
         public void read(SegmentMap.Builder builder, String value) throws PlaylistParserException {
@@ -31,13 +29,4 @@ enum SegmentMapParser implements AttributeParser<SegmentMap, SegmentMap.Builder>
     };
 
     private static final ByteRangeParser byteRangeParser = new ByteRangeParser();
-
-    static TagParser<SegmentMap> parser() {
-        return new DefaultTagParser<>(
-                EXT_X_MAP,
-                SegmentMapParser.class,
-                builder -> builder.build(),
-                SegmentMap::builder
-        );
-    }
 }

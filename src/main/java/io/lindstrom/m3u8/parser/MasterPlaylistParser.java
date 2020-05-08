@@ -4,8 +4,6 @@ import io.lindstrom.m3u8.model.*;
 
 import java.util.Iterator;
 
-import static io.lindstrom.m3u8.parser.Tags.*;
-
 /**
  * MasterPlaylistParser can read and write Master Playlists according to RFC 8216 (HTTP Live Streaming).
  * <p>
@@ -31,12 +29,135 @@ import static io.lindstrom.m3u8.parser.Tags.*;
  * This implementation is reusable and thread safe.
  */
 public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist, MasterPlaylist.Builder> {
-    private final TagParser<Variant> variantParser = VariantParser.parser();
-    private final TagParser<IFrameVariant> iFrameParser = IFrameParser.parser();
-    private final TagParser<AlternativeRendition> alternativeRenditionParser = AlternativeRenditionParser.parser();
-    private final TagParser<SessionData> sessionDataParser = SessionDataParser.parser();
-    private final TagParser<SegmentKey> sessionKeyParser = SegmentKeyParser.parser(EXT_X_SESSION_KEY);
 
+    enum TagMappers implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
+        EXT_X_VERSION {
+            @Override
+            public void read(MasterPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) {
+                builder.version(Integer.parseInt(attributes));
+            }
+
+            @Override
+            public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
+                // TODO
+            }
+        },
+
+        EXT_X_MEDIA {
+            @Override
+            public void read(MasterPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+                builder.addAlternativeRenditions(
+                        readAttributes(
+                                AlternativeRenditionParser.class, attributes, AlternativeRendition.builder()
+                        ).build()
+                );
+            }
+
+            @Override
+            public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
+                playlist.alternativeRenditions()
+                        .forEach(value -> textBuilder.add(tag(), value, AlternativeRenditionParser.class));
+            }
+        },
+
+        EXT_X_STREAM_INF {
+            @Override
+            public void read(MasterPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+                String uriLine = lineIterator.next();
+                if (uriLine == null || uriLine.startsWith("#")) {
+                    throw new PlaylistParserException("Expected URI, got " + uriLine);
+                }
+
+                builder.addVariants(
+                        readAttributes(VariantParser.class, attributes, Variant.builder())
+                                .uri(uriLine)
+                                .build()
+                );
+            }
+
+            @Override
+            public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
+                playlist.variants()
+                        .forEach(value -> textBuilder.add(tag(), value, VariantParser.class));
+            }
+        },
+
+        EXT_X_I_FRAME_STREAM_INF {
+            @Override
+            public void read(MasterPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+                builder.addIFrameVariants(readAttributes(IFrameParser.class, attributes, IFrameVariant.builder()).build());
+            }
+
+            @Override
+            public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
+                playlist.iFrameVariants()
+                        .forEach(value -> textBuilder.add(tag(), value, IFrameParser.class));
+            }
+        },
+
+        EXT_X_INDEPENDENT_SEGMENTS {
+            @Override
+            public void read(MasterPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+                builder.independentSegments(true);
+            }
+
+            @Override
+            public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
+                // TODO
+            }
+        },
+
+        EXT_X_START {
+            @Override
+            public void read(MasterPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+                //builder.startTimeOffset(startTimeOffsetParser.parse(attributes));
+            }
+
+            @Override
+            public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
+                // TODO
+            }
+        },
+
+        EXT_X_SESSION_DATA {
+            @Override
+            public void read(MasterPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+                builder.addSessionData(readAttributes(SessionDataParser.class, attributes, SessionData.builder()).build());
+            }
+
+            @Override
+            public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
+                playlist.sessionData()
+                        .forEach(value -> textBuilder.add(tag(), value, SessionDataParser.class));
+            }
+        },
+
+        EXT_X_SESSION_KEY {
+            private final Class<SegmentKeyParser> attributeMapper = SegmentKeyParser.class;
+
+            @Override
+            public void read(MasterPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+                builder.addSessionKeys(
+                        readAttributes(attributeMapper, attributes, SegmentKey.builder()).build()
+                );
+            }
+
+            @Override
+            public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
+                playlist.sessionKeys()
+                        .forEach(value -> textBuilder.add(tag(), value, attributeMapper));
+            }
+        }
+    }
+
+
+
+    @Override
+    void write(MasterPlaylist playlist, TextBuilder textBuilder) {
+        for (TagMappers mapper : TagMappers.values()) {
+            mapper.write(playlist, textBuilder);
+        }
+    }
 
     @Override
     MasterPlaylist.Builder newBuilder() {
@@ -44,74 +165,13 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
     }
 
     @Override
-    void onTag(MasterPlaylist.Builder builder, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
-        switch (prefix) {
-            case EXT_X_VERSION:
-                builder.version(Integer.parseInt(attributes));
-                break;
-
-            case EXT_X_MEDIA:
-                builder.addAlternativeRenditions(alternativeRenditionParser.parse(attributes));
-                break;
-
-            case EXT_X_STREAM_INF:
-                String uriLine = lineIterator.next();
-                if (uriLine == null || uriLine.startsWith("#")) {
-                    throw new PlaylistParserException("Expected URI, got " + uriLine);
-                }
-                builder.addVariants(variantParser.parse(attributes, uriLine));
-                break;
-
-            case EXT_X_I_FRAME_STREAM_INF:
-                builder.addIFrameVariants(iFrameParser.parse(attributes));
-                break;
-
-            case EXT_X_INDEPENDENT_SEGMENTS:
-                builder.independentSegments(true);
-                break;
-
-            case EXT_X_START:
-                builder.startTimeOffset(startTimeOffsetParser.parse(attributes));
-                break;
-
-            case EXT_X_SESSION_DATA:
-                builder.addSessionData(sessionDataParser.parse(attributes));
-                break;
-
-            case EXT_X_SESSION_KEY:
-                builder.addSessionKeys(sessionKeyParser.parse(attributes));
-                break;
-
-            default:
-                throw new PlaylistParserException("Invalid line: " + prefix);
-        }
-    }
-
-    @Override
-    void onURI(MasterPlaylist.Builder builder, String uri) throws PlaylistParserException {
-        throw new PlaylistParserException("Unexpected URI in master playlist");
+    void onTag(MasterPlaylist.Builder builder, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException{
+        String name = prefix.substring(1).replace("-", "_"); // TODO FIXME
+        TagMappers.valueOf(name).read(builder, attributes, lineIterator);
     }
 
     @Override
     MasterPlaylist build(MasterPlaylist.Builder builder) {
         return builder.build();
-    }
-
-    @Override
-    void write(MasterPlaylist playlist, StringBuilder stringBuilder) {
-        playlist.alternativeRenditions()
-                .forEach(value -> alternativeRenditionParser.write(value, stringBuilder));
-
-        playlist.variants()
-                .forEach(value -> variantParser.write(value, stringBuilder));
-
-        playlist.iFrameVariants()
-                .forEach(value -> iFrameParser.write(value, stringBuilder));
-
-        playlist.sessionData()
-                .forEach(value -> sessionDataParser.write(value, stringBuilder));
-
-        playlist.sessionKeys()
-                .forEach(value -> sessionKeyParser.write(value, stringBuilder));
     }
 }

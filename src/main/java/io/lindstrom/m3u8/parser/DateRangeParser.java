@@ -4,11 +4,9 @@ import io.lindstrom.m3u8.model.DateRange;
 
 import java.time.OffsetDateTime;
 
-import static io.lindstrom.m3u8.parser.Tags.EXT_X_DATERANGE;
 import static io.lindstrom.m3u8.parser.Tags.YES;
 
-enum DateRangeParser implements AttributeParser<DateRange, DateRange.Builder> {
-
+enum DateRangeParser implements AttributeMapper<DateRange, DateRange.Builder> {
     ID {
         @Override
         public void read(DateRange.Builder builder, String value) {
@@ -147,9 +145,5 @@ enum DateRangeParser implements AttributeParser<DateRange, DateRange.Builder> {
             // TODO: support client attribute types (quoted-string, hexadecimal-sequence & decimal-floating-point)
             value.clientAttributes().forEach(attributes::addQuoted);
         }
-    };
-
-    static TagParser<DateRange> parser() {
-        return new DefaultTagParser<>(EXT_X_DATERANGE, DateRangeParser.class, builder -> builder.build(), DateRange::builder);
     }
 }

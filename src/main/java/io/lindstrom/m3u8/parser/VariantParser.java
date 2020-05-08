@@ -2,7 +2,7 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.Variant;
 
-enum VariantParser implements AttributeParser<Variant, Variant.Builder> {
+enum VariantParser implements AttributeMapper<Variant, Variant.Builder> {
     BANDWIDTH {
         @Override
         public void read(Variant.Builder builder, String value) {
@@ -170,14 +170,5 @@ enum VariantParser implements AttributeParser<Variant, Variant.Builder> {
         public void write(AttributeListBuilder attributes, Variant value) {
             attributes.addRaw("\n" + value.uri());
         }
-    };
-
-    static TagParser<Variant> parser() {
-        return new DefaultTagParser<>(
-                Tags.EXT_X_STREAM_INF,
-                VariantParser.class,
-                builder -> builder.build(),
-                Variant::builder
-        );
     }
 }

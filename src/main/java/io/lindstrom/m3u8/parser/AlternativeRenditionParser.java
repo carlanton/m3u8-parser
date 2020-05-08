@@ -3,9 +3,7 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.AlternativeRendition;
 import io.lindstrom.m3u8.model.MediaType;
 
-import static io.lindstrom.m3u8.parser.Tags.EXT_X_MEDIA;
-
-enum AlternativeRenditionParser implements AttributeParser<AlternativeRendition, AlternativeRendition.Builder> {
+enum AlternativeRenditionParser implements AttributeMapper<AlternativeRendition, AlternativeRendition.Builder> {
     TYPE {
         @Override
         public void read(AlternativeRendition.Builder builder, String value) {
@@ -154,14 +152,5 @@ enum AlternativeRenditionParser implements AttributeParser<AlternativeRendition,
                 attributes.addQuoted(name(), String.join("/", value.channels()));
             }
         }
-    };
-
-    static TagParser<AlternativeRendition> parser() {
-        return new DefaultTagParser<>(
-                EXT_X_MEDIA,
-                AlternativeRenditionParser.class,
-                builder -> builder.build(),
-                AlternativeRendition::builder
-        );
     }
 }

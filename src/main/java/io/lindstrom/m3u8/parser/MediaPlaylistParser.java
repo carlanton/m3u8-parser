@@ -41,10 +41,239 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
             .optionalStart().appendOffset("+HH", "Z").optionalEnd()
             .toFormatter();
 
-    private final ByteRangeParser byteRangeParser = new ByteRangeParser(); // TODO?
-    private final TagParser<SegmentMap> segmentMapParser = SegmentMapParser.parser();
-    private final TagParser<SegmentKey> segmentKeyParser = SegmentKeyParser.parser(EXT_X_KEY);
-    private final TagParser<DateRange> dateRangeParser = DateRangeParser.parser();
+    enum TagMappers implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
+        EXT_X_VERSION {
+            @Override
+            public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) {
+                builder.version(Integer.parseInt(attributes));
+            }
+
+            @Override
+            public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
+                // TODO
+            }
+        },
+
+        EXT_X_INDEPENDENT_SEGMENTS {
+            @Override
+            public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) {
+                builder.independentSegments(true);
+            }
+
+            @Override
+            public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
+                // TODO
+            }
+        },
+
+        EXT_X_PLAYLIST_TYPE {
+            @Override
+            public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) {
+                builder.playlistType(PlaylistType.valueOf(attributes));
+            }
+
+            @Override
+            public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
+                playlist.playlistType().ifPresent(value ->
+                        textBuilder.add(tag()).add(":").add(value.toString()).add('\n'));
+            }
+        },
+
+        EXT_X_I_FRAMES_ONLY {
+            @Override
+            public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) {
+                builder.iFramesOnly(true);
+            }
+
+            @Override
+            public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
+                if (playlist.iFramesOnly()) {
+                    textBuilder.add(tag()).add("\n");
+                }
+            }
+        },
+
+        EXT_X_TARGETDURATION {
+            @Override
+            public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) {
+                builder.targetDuration(Integer.parseInt(attributes));
+            }
+
+            @Override
+            public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
+                textBuilder
+                        .add(tag()).add(":")
+                        .add(playlist.targetDuration()).add("\n");
+            }
+        },
+
+        EXT_X_ENDLIST {
+            @Override
+            public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) {
+                builder.ongoing(false);
+            }
+
+            @Override
+            public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
+                // written elsewhere
+            }
+        },
+
+        EXT_X_START {
+            @Override
+            public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+             //   builder.startTimeOffset(startTimeOffsetParser.parse(attributes));
+            }
+
+            @Override
+            public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
+                // TODO
+            }
+        },
+
+        EXT_X_DISCONTINUITY_SEQUENCE {
+            @Override
+            public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) {
+                builder.discontinuitySequence(Long.parseLong(attributes));
+            }
+
+            @Override
+            public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
+                if (playlist.discontinuitySequence() != 0) {
+                    textBuilder.add(tag()).add(":").add(playlist.discontinuitySequence()).add("\n");
+                }
+            }
+        },
+
+        EXT_X_MEDIA_SEQUENCE {
+            @Override
+            public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) {
+                builder.mediaSequence(Long.parseLong(attributes));
+
+            }
+
+            @Override
+            public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
+                textBuilder.add(tag()).add(":").add(playlist.mediaSequence()).add("\n");
+            }
+        },
+
+        EXT_X_ALLOW_CACHE {
+            @Override
+            public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+                builder.allowCache(ParserUtils.yesOrNo(attributes));
+            }
+
+            @Override
+            public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
+                playlist.allowCache().ifPresent(value ->
+                        textBuilder.add(tag()).add(":").add(value ? YES : NO).add("\n")
+                );
+            }
+        }
+    }
+
+    enum MediaSegmentTags implements Tag<MediaSegment, MediaSegment.Builder> {
+        EXT_X_BYTERANGE {
+            private final ByteRangeParser byteRangeParser = new ByteRangeParser(); // TODO?
+
+            @Override
+            public void read(MediaSegment.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+                builder.byteRange(byteRangeParser.parse(attributes));
+            }
+
+            @Override
+            public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
+                mediaSegment.byteRange().ifPresent(byteRange -> byteRangeParser.write(byteRange, textBuilder.stringBuilder()));
+            }
+        },
+
+        EXTINF {
+            @Override
+            public void read(MediaSegment.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+                String[] values = attributes.split(",", 2);
+                builder.duration(Double.parseDouble(values[0]));
+                if (values.length == 2 && !values[1].isEmpty()) {
+                    builder.title(values[1]);
+                }
+
+
+            }
+
+            @Override
+            public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
+                textBuilder.add(tag()).add(":").add(mediaSegment.duration()).add(",");
+                mediaSegment.title().ifPresent(textBuilder::add);
+                textBuilder.add('\n');
+            }
+        },
+
+        EXT_X_PROGRAM_DATE_TIME {
+            @Override
+            public void read(MediaSegment.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+                builder.programDateTime(OffsetDateTime.parse(attributes, FORMATTER));
+            }
+
+            @Override
+            public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
+                mediaSegment.programDateTime().ifPresent(value -> textBuilder
+                        .add(tag()).add(':')
+                        .add(value)
+                        .add('\n'));
+            }
+        },
+
+        EXT_X_DATERANGE {
+            @Override
+            public void read(MediaSegment.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+                builder.dateRange(readAttributes(DateRangeParser.class, attributes, DateRange.builder()).build());
+            }
+
+            @Override
+            public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
+                mediaSegment.dateRange().ifPresent(value -> textBuilder.add(tag(), value, DateRangeParser.class));
+            }
+        },
+
+        EXT_X_MAP {
+            @Override
+            public void read(MediaSegment.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+                builder.segmentMap(readAttributes(SegmentMapParser.class, attributes, SegmentMap.builder()).build());
+            }
+
+            @Override
+            public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
+                mediaSegment.segmentMap().ifPresent(map -> textBuilder.add(tag(), map, SegmentMapParser.class));
+            }
+        },
+
+        EXT_X_KEY {
+            @Override
+            public void read(MediaSegment.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+                builder.segmentKey(readAttributes(SegmentKeyParser.class, attributes, SegmentKey.builder()).build());
+            }
+
+            @Override
+            public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
+                mediaSegment.segmentKey().ifPresent(key -> textBuilder.add(tag(), key, SegmentKeyParser.class));
+            }
+        },
+
+        EXT_X_DISCONTINUITY {
+            @Override
+            public void read(MediaSegment.Builder builder, String attributes, Iterator<String> lineIterator) {
+                builder.discontinuity(true);
+            }
+
+            @Override
+            public void write(MediaSegment value, TextBuilder textBuilder) {
+                if (value.discontinuity()) {
+                    textBuilder.add(tag()).add('\n');
+                }
+            }
+        }
+
+    }
 
     @Override
     Builder newBuilder() {
@@ -53,85 +282,24 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
 
     @Override
     void onTag(Builder builderWrapper, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
-        MediaPlaylist.Builder builder = builderWrapper.playlistBuilder;
-        MediaSegment.Builder mediaSegmentBuilder = builderWrapper.segmentBuilder;
+        String name = prefix.substring(1).replace("-", "_"); // TODO FIXME
 
-        switch (prefix) {
-            case EXT_X_VERSION:
-                builder.version(Integer.parseInt(attributes));
-                break;
-
-            case EXT_X_INDEPENDENT_SEGMENTS:
-                builder.independentSegments(true);
-                break;
-
-            case EXT_X_PLAYLIST_TYPE:
-                builder.playlistType(PlaylistType.valueOf(attributes));
-                break;
-
-            case EXT_X_I_FRAMES_ONLY:
-                builder.iFramesOnly(true);
-                break;
-
-            case EXT_X_BYTERANGE:
-                mediaSegmentBuilder.byteRange(byteRangeParser.parse(attributes));
-                break;
-
-            case EXT_X_TARGETDURATION:
-                builder.targetDuration(Integer.parseInt(attributes));
-                break;
-
-            case EXTINF:
-                String[] values = attributes.split(",", 2);
-                mediaSegmentBuilder.duration(Double.parseDouble(values[0]));
-                if (values.length == 2 && !values[1].isEmpty()) {
-                    mediaSegmentBuilder.title(values[1]);
-                }
-                break;
-
-            case EXT_X_PROGRAM_DATE_TIME:
-                mediaSegmentBuilder.programDateTime(OffsetDateTime.parse(attributes, FORMATTER));
-                break;
-
-            case EXT_X_DATERANGE:
-                mediaSegmentBuilder.dateRange(dateRangeParser.parse(attributes));
-                break;
-
-            case EXT_X_MAP:
-                mediaSegmentBuilder.segmentMap(segmentMapParser.parse(attributes));
-                break;
-
-            case EXT_X_ENDLIST:
-                builder.ongoing(false);
-                break;
-
-            case EXT_X_MEDIA_SEQUENCE:
-                builder.mediaSequence(Long.parseLong(attributes));
-                break;
-
-            case EXT_X_DISCONTINUITY_SEQUENCE:
-                builder.discontinuitySequence(Long.parseLong(attributes));
-                break;
-
-            case EXT_X_KEY:
-                mediaSegmentBuilder.segmentKey(segmentKeyParser.parse(attributes));
-                break;
-
-            case EXT_X_START:
-                builder.startTimeOffset(startTimeOffsetParser.parse(attributes));
-                break;
-
-            case EXT_X_DISCONTINUITY:
-                mediaSegmentBuilder.discontinuity(true);
-                break;
-
-            case EXT_X_ALLOW_CACHE:
-                builder.allowCache(ParserUtils.yesOrNo(attributes));
-                break;
-
-            default:
-                throw new PlaylistParserException("Tag not implemented: " + prefix);
+        for (TagMappers tag : TagMappers.values()) {
+            if (tag.name().equals(name)) {
+                tag.read(builderWrapper.playlistBuilder, attributes, lineIterator);
+                return;
+            }
         }
+
+        for (MediaSegmentTags tag : MediaSegmentTags.values()) {
+            if (tag.name().equals(name)) {
+                tag.read(builderWrapper.segmentBuilder, attributes, lineIterator);
+                return;
+            }
+        }
+
+        // unknown tag
+        throw new PlaylistParserException("Tag not implemented: " + prefix);
     }
 
     @Override
@@ -147,68 +315,21 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
     }
 
     @Override
-    void write(MediaPlaylist playlist, StringBuilder stringBuilder) {
-        if (playlist.iFramesOnly()) {
-            stringBuilder.append(EXT_X_I_FRAMES_ONLY).append("\n");
+    void write(MediaPlaylist playlist, TextBuilder textBuilder) {
+        for (TagMappers mapper : TagMappers.values()) {
+            mapper.write(playlist, textBuilder);
         }
 
-        playlist.allowCache().ifPresent(value ->
-            stringBuilder.append(EXT_X_ALLOW_CACHE).append(":")
-                    .append(value ? YES : NO).append("\n")
-        );
-
-        playlist.playlistType().ifPresent(value ->
-                stringBuilder.append(EXT_X_PLAYLIST_TYPE).append(":")
-                        .append(value.toString()).append('\n'));
-
-        stringBuilder.append(EXT_X_TARGETDURATION).append(":").append(playlist.targetDuration()).append("\n");
-        stringBuilder.append(EXT_X_MEDIA_SEQUENCE).append(":").append(playlist.mediaSequence()).append("\n");
-
-        if (playlist.discontinuitySequence() != 0) {
-            stringBuilder.append(EXT_X_DISCONTINUITY_SEQUENCE).append(":")
-                    .append(playlist.discontinuitySequence()).append("\n");
-        }
-
-        playlist.mediaSegments().forEach(mediaSegment ->
-                writeMediaSegment(mediaSegment, stringBuilder));
+        playlist.mediaSegments().forEach(mediaSegment -> {
+            for (MediaSegmentTags mapper : MediaSegmentTags.values()) {
+                mapper.write(mediaSegment, textBuilder);
+            }
+            textBuilder.add(mediaSegment.uri()).add('\n');
+        });
 
         if (!playlist.ongoing()) {
-            stringBuilder.append(EXT_X_ENDLIST).append('\n');
+            textBuilder.add(EXT_X_ENDLIST).add('\n');
         }
-    }
-
-    private void writeMediaSegment(MediaSegment mediaSegment, StringBuilder stringBuilder) {
-
-        // EXT-X-DISCONTINUITY
-        if (mediaSegment.discontinuity()) {
-            stringBuilder.append(EXT_X_DISCONTINUITY).append('\n');
-        }
-
-        // EXT-X-PROGRAM-DATE-TIME
-        mediaSegment.programDateTime().ifPresent(value -> stringBuilder
-                .append(EXT_X_PROGRAM_DATE_TIME).append(':')
-                .append(value)
-                .append('\n'));
-
-        // EXT-X-DATERANGE
-        mediaSegment.dateRange().ifPresent(value -> dateRangeParser.write(value, stringBuilder));
-
-        // EXT-X-MAP
-        mediaSegment.segmentMap().ifPresent(map -> segmentMapParser.write(map, stringBuilder));
-
-        // EXTINF
-        stringBuilder.append(EXTINF).append(":").append(mediaSegment.duration()).append(",");
-        mediaSegment.title().ifPresent(stringBuilder::append);
-        stringBuilder.append('\n');
-
-        // EXT-X-BYTERANGE
-        mediaSegment.byteRange().ifPresent(byteRange -> byteRangeParser.write(byteRange, stringBuilder));
-
-        // EXT-X-KEY
-        mediaSegment.segmentKey().ifPresent(key -> segmentKeyParser.write(key, stringBuilder));
-
-        // <URI>
-        stringBuilder.append(mediaSegment.uri()).append('\n');
     }
 
     /**

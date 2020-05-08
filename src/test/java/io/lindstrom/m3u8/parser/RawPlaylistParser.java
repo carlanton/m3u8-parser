@@ -1,12 +1,11 @@
 package io.lindstrom.m3u8.parser;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.regex.Matcher;
+public class RawPlaylistParser /*extends AbstractPlaylistParser<RawPlaylist, RawPlaylist.Builder>*/ {
 
-public class RawPlaylistParser extends AbstractPlaylistParser<RawPlaylist, RawPlaylist.Builder> {
+    /*
+    public RawPlaylistParser(Class mapperClass) {
+        super(mapperClass);
+    }
 
     @Override
     RawPlaylist.Builder newBuilder() {
@@ -44,4 +43,5 @@ public class RawPlaylistParser extends AbstractPlaylistParser<RawPlaylist, RawPl
     void write(RawPlaylist playlist, StringBuilder stringBuilder) {
         throw new UnsupportedOperationException("not implemented");
     }
+    */
 }

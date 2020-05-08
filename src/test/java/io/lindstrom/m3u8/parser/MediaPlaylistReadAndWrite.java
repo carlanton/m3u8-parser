@@ -45,6 +45,9 @@ public class MediaPlaylistReadAndWrite {
     @Test
     public void readAndWrite() throws Exception {
         MediaPlaylist playlist = mediaPlaylistParser.readPlaylist(playlistPath);
+
+        System.out.println(mediaPlaylistParser.writePlaylistAsString(playlist));
+
         assertEquals(playlist, mediaPlaylistParser.readPlaylist(mediaPlaylistParser.writePlaylistAsString(playlist)));
     }
 

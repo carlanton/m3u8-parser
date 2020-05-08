@@ -1,7 +1,6 @@
 package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.Playlist;
-import io.lindstrom.m3u8.model.StartTimeOffset;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -10,12 +9,14 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static io.lindstrom.m3u8.parser.Tags.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public abstract class AbstractPlaylistParser<T extends Playlist, B> {
-    final TagParser<StartTimeOffset> startTimeOffsetParser = StartTimeOffsetParser.parser();
+    static final Pattern ATTRIBUTE_LIST_PATTERN = Pattern.compile("([A-Z0-9\\-]+)=(?:(?:\"([^\"]+)\")|([^,]+))");
 
     public T readPlaylist(InputStream inputStream) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, UTF_8))) {
@@ -95,7 +96,7 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
 
                 onTag(builder, prefix, attributes, lineIterator);
             } else if (!(line.startsWith("#") || line.isEmpty())) {
-                onURI(builder, line);
+                onURI(builder, line); // <-- TODO silly?
             }
         }
 
@@ -104,13 +105,15 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
 
     abstract B newBuilder();
 
-    abstract void onTag(B builder, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException;
+     abstract void onTag(B builder, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException;
 
-    abstract void onURI(B builder, String uri) throws PlaylistParserException;
+     void onURI(B builder, String uri) throws PlaylistParserException {
+         throw new PlaylistParserException("Unexpected URI in playlist: " + uri);
+     }
 
     abstract T build(B builder);
 
-    abstract void write(T playlist, StringBuilder stringBuilder);
+    abstract void write(T playlist, TextBuilder textBuilder);
 
     public String writePlaylistAsString(T playlist) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -121,9 +124,12 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
             stringBuilder.append(EXT_X_INDEPENDENT_SEGMENTS).append('\n');
         }
 
-        playlist.startTimeOffset().ifPresent(value -> startTimeOffsetParser.write(value, stringBuilder));
+        TextBuilder textBuilder = new TextBuilder(stringBuilder);
 
-        write(playlist, stringBuilder);
+        playlist.startTimeOffset().ifPresent(value -> textBuilder.add(EXT_X_START, value, StartTimeOffsetParser.class));
+
+
+        write(playlist, textBuilder);
         return stringBuilder.toString();
     }
 
@@ -134,4 +140,29 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
     public ByteBuffer writePlaylistAsByteBuffer(T playlist) {
         return ByteBuffer.wrap(writePlaylistAsBytes(playlist));
     }
+
+
+    static <X, Y, Z extends Enum<Z> & AttributeMapper<X, Y>> Y readAttributes(Class<Z> mapperClass,
+                                                                              String attributes,
+                                                                              Y builder) throws PlaylistParserException {
+        Matcher matcher = ATTRIBUTE_LIST_PATTERN.matcher(attributes);
+
+        while (matcher.find()) {
+            String attribute = matcher.group(1);
+            String value = matcher.group(2) != null ? matcher.group(2) : matcher.group(3);
+
+            try {
+                if (attribute.startsWith("X-")) {
+                    Enum.valueOf(mapperClass, "CUSTOM").read(builder, attribute, value);
+                } else {
+                    Enum.valueOf(mapperClass, attribute.replace("-", "_")).read(builder, value);
+                }
+            } catch (IllegalArgumentException e) {
+                throw new PlaylistParserException("Unknown attribute: " + attribute);
+            }
+        }
+
+        return builder;
+    }
+
 }
