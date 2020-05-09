@@ -12,8 +12,8 @@ enum StartTimeOffsetParser implements Attribute<StartTimeOffset, StartTimeOffset
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, StartTimeOffset value) {
-            attributes.add(key(), String.valueOf(value.timeOffset()));
+        public void write(StartTimeOffset value, TextBuilder textBuilder) {
+            textBuilder.add(key(), String.valueOf(value.timeOffset()));
         }
     },
 
@@ -24,9 +24,9 @@ enum StartTimeOffsetParser implements Attribute<StartTimeOffset, StartTimeOffset
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, StartTimeOffset value) {
+        public void write(StartTimeOffset value, TextBuilder textBuilder) {
             if (value.precise()) {
-                attributes.add(name(), YES);
+                textBuilder.add(name(), YES);
             }
         }
     }

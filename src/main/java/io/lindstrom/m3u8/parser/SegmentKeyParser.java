@@ -11,8 +11,8 @@ public enum SegmentKeyParser implements Attribute<SegmentKey, SegmentKey.Builder
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, SegmentKey segmentKey) {
-            attributes.add(name(), segmentKey.method());
+        public void write(SegmentKey segmentKey, TextBuilder textBuilder) {
+            textBuilder.add(name(), segmentKey.method());
         }
     },
 
@@ -23,8 +23,8 @@ public enum SegmentKeyParser implements Attribute<SegmentKey, SegmentKey.Builder
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, SegmentKey segmentKey) {
-            segmentKey.uri().ifPresent(uri -> attributes.addQuoted(name(), uri));
+        public void write(SegmentKey segmentKey, TextBuilder textBuilder) {
+            segmentKey.uri().ifPresent(uri -> textBuilder.addQuoted(name(), uri));
         }
     },
 
@@ -35,8 +35,8 @@ public enum SegmentKeyParser implements Attribute<SegmentKey, SegmentKey.Builder
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, SegmentKey segmentKey) {
-            segmentKey.iv().ifPresent(iv -> attributes.add(name(), iv));
+        public void write(SegmentKey segmentKey, TextBuilder textBuilder) {
+            segmentKey.iv().ifPresent(iv -> textBuilder.add(name(), iv));
         }
     },
 
@@ -47,8 +47,8 @@ public enum SegmentKeyParser implements Attribute<SegmentKey, SegmentKey.Builder
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, SegmentKey segmentKey) {
-            segmentKey.keyFormat().ifPresent(keyFormat -> attributes.addQuoted(name(), keyFormat));
+        public void write(SegmentKey segmentKey, TextBuilder textBuilder) {
+            segmentKey.keyFormat().ifPresent(keyFormat -> textBuilder.addQuoted(name(), keyFormat));
         }
     },
 
@@ -59,8 +59,8 @@ public enum SegmentKeyParser implements Attribute<SegmentKey, SegmentKey.Builder
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, SegmentKey segmentKey) {
-            segmentKey.keyFormatVersions().ifPresent(v -> attributes.addQuoted(name(), v));
+        public void write(SegmentKey segmentKey, TextBuilder textBuilder) {
+            segmentKey.keyFormatVersions().ifPresent(v -> textBuilder.addQuoted(name(), v));
         }
     }
 }

@@ -3,12 +3,11 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.*;
 
 import java.time.OffsetDateTime;
-import java.util.Iterator;
 
 enum MediaSegmentTags implements Tag<MediaSegment, MediaSegment.Builder> {
     EXT_X_BYTERANGE {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+        public void read(MediaSegment.Builder builder, String attributes) throws PlaylistParserException {
             builder.byteRange(ParserUtils.parseByteRange(attributes));
         }
 
@@ -24,7 +23,7 @@ enum MediaSegmentTags implements Tag<MediaSegment, MediaSegment.Builder> {
 
     EXTINF {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes, Iterator<String> lineIterator) {
+        public void read(MediaSegment.Builder builder, String attributes) {
             int p = attributes.indexOf(',');
 
             if (p < 0) {
@@ -48,7 +47,7 @@ enum MediaSegmentTags implements Tag<MediaSegment, MediaSegment.Builder> {
 
     EXT_X_PROGRAM_DATE_TIME {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes, Iterator<String> lineIterator) {
+        public void read(MediaSegment.Builder builder, String attributes) {
             builder.programDateTime(OffsetDateTime.parse(attributes, ParserUtils.FORMATTER));
         }
 
@@ -63,7 +62,7 @@ enum MediaSegmentTags implements Tag<MediaSegment, MediaSegment.Builder> {
 
     EXT_X_DATERANGE {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+        public void read(MediaSegment.Builder builder, String attributes) throws PlaylistParserException {
             builder.dateRange(AbstractPlaylistParser.readAttributes(DateRangeParser.class, attributes, DateRange.builder()).build());
         }
 
@@ -75,7 +74,7 @@ enum MediaSegmentTags implements Tag<MediaSegment, MediaSegment.Builder> {
 
     EXT_X_MAP {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+        public void read(MediaSegment.Builder builder, String attributes) throws PlaylistParserException {
             builder.segmentMap(AbstractPlaylistParser.readAttributes(SegmentMapParser.class, attributes, SegmentMap.builder()).build());
         }
 
@@ -87,7 +86,7 @@ enum MediaSegmentTags implements Tag<MediaSegment, MediaSegment.Builder> {
 
     EXT_X_KEY {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+        public void read(MediaSegment.Builder builder, String attributes) throws PlaylistParserException {
             builder.segmentKey(AbstractPlaylistParser.readAttributes(SegmentKeyParser.class, attributes, SegmentKey.builder()).build());
         }
 
@@ -99,7 +98,7 @@ enum MediaSegmentTags implements Tag<MediaSegment, MediaSegment.Builder> {
 
     EXT_X_DISCONTINUITY {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes, Iterator<String> lineIterator) {
+        public void read(MediaSegment.Builder builder, String attributes) {
             builder.discontinuity(true);
         }
 

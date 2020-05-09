@@ -43,14 +43,14 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
 
         for (MediaPlaylistTags tag : MediaPlaylistTags.values()) {
             if (tag.name().equals(name)) {
-                tag.read(builderWrapper.playlistBuilder, attributes, lineIterator);
+                tag.read(builderWrapper.playlistBuilder, attributes);
                 return;
             }
         }
 
         for (MediaSegmentTags tag : MediaSegmentTags.values()) {
             if (tag.name().equals(name)) {
-                tag.read(builderWrapper.segmentBuilder, attributes, lineIterator);
+                tag.read(builderWrapper.segmentBuilder, attributes);
                 return;
             }
         }

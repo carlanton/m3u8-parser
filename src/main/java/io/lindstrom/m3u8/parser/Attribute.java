@@ -2,7 +2,7 @@ package io.lindstrom.m3u8.parser;
 
 public interface Attribute<T, B> {
     void read(B builder, String value) throws PlaylistParserException;
-    void write(AttributeListBuilder attributes, T value);
+    void write(T value, TextBuilder textBuilder);
     String name();
     default String key() {
         return name().replace("_", "-");

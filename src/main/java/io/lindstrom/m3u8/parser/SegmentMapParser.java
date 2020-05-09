@@ -10,8 +10,8 @@ enum SegmentMapParser implements Attribute<SegmentMap, SegmentMap.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, SegmentMap value) {
-            attributes.addQuoted(name(), value.uri());
+        public void write(SegmentMap value, TextBuilder textBuilder) {
+            textBuilder.addQuoted(name(), value.uri());
         }
     },
 
@@ -22,9 +22,9 @@ enum SegmentMapParser implements Attribute<SegmentMap, SegmentMap.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, SegmentMap value) {
+        public void write(SegmentMap value, TextBuilder textBuilder) {
             value.byteRange().map(ParserUtils::writeByteRange).ifPresent(v ->
-                    attributes.addQuoted(name(), v));
+                    textBuilder.addQuoted(name(), v));
         }
     }
 }

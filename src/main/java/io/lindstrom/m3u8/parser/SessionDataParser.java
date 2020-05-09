@@ -10,8 +10,8 @@ enum SessionDataParser implements Attribute<SessionData, SessionData.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, SessionData value) {
-            attributes.addQuoted(key(), value.dataId());
+        public void write(SessionData value, TextBuilder textBuilder) {
+            textBuilder.addQuoted(key(), value.dataId());
         }
     },
 
@@ -22,8 +22,8 @@ enum SessionDataParser implements Attribute<SessionData, SessionData.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, SessionData value) {
-            value.value().ifPresent(v -> attributes.addQuoted(name(), v));
+        public void write(SessionData value, TextBuilder textBuilder) {
+            value.value().ifPresent(v -> textBuilder.addQuoted(name(), v));
         }
     },
 
@@ -34,8 +34,8 @@ enum SessionDataParser implements Attribute<SessionData, SessionData.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, SessionData value) {
-            value.uri().ifPresent(v -> attributes.addQuoted(name(), v));
+        public void write(SessionData value, TextBuilder textBuilder) {
+            value.uri().ifPresent(v -> textBuilder.addQuoted(name(), v));
         }
     },
 
@@ -46,8 +46,8 @@ enum SessionDataParser implements Attribute<SessionData, SessionData.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, SessionData value) {
-            value.language().ifPresent(v -> attributes.addQuoted(name(), v));
+        public void write(SessionData value, TextBuilder textBuilder) {
+            value.language().ifPresent(v -> textBuilder.addQuoted(name(), v));
         }
     }
 }

@@ -14,8 +14,8 @@ enum DateRangeParser implements Attribute<DateRange, DateRange.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, DateRange value) {
-            attributes.addQuoted(name(), value.id());
+        public void write(DateRange value, TextBuilder textBuilder) {
+            textBuilder.addQuoted(name(), value.id());
         }
     },
 
@@ -26,8 +26,8 @@ enum DateRangeParser implements Attribute<DateRange, DateRange.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, DateRange value) {
-            value.classAttribute().ifPresent(v -> attributes.addQuoted(name(), v));
+        public void write(DateRange value, TextBuilder textBuilder) {
+            value.classAttribute().ifPresent(v -> textBuilder.addQuoted(name(), v));
         }
     },
 
@@ -38,8 +38,8 @@ enum DateRangeParser implements Attribute<DateRange, DateRange.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, DateRange value) {
-            attributes.addQuoted(key(), value.startDate().toString());
+        public void write(DateRange value, TextBuilder textBuilder) {
+            textBuilder.addQuoted(key(), value.startDate().toString());
         }
     },
 
@@ -50,8 +50,8 @@ enum DateRangeParser implements Attribute<DateRange, DateRange.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, DateRange value) {
-            value.endDate().ifPresent(v -> attributes.addQuoted(key(), v.toString()));
+        public void write(DateRange value, TextBuilder textBuilder) {
+            value.endDate().ifPresent(v -> textBuilder.addQuoted(key(), v.toString()));
         }
     },
 
@@ -62,8 +62,8 @@ enum DateRangeParser implements Attribute<DateRange, DateRange.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, DateRange value) {
-            value.duration().ifPresent(v -> attributes.add(name(), Double.toString(v)));
+        public void write(DateRange value, TextBuilder textBuilder) {
+            value.duration().ifPresent(v -> textBuilder.add(name(), Double.toString(v)));
         }
     },
 
@@ -74,8 +74,8 @@ enum DateRangeParser implements Attribute<DateRange, DateRange.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, DateRange value) {
-            value.plannedDuration().ifPresent(v -> attributes.add(key(), Double.toString(v)));
+        public void write(DateRange value, TextBuilder textBuilder) {
+            value.plannedDuration().ifPresent(v -> textBuilder.add(key(), Double.toString(v)));
         }
     },
 
@@ -86,8 +86,8 @@ enum DateRangeParser implements Attribute<DateRange, DateRange.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, DateRange value) {
-            value.scte35Cmd().ifPresent(v -> attributes.add(key(), v));
+        public void write(DateRange value, TextBuilder textBuilder) {
+            value.scte35Cmd().ifPresent(v -> textBuilder.add(key(), v));
         }
     },
 
@@ -98,8 +98,8 @@ enum DateRangeParser implements Attribute<DateRange, DateRange.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, DateRange value) {
-            value.scte35Out().ifPresent(v -> attributes.add(key(), v));
+        public void write(DateRange value, TextBuilder textBuilder) {
+            value.scte35Out().ifPresent(v -> textBuilder.add(key(), v));
         }
     },
 
@@ -110,8 +110,8 @@ enum DateRangeParser implements Attribute<DateRange, DateRange.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, DateRange value) {
-            value.scte35In().ifPresent(v -> attributes.add(key(), v));
+        public void write(DateRange value, TextBuilder textBuilder) {
+            value.scte35In().ifPresent(v -> textBuilder.add(key(), v));
         }
     },
 
@@ -122,9 +122,9 @@ enum DateRangeParser implements Attribute<DateRange, DateRange.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, DateRange value) {
+        public void write(DateRange value, TextBuilder textBuilder) {
             if (value.endOnNext()) {
-                attributes.add(key(), YES);
+                textBuilder.add(key(), YES);
             }
         }
     },
@@ -141,9 +141,9 @@ enum DateRangeParser implements Attribute<DateRange, DateRange.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, DateRange value) {
+        public void write(DateRange value, TextBuilder textBuilder) {
             // TODO: support client attribute types (quoted-string, hexadecimal-sequence & decimal-floating-point)
-            value.clientAttributes().forEach(attributes::addQuoted);
+            value.clientAttributes().forEach(textBuilder::addQuoted);
         }
     }
 }

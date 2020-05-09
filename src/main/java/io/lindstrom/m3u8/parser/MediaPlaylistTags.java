@@ -4,15 +4,13 @@ import io.lindstrom.m3u8.model.MediaPlaylist;
 import io.lindstrom.m3u8.model.PlaylistType;
 import io.lindstrom.m3u8.model.StartTimeOffset;
 
-import java.util.Iterator;
-
 import static io.lindstrom.m3u8.parser.AbstractPlaylistParser.readAttributes;
 import static io.lindstrom.m3u8.parser.Tags.*;
 
 enum MediaPlaylistTags implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
     EXT_X_VERSION {
         @Override
-        public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) {
+        public void read(MediaPlaylist.Builder builder, String attributes) {
             builder.version(Integer.parseInt(attributes));
         }
 
@@ -25,7 +23,7 @@ enum MediaPlaylistTags implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
 
     EXT_X_INDEPENDENT_SEGMENTS {
         @Override
-        public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) {
+        public void read(MediaPlaylist.Builder builder, String attributes) {
             builder.independentSegments(true);
         }
 
@@ -39,7 +37,7 @@ enum MediaPlaylistTags implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
 
     EXT_X_PLAYLIST_TYPE {
         @Override
-        public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) {
+        public void read(MediaPlaylist.Builder builder, String attributes) {
             builder.playlistType(PlaylistType.valueOf(attributes));
         }
 
@@ -52,7 +50,7 @@ enum MediaPlaylistTags implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
 
     EXT_X_I_FRAMES_ONLY {
         @Override
-        public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) {
+        public void read(MediaPlaylist.Builder builder, String attributes) {
             builder.iFramesOnly(true);
         }
 
@@ -66,7 +64,7 @@ enum MediaPlaylistTags implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
 
     EXT_X_TARGETDURATION {
         @Override
-        public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) {
+        public void read(MediaPlaylist.Builder builder, String attributes) {
             builder.targetDuration(Integer.parseInt(attributes));
         }
 
@@ -80,7 +78,7 @@ enum MediaPlaylistTags implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
 
     EXT_X_ENDLIST {
         @Override
-        public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) {
+        public void read(MediaPlaylist.Builder builder, String attributes) {
             builder.ongoing(false);
         }
 
@@ -92,7 +90,7 @@ enum MediaPlaylistTags implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
 
     EXT_X_START {
         @Override
-        public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+        public void read(MediaPlaylist.Builder builder, String attributes) throws PlaylistParserException {
             builder.startTimeOffset(readAttributes(StartTimeOffsetParser.class, attributes, StartTimeOffset.builder()).build());
         }
 
@@ -104,7 +102,7 @@ enum MediaPlaylistTags implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
 
     EXT_X_DISCONTINUITY_SEQUENCE {
         @Override
-        public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) {
+        public void read(MediaPlaylist.Builder builder, String attributes) {
             builder.discontinuitySequence(Long.parseLong(attributes));
         }
 
@@ -118,7 +116,7 @@ enum MediaPlaylistTags implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
 
     EXT_X_MEDIA_SEQUENCE {
         @Override
-        public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) {
+        public void read(MediaPlaylist.Builder builder, String attributes) {
             builder.mediaSequence(Long.parseLong(attributes));
 
         }
@@ -131,7 +129,7 @@ enum MediaPlaylistTags implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
 
     EXT_X_ALLOW_CACHE {
         @Override
-        public void read(MediaPlaylist.Builder builder, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+        public void read(MediaPlaylist.Builder builder, String attributes) throws PlaylistParserException {
             builder.allowCache(ParserUtils.yesOrNo(attributes));
         }
 

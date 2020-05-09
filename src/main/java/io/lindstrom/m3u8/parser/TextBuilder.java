@@ -10,6 +10,8 @@ import static io.lindstrom.m3u8.parser.Tags.YES;
 public class TextBuilder {
     private final StringBuilder stringBuilder;
 
+    private int currentAttributeCount = 0;
+
     public TextBuilder(StringBuilder stringBuilder) {
         this.stringBuilder = stringBuilder;
     }
@@ -37,11 +39,11 @@ public class TextBuilder {
                                                                     X value,
                                                                     Class<M> mapperClass) {
 
-        AttributeListBuilder attributes = new AttributeListBuilder();
-        EnumSet.allOf(mapperClass).forEach(attribute -> attribute.write(attributes, value));
+
 
         stringBuilder.append(tag).append(':');
-        stringBuilder.append(attributes.toString());
+        currentAttributeCount = 0;
+        EnumSet.allOf(mapperClass).forEach(attribute -> attribute.write(value, this));
         stringBuilder.append('\n');
 
         return this;
@@ -77,7 +79,6 @@ public class TextBuilder {
         return this;
     }
 
-
     // attribute
     public void add(String key, Enum<?> value) {
         add(key, value.toString());
@@ -92,10 +93,11 @@ public class TextBuilder {
     }
 
     public void add(String key, String value) {
-        if (stringBuilder.length() > 0) {
+        if (currentAttributeCount > 0) {
             stringBuilder.append(",");
         }
         stringBuilder.append(key).append("=").append(value);
+        currentAttributeCount++;
     }
 
     public void addRaw(String string) {

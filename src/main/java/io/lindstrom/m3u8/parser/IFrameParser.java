@@ -10,8 +10,8 @@ enum IFrameParser implements Attribute<IFrameVariant, IFrameVariant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, IFrameVariant value) {
-            attributes.addQuoted(name(), value.uri());
+        public void write(IFrameVariant value, TextBuilder textBuilder) {
+            textBuilder.addQuoted(name(), value.uri());
         }
     },
 
@@ -22,8 +22,8 @@ enum IFrameParser implements Attribute<IFrameVariant, IFrameVariant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, IFrameVariant value) {
-            attributes.add(name(), String.valueOf(value.bandwidth()));
+        public void write(IFrameVariant value, TextBuilder textBuilder) {
+            textBuilder.add(name(), String.valueOf(value.bandwidth()));
         }
     },
 
@@ -34,8 +34,8 @@ enum IFrameParser implements Attribute<IFrameVariant, IFrameVariant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, IFrameVariant value) {
-            value.averageBandwidth().ifPresent(v -> attributes.add(key(), String.valueOf(v)));
+        public void write(IFrameVariant value, TextBuilder textBuilder) {
+            value.averageBandwidth().ifPresent(v -> textBuilder.add(key(), String.valueOf(v)));
         }
     },
 
@@ -46,9 +46,9 @@ enum IFrameParser implements Attribute<IFrameVariant, IFrameVariant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, IFrameVariant value) {
+        public void write(IFrameVariant value, TextBuilder textBuilder) {
             if (!value.codecs().isEmpty()) {
-                attributes.addQuoted(name(), String.join(",", value.codecs()));
+                textBuilder.addQuoted(name(), String.join(",", value.codecs()));
             }
         }
     },
@@ -60,8 +60,8 @@ enum IFrameParser implements Attribute<IFrameVariant, IFrameVariant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, IFrameVariant value) {
-            value.resolution().ifPresent(v -> attributes.add(key(), ParserUtils.writeResolution(v)));
+        public void write(IFrameVariant value, TextBuilder textBuilder) {
+            value.resolution().ifPresent(v -> textBuilder.add(key(), ParserUtils.writeResolution(v)));
         }
     },
 
@@ -72,8 +72,8 @@ enum IFrameParser implements Attribute<IFrameVariant, IFrameVariant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, IFrameVariant value) {
-            value.hdcpLevel().ifPresent(v -> attributes.add(key(), v));
+        public void write(IFrameVariant value, TextBuilder textBuilder) {
+            value.hdcpLevel().ifPresent(v -> textBuilder.add(key(), v));
         }
     },
 
@@ -84,8 +84,8 @@ enum IFrameParser implements Attribute<IFrameVariant, IFrameVariant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, IFrameVariant value) {
-            value.video().ifPresent(v -> attributes.addQuoted(name(), v));
+        public void write(IFrameVariant value, TextBuilder textBuilder) {
+            value.video().ifPresent(v -> textBuilder.addQuoted(name(), v));
         }
     },
 
@@ -96,8 +96,8 @@ enum IFrameParser implements Attribute<IFrameVariant, IFrameVariant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, IFrameVariant value) {
-            value.programId().ifPresent(v -> attributes.add(key(), Integer.toString(v)));
+        public void write(IFrameVariant value, TextBuilder textBuilder) {
+            value.programId().ifPresent(v -> textBuilder.add(key(), Integer.toString(v)));
         }
     },
 
@@ -108,8 +108,8 @@ enum IFrameParser implements Attribute<IFrameVariant, IFrameVariant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, IFrameVariant value) {
-            value.videoRange().ifPresent(v -> attributes.add(key(), v));
+        public void write(IFrameVariant value, TextBuilder textBuilder) {
+            value.videoRange().ifPresent(v -> textBuilder.add(key(), v));
         }
     }
 }

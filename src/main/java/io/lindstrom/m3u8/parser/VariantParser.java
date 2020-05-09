@@ -10,8 +10,8 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, Variant value) {
-            attributes.add(name(), String.valueOf(value.bandwidth()));
+        public void write(Variant value, TextBuilder textBuilder) {
+            textBuilder.add(name(), String.valueOf(value.bandwidth()));
         }
     },
 
@@ -22,8 +22,8 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, Variant value) {
-            value.averageBandwidth().ifPresent(v -> attributes.add(key(), String.valueOf(v)));
+        public void write(Variant value, TextBuilder textBuilder) {
+            value.averageBandwidth().ifPresent(v -> textBuilder.add(key(), String.valueOf(v)));
         }
     },
 
@@ -34,9 +34,9 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, Variant value) {
+        public void write(Variant value, TextBuilder textBuilder) {
             if (!value.codecs().isEmpty()) {
-                attributes.addQuoted(name(), String.join(",", value.codecs()));
+                textBuilder.addQuoted(name(), String.join(",", value.codecs()));
             }
         }
     },
@@ -48,8 +48,8 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, Variant value) {
-            value.resolution().ifPresent(v -> attributes.add(name(), ParserUtils.writeResolution(v)));
+        public void write(Variant value, TextBuilder textBuilder) {
+            value.resolution().ifPresent(v -> textBuilder.add(name(), ParserUtils.writeResolution(v)));
         }
     },
 
@@ -61,8 +61,8 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, Variant value) {
-            value.frameRate().ifPresent(v -> attributes.add(key(), Double.toString(v)));
+        public void write(Variant value, TextBuilder textBuilder) {
+            value.frameRate().ifPresent(v -> textBuilder.add(key(), Double.toString(v)));
         }
     },
 
@@ -73,8 +73,8 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, Variant value) {
-            value.hdcpLevel().ifPresent(v -> attributes.add(key(), v));
+        public void write(Variant value, TextBuilder textBuilder) {
+            value.hdcpLevel().ifPresent(v -> textBuilder.add(key(), v));
         }
     },
 
@@ -85,8 +85,8 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, Variant value) {
-            value.audio().ifPresent(v -> attributes.addQuoted(name(), v));
+        public void write(Variant value, TextBuilder textBuilder) {
+            value.audio().ifPresent(v -> textBuilder.addQuoted(name(), v));
         }
     },
 
@@ -97,8 +97,8 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, Variant value) {
-            value.video().ifPresent(v -> attributes.addQuoted(name(), v));
+        public void write(Variant value, TextBuilder textBuilder) {
+            value.video().ifPresent(v -> textBuilder.addQuoted(name(), v));
         }
     },
 
@@ -109,8 +109,8 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, Variant value) {
-            value.subtitles().ifPresent(v -> attributes.addQuoted(name(), v));
+        public void write(Variant value, TextBuilder textBuilder) {
+            value.subtitles().ifPresent(v -> textBuilder.addQuoted(name(), v));
         }
     },
 
@@ -127,11 +127,11 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, Variant value) {
+        public void write(Variant value, TextBuilder textBuilder) {
             if (value.closedCaptionsNone().orElse(false)) {
-                attributes.add(key(), NONE);
+                textBuilder.add(key(), NONE);
             } else {
-                value.closedCaptions().ifPresent(v -> attributes.addQuoted(key(), v));
+                value.closedCaptions().ifPresent(v -> textBuilder.addQuoted(key(), v));
             }
         }
     },
@@ -143,8 +143,8 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, Variant value) {
-            value.programId().ifPresent(v -> attributes.add(key(), Integer.toString(v)));
+        public void write(Variant value, TextBuilder textBuilder) {
+            value.programId().ifPresent(v -> textBuilder.add(key(), Integer.toString(v)));
         }
     },
 
@@ -155,8 +155,8 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, Variant value) {
-            value.videoRange().ifPresent(v -> attributes.add(key(), v));
+        public void write(Variant value, TextBuilder textBuilder) {
+            value.videoRange().ifPresent(v -> textBuilder.add(key(), v));
         }
     },
 
@@ -167,8 +167,8 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, Variant value) {
-            attributes.addRaw("\n" + value.uri());
+        public void write(Variant value, TextBuilder textBuilder) {
+            textBuilder.addRaw("\n" + value.uri());
         }
     }
 }

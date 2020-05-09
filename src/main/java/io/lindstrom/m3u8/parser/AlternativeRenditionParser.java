@@ -11,8 +11,8 @@ enum AlternativeRenditionParser implements Attribute<AlternativeRendition, Alter
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
-            attributes.add(key(), value.type());
+        public void write(AlternativeRendition value, TextBuilder textBuilder) {
+            textBuilder.add(key(), value.type());
         }
     },
 
@@ -23,8 +23,8 @@ enum AlternativeRenditionParser implements Attribute<AlternativeRendition, Alter
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
-            value.uri().ifPresent(uri -> attributes.addQuoted(key(), uri));
+        public void write(AlternativeRendition value, TextBuilder textBuilder) {
+            value.uri().ifPresent(uri -> textBuilder.addQuoted(key(), uri));
         }
     },
 
@@ -35,8 +35,8 @@ enum AlternativeRenditionParser implements Attribute<AlternativeRendition, Alter
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
-            attributes.addQuoted(key(), value.groupId());
+        public void write(AlternativeRendition value, TextBuilder textBuilder) {
+            textBuilder.addQuoted(key(), value.groupId());
         }
     },
 
@@ -47,8 +47,8 @@ enum AlternativeRenditionParser implements Attribute<AlternativeRendition, Alter
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
-            value.language().ifPresent(v -> attributes.addQuoted(key(), v));
+        public void write(AlternativeRendition value, TextBuilder textBuilder) {
+            value.language().ifPresent(v -> textBuilder.addQuoted(key(), v));
         }
     },
 
@@ -59,8 +59,8 @@ enum AlternativeRenditionParser implements Attribute<AlternativeRendition, Alter
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
-            value.assocLanguage().ifPresent(v -> attributes.addQuoted(key(), v));
+        public void write(AlternativeRendition value, TextBuilder textBuilder) {
+            value.assocLanguage().ifPresent(v -> textBuilder.addQuoted(key(), v));
         }
     },
 
@@ -71,8 +71,8 @@ enum AlternativeRenditionParser implements Attribute<AlternativeRendition, Alter
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
-            attributes.addQuoted(name(), value.name());
+        public void write(AlternativeRendition value, TextBuilder textBuilder) {
+            textBuilder.addQuoted(name(), value.name());
         }
     },
 
@@ -83,8 +83,8 @@ enum AlternativeRenditionParser implements Attribute<AlternativeRendition, Alter
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
-            value.defaultRendition().ifPresent(v -> attributes.add(name(), v));
+        public void write(AlternativeRendition value, TextBuilder textBuilder) {
+            value.defaultRendition().ifPresent(v -> textBuilder.add(name(), v));
         }
     },
 
@@ -95,8 +95,8 @@ enum AlternativeRenditionParser implements Attribute<AlternativeRendition, Alter
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
-            value.autoSelect().ifPresent(v -> attributes.add(name(), v));
+        public void write(AlternativeRendition value, TextBuilder textBuilder) {
+            value.autoSelect().ifPresent(v -> textBuilder.add(name(), v));
         }
     },
 
@@ -107,8 +107,8 @@ enum AlternativeRenditionParser implements Attribute<AlternativeRendition, Alter
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
-            value.forced().ifPresent(v -> attributes.add(name(), v));
+        public void write(AlternativeRendition value, TextBuilder textBuilder) {
+            value.forced().ifPresent(v -> textBuilder.add(name(), v));
 
         }
     },
@@ -120,8 +120,8 @@ enum AlternativeRenditionParser implements Attribute<AlternativeRendition, Alter
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
-            value.inStreamId().ifPresent(v -> attributes.addQuoted(key(), v));
+        public void write(AlternativeRendition value, TextBuilder textBuilder) {
+            value.inStreamId().ifPresent(v -> textBuilder.addQuoted(key(), v));
 
         }
     },
@@ -133,9 +133,9 @@ enum AlternativeRenditionParser implements Attribute<AlternativeRendition, Alter
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
+        public void write(AlternativeRendition value, TextBuilder textBuilder) {
             if (!value.characteristics().isEmpty()) {
-                attributes.addQuoted(name(), String.join(",", value.characteristics()));
+                textBuilder.addQuoted(name(), String.join(",", value.characteristics()));
             }
         }
     },
@@ -147,9 +147,9 @@ enum AlternativeRenditionParser implements Attribute<AlternativeRendition, Alter
         }
 
         @Override
-        public void write(AttributeListBuilder attributes, AlternativeRendition value) {
+        public void write(AlternativeRendition value, TextBuilder textBuilder) {
             if (!value.channels().isEmpty()) {
-                attributes.addQuoted(name(), String.join("/", value.channels()));
+                textBuilder.addQuoted(name(), String.join("/", value.channels()));
             }
         }
     }
