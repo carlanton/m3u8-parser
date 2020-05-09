@@ -13,8 +13,7 @@ enum MasterPlaylistTags implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
 
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-            playlist.version().ifPresent(version -> textBuilder.add(tag())
-                    .add(":").add(version).add('\n'));
+            playlist.version().ifPresent(version -> textBuilder.addTag(tag(), version));
         }
     },
 
@@ -27,7 +26,7 @@ enum MasterPlaylistTags implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
             if (playlist.independentSegments()) {
-                textBuilder.add(tag()).add('\n');
+                textBuilder.addTag(tag());
             }
         }
     },

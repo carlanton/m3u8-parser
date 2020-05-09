@@ -16,8 +16,7 @@ enum MediaPlaylistTags implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
 
         @Override
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-            playlist.version().ifPresent(version -> textBuilder.add(tag())
-                    .add(":").add(version).add('\n'));
+            playlist.version().ifPresent(version -> textBuilder.addTag(tag(), version));
         }
     },
 
@@ -30,7 +29,7 @@ enum MediaPlaylistTags implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
         @Override
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
             if (playlist.independentSegments()) {
-                textBuilder.add(tag()).add('\n');
+                textBuilder.addTag(tag());
             }
         }
     },
@@ -43,8 +42,7 @@ enum MediaPlaylistTags implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
 
         @Override
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-            playlist.playlistType().ifPresent(value ->
-                    textBuilder.add(tag()).add(":").add(value.toString()).add('\n'));
+            playlist.playlistType().ifPresent(value -> textBuilder.addTag(tag(), value.toString()));
         }
     },
 
@@ -57,7 +55,7 @@ enum MediaPlaylistTags implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
         @Override
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
             if (playlist.iFramesOnly()) {
-                textBuilder.add(tag()).add("\n");
+                textBuilder.addTag(tag());
             }
         }
     },
@@ -70,9 +68,7 @@ enum MediaPlaylistTags implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
 
         @Override
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-            textBuilder
-                    .add(tag()).add(":")
-                    .add(playlist.targetDuration()).add("\n");
+            textBuilder.addTag(tag(), playlist.targetDuration());
         }
     },
 
@@ -109,7 +105,7 @@ enum MediaPlaylistTags implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
         @Override
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
             if (playlist.discontinuitySequence() != 0) {
-                textBuilder.add(tag()).add(":").add(playlist.discontinuitySequence()).add("\n");
+                textBuilder.addTag(tag(), playlist.discontinuitySequence());
             }
         }
     },

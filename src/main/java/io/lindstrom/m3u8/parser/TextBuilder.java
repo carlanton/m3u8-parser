@@ -54,6 +54,7 @@ public class TextBuilder {
         return this;
     }
 
+
     public TextBuilder add(char ch) {
         stringBuilder.append(ch);
         return this;
@@ -79,6 +80,29 @@ public class TextBuilder {
         return this;
     }
 
+    // Tag helpers
+    public TextBuilder addTag(String tag) {
+        stringBuilder.append(tag).append('\n');
+        return this;
+    }
+
+    public TextBuilder addTag(String tag, int attribute) {
+        stringBuilder.append(tag).append(":").append(attribute).append('\n');
+        return this;
+    }
+
+    public TextBuilder addTag(String tag, long attribute) {
+        stringBuilder.append(tag).append(":").append(attribute).append('\n');
+        return this;
+    }
+
+    public TextBuilder addTag(String tag, String attribute) {
+        stringBuilder.append(tag).append(":").append(attribute).append('\n');
+        return this;
+    }
+
+
+
     // attribute
     public void add(String key, Enum<?> value) {
         add(key, value.toString());
@@ -103,4 +127,6 @@ public class TextBuilder {
     public void addRaw(String string) {
         stringBuilder.append(string);
     }
+
+
 }
