@@ -9,12 +9,13 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import static io.lindstrom.m3u8.parser.Tags.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public abstract class AbstractPlaylistParser<T extends Playlist, B> {
-    final StartTimeOffsetParser startTimeOffsetParser = new StartTimeOffsetParser();
+    private static final String EXTM3U = "#EXTM3U";
 
     public T readPlaylist(InputStream inputStream) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, UTF_8))) {
@@ -71,7 +72,7 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
         boolean extM3uFound = false;
         while (lineIterator.hasNext() && !extM3uFound) {
             String line = lineIterator.next();
-            if (Tags.EXTM3U.equals(line)) {
+            if (EXTM3U.equals(line)) {
                 extM3uFound = true;
             } else if (!line.isEmpty()) {
                 break; // invalid line  found
@@ -89,12 +90,14 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
 
             if (line.startsWith("#EXT")) {
                 int colonPosition = line.indexOf(':');
-                String prefix = colonPosition > 0 ? line.substring(0, colonPosition) : line;
+                String prefix = colonPosition > 0 ? line.substring(1, colonPosition) : line.substring(1);
                 String attributes = colonPosition > 0 ? line.substring(colonPosition + 1) : "";
 
-                onTag(builder, prefix, attributes, lineIterator);
+                String tagName = prefix.contains("-") ? prefix.replace("-", "_") : prefix;
+
+                onTag(builder, tagName, attributes, lineIterator);
             } else if (!(line.startsWith("#") || line.isEmpty())) {
-                onURI(builder, line);
+                onURI(builder, line); // <-- TODO silly?
             }
         }
 
@@ -105,24 +108,20 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
 
     abstract void onTag(B builder, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException;
 
-    abstract void onURI(B builder, String uri) throws PlaylistParserException;
+    void onURI(B builder, String uri) throws PlaylistParserException {
+        throw new PlaylistParserException("Unexpected URI in playlist: " + uri);
+    }
 
     abstract T build(B builder);
 
-    abstract void write(T playlist, StringBuilder stringBuilder);
+    abstract void write(T playlist, TextBuilder textBuilder);
 
     public String writePlaylistAsString(T playlist) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(EXTM3U).append('\n');
-        playlist.version().ifPresent(version -> stringBuilder.append(EXT_X_VERSION)
-                .append(":").append(version).append('\n'));
-        if (playlist.independentSegments()) {
-            stringBuilder.append(EXT_X_INDEPENDENT_SEGMENTS).append('\n');
-        }
 
-        playlist.startTimeOffset().ifPresent(value -> startTimeOffsetParser.write(value, stringBuilder));
-
-        write(playlist, stringBuilder);
+        TextBuilder textBuilder = new TextBuilder(stringBuilder);
+        write(playlist, textBuilder);
         return stringBuilder.toString();
     }
 
@@ -133,4 +132,6 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
     public ByteBuffer writePlaylistAsByteBuffer(T playlist) {
         return ByteBuffer.wrap(writePlaylistAsBytes(playlist));
     }
+
+
 }
