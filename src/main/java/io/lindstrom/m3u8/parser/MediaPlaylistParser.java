@@ -41,14 +41,14 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
     void onTag(Builder builderWrapper, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
         String name = prefix.substring(1).replace("-", "_"); // TODO FIXME
 
-        for (MediaPlaylistTags tag : MediaPlaylistTags.values()) {
+        for (MediaPlaylistTag tag : MediaPlaylistTag.values()) {
             if (tag.name().equals(name)) {
                 tag.read(builderWrapper.playlistBuilder, attributes);
                 return;
             }
         }
 
-        for (MediaSegmentTags tag : MediaSegmentTags.values()) {
+        for (MediaSegmentTag tag : MediaSegmentTag.values()) {
             if (tag.name().equals(name)) {
                 tag.read(builderWrapper.segmentBuilder, attributes);
                 return;
@@ -73,12 +73,12 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
 
     @Override
     void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-        for (MediaPlaylistTags mapper : MediaPlaylistTags.values()) {
+        for (MediaPlaylistTag mapper : MediaPlaylistTag.values()) {
             mapper.write(playlist, textBuilder);
         }
 
         playlist.mediaSegments().forEach(mediaSegment -> {
-            for (MediaSegmentTags mapper : MediaSegmentTags.values()) {
+            for (MediaSegmentTag mapper : MediaSegmentTag.values()) {
                 mapper.write(mediaSegment, textBuilder);
             }
             textBuilder.add(mediaSegment.uri()).add('\n');

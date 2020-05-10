@@ -3,7 +3,7 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.KeyMethod;
 import io.lindstrom.m3u8.model.SegmentKey;
 
-public enum SegmentKeyParser implements Attribute<SegmentKey, SegmentKey.Builder> {
+public enum SegmentKeyAttribute implements Attribute<SegmentKey, SegmentKey.Builder> {
     METHOD {
         @Override
         public void read(SegmentKey.Builder builder, String value) {
@@ -62,5 +62,11 @@ public enum SegmentKeyParser implements Attribute<SegmentKey, SegmentKey.Builder
         public void write(SegmentKey segmentKey, TextBuilder textBuilder) {
             segmentKey.keyFormatVersions().ifPresent(v -> textBuilder.addQuoted(name(), v));
         }
+    };
+
+    static SegmentKey parse(String attributes) throws PlaylistParserException {
+        SegmentKey.Builder builder = SegmentKey.builder();
+        AbstractPlaylistParser.readAttributes(SegmentKeyAttribute.class, attributes, builder);
+        return builder.build();
     }
 }

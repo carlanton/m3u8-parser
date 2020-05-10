@@ -4,7 +4,7 @@ import io.lindstrom.m3u8.model.*;
 
 import java.time.OffsetDateTime;
 
-enum MediaSegmentTags implements Tag<MediaSegment, MediaSegment.Builder> {
+enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
     EXT_X_BYTERANGE {
         @Override
         public void read(MediaSegment.Builder builder, String attributes) throws PlaylistParserException {
@@ -13,11 +13,7 @@ enum MediaSegmentTags implements Tag<MediaSegment, MediaSegment.Builder> {
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            mediaSegment.byteRange().ifPresent(byteRange -> textBuilder
-                            .add(tag())
-                            .add(":")
-                            .add(ParserUtils.writeByteRange(byteRange))
-                            .add("\n"));
+            mediaSegment.byteRange().ifPresent(value -> textBuilder.addTag(tag(), ParserUtils.writeByteRange(value)));
         }
     },
 
@@ -53,46 +49,43 @@ enum MediaSegmentTags implements Tag<MediaSegment, MediaSegment.Builder> {
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            mediaSegment.programDateTime().ifPresent(value -> textBuilder
-                    .add(tag()).add(':')
-                    .add(value)
-                    .add('\n'));
+            mediaSegment.programDateTime().ifPresent(value -> textBuilder.addTag(tag(), value.toString()));
         }
     },
 
     EXT_X_DATERANGE {
         @Override
         public void read(MediaSegment.Builder builder, String attributes) throws PlaylistParserException {
-            builder.dateRange(AbstractPlaylistParser.readAttributes(DateRangeParser.class, attributes, DateRange.builder()).build());
+            builder.dateRange(DateRangeAttributes.parse(attributes));
         }
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            mediaSegment.dateRange().ifPresent(value -> textBuilder.add(tag(), value, DateRangeParser.class));
+            mediaSegment.dateRange().ifPresent(value -> textBuilder.add(tag(), value, DateRangeAttributes.class));
         }
     },
 
     EXT_X_MAP {
         @Override
         public void read(MediaSegment.Builder builder, String attributes) throws PlaylistParserException {
-            builder.segmentMap(AbstractPlaylistParser.readAttributes(SegmentMapParser.class, attributes, SegmentMap.builder()).build());
+            builder.segmentMap(SegmentMapAttribute.parse(attributes));
         }
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            mediaSegment.segmentMap().ifPresent(map -> textBuilder.add(tag(), map, SegmentMapParser.class));
+            mediaSegment.segmentMap().ifPresent(value -> textBuilder.add(tag(), value, SegmentMapAttribute.class));
         }
     },
 
     EXT_X_KEY {
         @Override
         public void read(MediaSegment.Builder builder, String attributes) throws PlaylistParserException {
-            builder.segmentKey(AbstractPlaylistParser.readAttributes(SegmentKeyParser.class, attributes, SegmentKey.builder()).build());
+            builder.segmentKey(SegmentKeyAttribute.parse(attributes));
         }
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            mediaSegment.segmentKey().ifPresent(key -> textBuilder.add(tag(), key, SegmentKeyParser.class));
+            mediaSegment.segmentKey().ifPresent(key -> textBuilder.add(tag(), key, SegmentKeyAttribute.class));
         }
     },
 

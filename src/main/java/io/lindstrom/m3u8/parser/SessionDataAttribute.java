@@ -2,7 +2,9 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.SessionData;
 
-enum SessionDataParser implements Attribute<SessionData, SessionData.Builder> {
+import static io.lindstrom.m3u8.parser.AbstractPlaylistParser.readAttributes;
+
+enum SessionDataAttribute implements Attribute<SessionData, SessionData.Builder> {
     DATA_ID {
         @Override
         public void read(SessionData.Builder builder, String value) {
@@ -49,5 +51,11 @@ enum SessionDataParser implements Attribute<SessionData, SessionData.Builder> {
         public void write(SessionData value, TextBuilder textBuilder) {
             value.language().ifPresent(v -> textBuilder.addQuoted(name(), v));
         }
+    };
+
+    static SessionData parse(String attributes) throws PlaylistParserException {
+        SessionData.Builder builder = SessionData.builder();
+        readAttributes(SessionDataAttribute.class, attributes, builder);
+        return builder.build();
     }
 }

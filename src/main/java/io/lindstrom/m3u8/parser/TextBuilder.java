@@ -2,7 +2,6 @@ package io.lindstrom.m3u8.parser;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Optional;
 
 import static io.lindstrom.m3u8.parser.Tags.NO;
 import static io.lindstrom.m3u8.parser.Tags.YES;
@@ -16,26 +15,15 @@ public class TextBuilder {
         this.stringBuilder = stringBuilder;
     }
 
-    public <X, M extends Enum<M> & Attribute<X, ?>> TextBuilder add(String tag,
+    public <X, M extends Enum<M> & Attribute<X, ?>> void add(String tag,
                                                                     List<X> values,
                                                                     Class<M> mapperClass) {
 
-        values.forEach(x -> add(tag, x, mapperClass));
+        values.forEach(value -> add(tag, value, mapperClass));
 
-        return this;
     }
 
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    public <X, M extends Enum<M> & Attribute<X, ?>> TextBuilder add(String tag,
-                                                                    Optional<X> value,
-                                                                    Class<M> mapperClass) {
-
-        value.ifPresent(x -> add(tag, x, mapperClass));
-
-        return this;
-    }
-
-    public <X, M extends Enum<M> & Attribute<X, ?>> TextBuilder add(String tag,
+    public <X, M extends Enum<M> & Attribute<X, ?>> void add(String tag,
                                                                     X value,
                                                                     Class<M> mapperClass) {
 
@@ -45,8 +33,6 @@ public class TextBuilder {
         currentAttributeCount = 0;
         EnumSet.allOf(mapperClass).forEach(attribute -> attribute.write(value, this));
         stringBuilder.append('\n');
-
-        return this;
     }
 
     public TextBuilder add(String text) {
@@ -81,24 +67,20 @@ public class TextBuilder {
     }
 
     // Tag helpers
-    public TextBuilder addTag(String tag) {
+    void addTag(String tag) {
         stringBuilder.append(tag).append('\n');
-        return this;
     }
 
-    public TextBuilder addTag(String tag, int attribute) {
+    void addTag(String tag, int attribute) {
         stringBuilder.append(tag).append(":").append(attribute).append('\n');
-        return this;
     }
 
-    public TextBuilder addTag(String tag, long attribute) {
+    void addTag(String tag, long attribute) {
         stringBuilder.append(tag).append(":").append(attribute).append('\n');
-        return this;
     }
 
-    public TextBuilder addTag(String tag, String attribute) {
+    void addTag(String tag, String attribute) {
         stringBuilder.append(tag).append(":").append(attribute).append('\n');
-        return this;
     }
 
 
@@ -123,10 +105,4 @@ public class TextBuilder {
         stringBuilder.append(key).append("=").append(value);
         currentAttributeCount++;
     }
-
-    public void addRaw(String string) {
-        stringBuilder.append(string);
-    }
-
-
 }

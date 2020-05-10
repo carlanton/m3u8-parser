@@ -2,7 +2,9 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.Variant;
 
-enum VariantParser implements Attribute<Variant, Variant.Builder> {
+import static io.lindstrom.m3u8.parser.AbstractPlaylistParser.readAttributes;
+
+enum VariantAttribute implements Attribute<Variant, Variant.Builder> {
     BANDWIDTH {
         @Override
         public void read(Variant.Builder builder, String value) {
@@ -68,7 +70,7 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
 
     HDCP_LEVEL {
         @Override
-        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+        public void read(Variant.Builder builder, String value) {
             builder.hdcpLevel(value);
         }
 
@@ -80,7 +82,7 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
 
     AUDIO {
         @Override
-        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+        public void read(Variant.Builder builder, String value) {
             builder.audio(value);
         }
 
@@ -92,7 +94,7 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
 
     VIDEO {
         @Override
-        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+        public void read(Variant.Builder builder, String value) {
             builder.video(value);
         }
 
@@ -104,7 +106,7 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
 
     SUBTITLES {
         @Override
-        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+        public void read(Variant.Builder builder, String value) {
             builder.subtitles(value);
         }
 
@@ -118,7 +120,7 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
         private static final String NONE = "NONE";
 
         @Override
-        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+        public void read(Variant.Builder builder, String value) {
             if (value.equals(NONE)) {
                 builder.closedCaptionsNone(true);
             } else {
@@ -138,7 +140,7 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
 
     PROGRAM_ID {
         @Override
-        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+        public void read(Variant.Builder builder, String value) {
             builder.programId(Integer.parseInt(value));
         }
 
@@ -150,7 +152,7 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
 
     VIDEO_RANGE {
         @Override
-        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+        public void read(Variant.Builder builder, String value) {
             builder.videoRange(value);
         }
 
@@ -168,7 +170,13 @@ enum VariantParser implements Attribute<Variant, Variant.Builder> {
 
         @Override
         public void write(Variant value, TextBuilder textBuilder) {
-            textBuilder.addRaw("\n" + value.uri());
+            textBuilder.add("\n").add(value.uri());
         }
+    };
+
+    static Variant parse(String attributes) throws PlaylistParserException {
+        Variant.Builder builder = Variant.builder();
+        readAttributes(VariantAttribute.class, attributes, builder);
+        return builder.build();
     }
 }

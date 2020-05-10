@@ -6,7 +6,7 @@ import java.time.OffsetDateTime;
 
 import static io.lindstrom.m3u8.parser.Tags.YES;
 
-enum DateRangeParser implements Attribute<DateRange, DateRange.Builder> {
+enum DateRangeAttributes implements Attribute<DateRange, DateRange.Builder> {
     ID {
         @Override
         public void read(DateRange.Builder builder, String value) {
@@ -145,5 +145,11 @@ enum DateRangeParser implements Attribute<DateRange, DateRange.Builder> {
             // TODO: support client attribute types (quoted-string, hexadecimal-sequence & decimal-floating-point)
             value.clientAttributes().forEach(textBuilder::addQuoted);
         }
+    };
+
+    static DateRange parse(String attributes) throws PlaylistParserException {
+        DateRange.Builder builder = DateRange.builder();
+        AbstractPlaylistParser.readAttributes(DateRangeAttributes.class, attributes, builder);
+        return builder.build();
     }
 }

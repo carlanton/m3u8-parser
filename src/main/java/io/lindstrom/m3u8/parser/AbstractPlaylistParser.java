@@ -12,7 +12,8 @@ import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static io.lindstrom.m3u8.parser.Tags.*;
+import static io.lindstrom.m3u8.parser.Tags.EXTM3U;
+import static io.lindstrom.m3u8.parser.Tags.EXT_X_START;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public abstract class AbstractPlaylistParser<T extends Playlist, B> {
@@ -121,7 +122,7 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
 
         TextBuilder textBuilder = new TextBuilder(stringBuilder);
 
-        playlist.startTimeOffset().ifPresent(value -> textBuilder.add(EXT_X_START, value, StartTimeOffsetParser.class));
+        playlist.startTimeOffset().ifPresent(value -> textBuilder.add(EXT_X_START, value, StartTimeOffsetAttribute.class));
 
         write(playlist, textBuilder);
         return stringBuilder.toString();
@@ -136,9 +137,9 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
     }
 
 
-    static <X, Y, Z extends Enum<Z> & Attribute<X, Y>> Y readAttributes(Class<Z> mapperClass,
-                                                                        String attributes,
-                                                                        Y builder) throws PlaylistParserException {
+    static <X, Y, Z extends Enum<Z> & Attribute<X, Y>> void readAttributes(Class<Z> mapperClass,
+                                                                           String attributes,
+                                                                           Y builder) throws PlaylistParserException {
         Matcher matcher = ATTRIBUTE_LIST_PATTERN.matcher(attributes);
 
         while (matcher.find()) {
@@ -155,8 +156,5 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
                 throw new PlaylistParserException("Unknown attribute: " + attribute);
             }
         }
-
-        return builder;
     }
-
 }

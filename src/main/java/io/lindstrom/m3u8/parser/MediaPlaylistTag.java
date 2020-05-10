@@ -2,12 +2,11 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.MediaPlaylist;
 import io.lindstrom.m3u8.model.PlaylistType;
-import io.lindstrom.m3u8.model.StartTimeOffset;
 
-import static io.lindstrom.m3u8.parser.AbstractPlaylistParser.readAttributes;
-import static io.lindstrom.m3u8.parser.Tags.*;
+import static io.lindstrom.m3u8.parser.Tags.NO;
+import static io.lindstrom.m3u8.parser.Tags.YES;
 
-enum MediaPlaylistTags implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
+enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
     EXT_X_VERSION {
         @Override
         public void read(MediaPlaylist.Builder builder, String attributes) {
@@ -87,12 +86,12 @@ enum MediaPlaylistTags implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
     EXT_X_START {
         @Override
         public void read(MediaPlaylist.Builder builder, String attributes) throws PlaylistParserException {
-            builder.startTimeOffset(readAttributes(StartTimeOffsetParser.class, attributes, StartTimeOffset.builder()).build());
+            builder.startTimeOffset(StartTimeOffsetAttribute.parse(attributes));
         }
 
         @Override
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-            textBuilder.add(tag(), playlist.startTimeOffset(), StartTimeOffsetParser.class);
+            playlist.startTimeOffset().ifPresent(value -> textBuilder.add(tag(), value, StartTimeOffsetAttribute.class));
         }
     },
 

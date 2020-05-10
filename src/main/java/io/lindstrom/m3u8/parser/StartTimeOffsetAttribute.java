@@ -2,9 +2,9 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.StartTimeOffset;
 
-import static io.lindstrom.m3u8.parser.Tags.*;
+import static io.lindstrom.m3u8.parser.Tags.YES;
 
-enum StartTimeOffsetParser implements Attribute<StartTimeOffset, StartTimeOffset.Builder> {
+enum StartTimeOffsetAttribute implements Attribute<StartTimeOffset, StartTimeOffset.Builder> {
     TIME_OFFSET {
         @Override
         public void read(StartTimeOffset.Builder builder, String value) {
@@ -29,5 +29,11 @@ enum StartTimeOffsetParser implements Attribute<StartTimeOffset, StartTimeOffset
                 textBuilder.add(name(), YES);
             }
         }
+    };
+
+    static StartTimeOffset parse(String attributes) throws PlaylistParserException {
+        StartTimeOffset.Builder builder = StartTimeOffset.builder();
+        AbstractPlaylistParser.readAttributes(StartTimeOffsetAttribute.class, attributes, builder);
+        return builder.build();
     }
 }

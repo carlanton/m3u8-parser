@@ -32,7 +32,7 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
 
     @Override
     void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-        for (MasterPlaylistTags mapper : MasterPlaylistTags.values()) {
+        for (MasterPlaylistTag mapper : MasterPlaylistTag.values()) {
             mapper.write(playlist, textBuilder);
         }
     }
@@ -46,9 +46,9 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
     void onTag(MasterPlaylist.Builder builder, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException{
         String name = prefix.substring(1).replace("-", "_"); // TODO FIXME
 
-        MasterPlaylistTags tag = MasterPlaylistTags.valueOf(name);
+        MasterPlaylistTag tag = MasterPlaylistTag.valueOf(name);
 
-        if (tag == MasterPlaylistTags.EXT_X_STREAM_INF) {
+        if (tag == MasterPlaylistTag.EXT_X_STREAM_INF) {
             String uriLine = lineIterator.next();
             if (uriLine == null || uriLine.startsWith("#")) {
                 throw new PlaylistParserException("Expected URI, got " + uriLine);
