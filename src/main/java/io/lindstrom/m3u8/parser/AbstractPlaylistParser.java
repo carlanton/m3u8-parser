@@ -13,7 +13,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static io.lindstrom.m3u8.parser.Tags.EXTM3U;
-import static io.lindstrom.m3u8.parser.Tags.EXT_X_START;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public abstract class AbstractPlaylistParser<T extends Playlist, B> {
@@ -92,10 +91,12 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
 
             if (line.startsWith("#EXT")) {
                 int colonPosition = line.indexOf(':');
-                String prefix = colonPosition > 0 ? line.substring(0, colonPosition) : line;
+                String prefix = colonPosition > 0 ? line.substring(1, colonPosition) : line.substring(1);
                 String attributes = colonPosition > 0 ? line.substring(colonPosition + 1) : "";
 
-                onTag(builder, prefix, attributes, lineIterator);
+                String tagName = prefix.contains("-") ? prefix.replace("-", "_") : prefix;
+
+                onTag(builder, tagName, attributes, lineIterator);
             } else if (!(line.startsWith("#") || line.isEmpty())) {
                 onURI(builder, line); // <-- TODO silly?
             }
@@ -121,9 +122,6 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
         stringBuilder.append(EXTM3U).append('\n');
 
         TextBuilder textBuilder = new TextBuilder(stringBuilder);
-
-        playlist.startTimeOffset().ifPresent(value -> textBuilder.add(EXT_X_START, value, StartTimeOffsetAttribute.class));
-
         write(playlist, textBuilder);
         return stringBuilder.toString();
     }

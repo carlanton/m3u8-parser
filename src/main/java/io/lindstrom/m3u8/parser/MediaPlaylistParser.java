@@ -38,9 +38,7 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
     }
 
     @Override
-    void onTag(Builder builderWrapper, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
-        String name = prefix.substring(1).replace("-", "_"); // TODO FIXME
-
+    void onTag(Builder builderWrapper, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
         for (MediaPlaylistTag tag : MediaPlaylistTag.values()) {
             if (tag.name().equals(name)) {
                 tag.read(builderWrapper.playlistBuilder, attributes);
@@ -56,7 +54,7 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
         }
 
         // unknown tag
-        throw new PlaylistParserException("Tag not implemented: " + prefix);
+        throw new PlaylistParserException("Tag not implemented: " + name.replace("_", "-"));
     }
 
     @Override

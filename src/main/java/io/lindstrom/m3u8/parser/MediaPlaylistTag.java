@@ -33,6 +33,18 @@ enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
         }
     },
 
+    EXT_X_START {
+        @Override
+        public void read(MediaPlaylist.Builder builder, String attributes) throws PlaylistParserException {
+            builder.startTimeOffset(StartTimeOffsetAttribute.parse(attributes));
+        }
+
+        @Override
+        public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
+            playlist.startTimeOffset().ifPresent(value -> textBuilder.add(tag(), value, StartTimeOffsetAttribute.class));
+        }
+    },
+
     EXT_X_PLAYLIST_TYPE {
         @Override
         public void read(MediaPlaylist.Builder builder, String attributes) {
@@ -80,18 +92,6 @@ enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
         @Override
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
             // written elsewhere
-        }
-    },
-
-    EXT_X_START {
-        @Override
-        public void read(MediaPlaylist.Builder builder, String attributes) throws PlaylistParserException {
-            builder.startTimeOffset(StartTimeOffsetAttribute.parse(attributes));
-        }
-
-        @Override
-        public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-            playlist.startTimeOffset().ifPresent(value -> textBuilder.add(tag(), value, StartTimeOffsetAttribute.class));
         }
     },
 

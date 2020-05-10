@@ -29,6 +29,18 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
         }
     },
 
+    EXT_X_START {
+        @Override
+        public void read(MasterPlaylist.Builder builder, String attributes) throws PlaylistParserException {
+            builder.startTimeOffset(StartTimeOffsetAttribute.parse(attributes));
+        }
+
+        @Override
+        public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
+            playlist.startTimeOffset().ifPresent(value -> textBuilder.add(tag(), value, StartTimeOffsetAttribute.class));
+        }
+    },
+
     EXT_X_MEDIA {
         @Override
         public void read(MasterPlaylist.Builder builder, String attributes) throws PlaylistParserException {
@@ -62,18 +74,6 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
             textBuilder.add(tag(), playlist.iFrameVariants(), IFrameVariantAttribute.class);
-        }
-    },
-
-    EXT_X_START {
-        @Override
-        public void read(MasterPlaylist.Builder builder, String attributes) throws PlaylistParserException {
-            builder.startTimeOffset(StartTimeOffsetAttribute.parse(attributes));
-        }
-
-        @Override
-        public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-            playlist.startTimeOffset().ifPresent(value -> textBuilder.add(tag(), value, StartTimeOffsetAttribute.class));
         }
     },
 

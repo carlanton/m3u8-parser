@@ -93,7 +93,7 @@ enum DateRangeAttributes implements Attribute<DateRange, DateRange.Builder> {
 
     SCTE35_OUT {
         @Override
-        public void read(DateRange.Builder builder, String value) throws PlaylistParserException {
+        public void read(DateRange.Builder builder, String value) {
             builder.scte35Out(value);
         }
 

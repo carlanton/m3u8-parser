@@ -15,6 +15,10 @@ public class TextBuilder {
         this.stringBuilder = stringBuilder;
     }
 
+    public TextBuilder() {
+        this.stringBuilder = new StringBuilder();
+    }
+
     public <X, M extends Enum<M> & Attribute<X, ?>> void add(String tag,
                                                                     List<X> values,
                                                                     Class<M> mapperClass) {
@@ -23,16 +27,19 @@ public class TextBuilder {
 
     }
 
-    public <X, M extends Enum<M> & Attribute<X, ?>> void add(String tag,
-                                                                    X value,
-                                                                    Class<M> mapperClass) {
+    public <X, M extends Enum<M> & Attribute<X, ?>> void add(String tag, X value, Class<M> mapperClass) {
 
 
 
         stringBuilder.append(tag).append(':');
+        addAttributes(value, mapperClass);
+        stringBuilder.append('\n');
+    }
+
+    public <X, M extends Enum<M> & Attribute<X, ?>> TextBuilder addAttributes(X value, Class<M> mapperClass) {
         currentAttributeCount = 0;
         EnumSet.allOf(mapperClass).forEach(attribute -> attribute.write(value, this));
-        stringBuilder.append('\n');
+        return this;
     }
 
     public TextBuilder add(String text) {
@@ -104,5 +111,10 @@ public class TextBuilder {
         }
         stringBuilder.append(key).append("=").append(value);
         currentAttributeCount++;
+    }
+
+    @Override
+    public String toString() {
+        return stringBuilder.toString();
     }
 }

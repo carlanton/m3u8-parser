@@ -1,10 +1,12 @@
 package io.lindstrom.m3u8.parser;
 
 import java.nio.file.Path;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 class TestUtils {
     static void attributeConsistencyCheck(String original, String written, Path playlistPath) throws PlaylistParserException {
-        /*
         RawPlaylistParser quoteCheckingParser = new RawPlaylistParser();
 
         RawPlaylist expected = quoteCheckingParser.readPlaylist(original);
@@ -36,6 +38,5 @@ class TestUtils {
             }
         }
 
-         */
     }
 }

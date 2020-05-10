@@ -43,10 +43,13 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
     }
 
     @Override
-    void onTag(MasterPlaylist.Builder builder, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException{
-        String name = prefix.substring(1).replace("-", "_"); // TODO FIXME
-
-        MasterPlaylistTag tag = MasterPlaylistTag.valueOf(name);
+    void onTag(MasterPlaylist.Builder builder, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException{
+        MasterPlaylistTag tag;
+        try {
+            tag = MasterPlaylistTag.valueOf(name);
+        } catch (IllegalArgumentException e) {
+            throw new PlaylistParserException("Tag not implemented: " + name.replace("_", "-"));
+        }
 
         if (tag == MasterPlaylistTag.EXT_X_STREAM_INF) {
             String uriLine = lineIterator.next();
