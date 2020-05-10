@@ -3,6 +3,9 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.KeyMethod;
 import io.lindstrom.m3u8.model.SegmentKey;
 
+/*
+ * #EXT-X-KEY:<attribute-list>
+ */
 public enum SegmentKeyAttribute implements Attribute<SegmentKey, SegmentKey.Builder> {
     METHOD {
         @Override
@@ -66,7 +69,7 @@ public enum SegmentKeyAttribute implements Attribute<SegmentKey, SegmentKey.Buil
 
     static SegmentKey parse(String attributes) throws PlaylistParserException {
         SegmentKey.Builder builder = SegmentKey.builder();
-        AbstractPlaylistParser.readAttributes(SegmentKeyAttribute.class, attributes, builder);
+        ParserUtils.readAttributes(SegmentKeyAttribute.class, attributes, builder);
         return builder.build();
     }
 }

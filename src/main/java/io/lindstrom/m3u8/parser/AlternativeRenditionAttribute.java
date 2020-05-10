@@ -159,7 +159,7 @@ enum AlternativeRenditionAttribute implements Attribute<AlternativeRendition, Al
 
     static AlternativeRendition parse(String attributes) throws PlaylistParserException {
         AlternativeRendition.Builder builder = AlternativeRendition.builder();
-        AbstractPlaylistParser.readAttributes(AlternativeRenditionAttribute.class, attributes, builder);
+        ParserUtils.readAttributes(AlternativeRenditionAttribute.class, attributes, builder);
         return builder.build();
     }
 }

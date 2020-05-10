@@ -4,6 +4,9 @@ import io.lindstrom.m3u8.model.StartTimeOffset;
 
 import static io.lindstrom.m3u8.parser.ParserUtils.YES;
 
+/*
+ * #EXT-X-START:<attribute-list>
+ */
 enum StartTimeOffsetAttribute implements Attribute<StartTimeOffset, StartTimeOffset.Builder> {
     TIME_OFFSET {
         @Override
@@ -33,7 +36,7 @@ enum StartTimeOffsetAttribute implements Attribute<StartTimeOffset, StartTimeOff
 
     static StartTimeOffset parse(String attributes) throws PlaylistParserException {
         StartTimeOffset.Builder builder = StartTimeOffset.builder();
-        AbstractPlaylistParser.readAttributes(StartTimeOffsetAttribute.class, attributes, builder);
+        ParserUtils.readAttributes(StartTimeOffsetAttribute.class, attributes, builder);
         return builder.build();
     }
 }

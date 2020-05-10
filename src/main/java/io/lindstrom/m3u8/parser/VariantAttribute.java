@@ -2,8 +2,9 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.Variant;
 
-import static io.lindstrom.m3u8.parser.AbstractPlaylistParser.readAttributes;
-
+/*
+ * #EXT-X-STREAM-INF:<attribute-list>
+ */
 enum VariantAttribute implements Attribute<Variant, Variant.Builder> {
     BANDWIDTH {
         @Override
@@ -176,7 +177,7 @@ enum VariantAttribute implements Attribute<Variant, Variant.Builder> {
 
     static Variant parse(String attributes) throws PlaylistParserException {
         Variant.Builder builder = Variant.builder();
-        readAttributes(VariantAttribute.class, attributes, builder);
+        ParserUtils.readAttributes(VariantAttribute.class, attributes, builder);
         return builder.build();
     }
 }

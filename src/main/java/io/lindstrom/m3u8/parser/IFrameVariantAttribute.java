@@ -2,7 +2,7 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.IFrameVariant;
 
-import static io.lindstrom.m3u8.parser.AbstractPlaylistParser.readAttributes;
+import static io.lindstrom.m3u8.parser.ParserUtils.readAttributes;
 
 /*
  * #EXT-X-I-FRAME-STREAM-INF:<attribute-list>

@@ -2,8 +2,11 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.SessionData;
 
-import static io.lindstrom.m3u8.parser.AbstractPlaylistParser.readAttributes;
+import static io.lindstrom.m3u8.parser.ParserUtils.readAttributes;
 
+/*
+ * #EXT-X-SESSION-DATA:<attribute-list>
+ */
 enum SessionDataAttribute implements Attribute<SessionData, SessionData.Builder> {
     DATA_ID {
         @Override

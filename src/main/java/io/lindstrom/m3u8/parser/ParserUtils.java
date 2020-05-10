@@ -20,6 +20,7 @@ class ParserUtils {
 
     static final String YES = "YES";
     static final String NO = "NO";
+    static final Pattern ATTRIBUTE_LIST_PATTERN = Pattern.compile("([A-Z0-9\\-]+)=(?:(?:\"([^\"]+)\")|([^,]+))");
 
     private static final Pattern BYTE_RANGE_PATTERN = Pattern.compile("(\\d+)(?:@(\\d+))?");
 
@@ -68,5 +69,26 @@ class ParserUtils {
 
     static String writeByteRange(ByteRange byteRange) {
         return byteRange.length() + byteRange.offset().map(offset -> "@" + offset).orElse("");
+    }
+
+    static <X, Y, Z extends Enum<Z> & Attribute<X, Y>> void readAttributes(Class<Z> mapperClass,
+                                                                           String attributes,
+                                                                           Y builder) throws PlaylistParserException {
+        Matcher matcher = ATTRIBUTE_LIST_PATTERN.matcher(attributes);
+
+        while (matcher.find()) {
+            String attribute = matcher.group(1);
+            String value = matcher.group(2) != null ? matcher.group(2) : matcher.group(3);
+
+            try {
+                if (attribute.startsWith("X-")) {
+                    Enum.valueOf(mapperClass, "CLIENT_ATTRIBUTE").read(builder, attribute, value);
+                } else {
+                    Enum.valueOf(mapperClass, attribute.replace("-", "_")).read(builder, value);
+                }
+            } catch (IllegalArgumentException e) {
+                throw new PlaylistParserException("Unknown attribute: " + attribute);
+            }
+        }
     }
 }

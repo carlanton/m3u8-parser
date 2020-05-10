@@ -16,7 +16,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public abstract class AbstractPlaylistParser<T extends Playlist, B> {
     private static final String EXTM3U = "#EXTM3U";
-    static final Pattern ATTRIBUTE_LIST_PATTERN = Pattern.compile("([A-Z0-9\\-]+)=(?:(?:\"([^\"]+)\")|([^,]+))");
 
     public T readPlaylist(InputStream inputStream) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, UTF_8))) {
@@ -135,24 +134,4 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
     }
 
 
-    static <X, Y, Z extends Enum<Z> & Attribute<X, Y>> void readAttributes(Class<Z> mapperClass,
-                                                                           String attributes,
-                                                                           Y builder) throws PlaylistParserException {
-        Matcher matcher = ATTRIBUTE_LIST_PATTERN.matcher(attributes);
-
-        while (matcher.find()) {
-            String attribute = matcher.group(1);
-            String value = matcher.group(2) != null ? matcher.group(2) : matcher.group(3);
-
-            try {
-                if (attribute.startsWith("X-")) {
-                    Enum.valueOf(mapperClass, "CLIENT_ATTRIBUTE").read(builder, attribute, value);
-                } else {
-                    Enum.valueOf(mapperClass, attribute.replace("-", "_")).read(builder, value);
-                }
-            } catch (IllegalArgumentException e) {
-                throw new PlaylistParserException("Unknown attribute: " + attribute);
-            }
-        }
-    }
 }

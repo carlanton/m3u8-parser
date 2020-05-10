@@ -14,7 +14,7 @@ public class RawPlaylistParser extends AbstractPlaylistParser<RawPlaylist, RawPl
 
     @Override
     void onTag(RawPlaylist.Builder builder, String name, String attributeList, Iterator<String> lineIterator) {
-        Matcher matcher = ATTRIBUTE_LIST_PATTERN.matcher(attributeList);
+        Matcher matcher = ParserUtils.ATTRIBUTE_LIST_PATTERN.matcher(attributeList);
         List<RawAttribute> attributes = new ArrayList<>();
         while (matcher.find()) {
             boolean hasQuotes = matcher.group(2) != null;
