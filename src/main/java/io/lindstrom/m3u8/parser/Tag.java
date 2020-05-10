@@ -6,6 +6,7 @@ interface Tag<T, B> {
     String name();
 
     default String tag() {
-        return "#" + name().replace("_", "-");
+        String name = name();
+        return "#" + (name.contains("_") ? name.replace("_", "-") : name);
     }
 }
