@@ -3,12 +3,16 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.Resolution;
 import io.lindstrom.m3u8.model.Variant;
 import io.lindstrom.m3u8.model.VideoRange;
+import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
 
 public class VariantParserTest {
     //private final TagParser<Variant> parser = VariantParser.parser();
-    private final String attributes = "BANDWIDTH=123456789,AVERAGE-BANDWIDTH=12345678,CODECS=\"a,b,c\",RESOLUTION=1024x768,FRAME-RATE=50.0,HDCP-LEVEL=0,AUDIO=\"audio\",VIDEO=\"video\",SUBTITLES=\"subtitles\",CLOSED-CAPTIONS=\"cc\",VIDEO-RANGE=SDR";
+    private final String attributes = "BANDWIDTH=123456789,AVERAGE-BANDWIDTH=12345678,CODECS=\"a,b,c\",RESOLUTION=1024x768,FRAME-RATE=50.0,HDCP-LEVEL=0,AUDIO=\"audio\",VIDEO=\"video\",SUBTITLES=\"subtitles\",CLOSED-CAPTIONS=\"cc\",VIDEO-RANGE=SDR,URI=uri";
     private final Variant variant = Variant.builder()
             .uri("uri")
             .bandwidth(123456789)
@@ -24,9 +28,9 @@ public class VariantParserTest {
             .closedCaptions("cc")
             .build();
 
-/*    @Test
+   @Test
     public void parseAttributes() throws Exception {
-        assertEquals(variant, parser.parse(attributes, "uri"));
+        assertEquals(variant, VariantAttribute.parse(attributes + ",URI=uri"));
     }
 
     @Test
@@ -36,19 +40,18 @@ public class VariantParserTest {
                 .closedCaptions(Optional.empty())
                 .build();
 
-        assertEquals(variantLocal, parser.parse(attributes.replace("\"cc\"", "NONE"), "uri"));
+        assertEquals(variantLocal, VariantAttribute.parse(attributes.replace("\"cc\"", "NONE")));
     }
-*/
-/*
+
     @Test
     public void write() throws Exception {
-        StringBuilder stringBuilder = new StringBuilder();
-        parser.write(variant, stringBuilder);
-        assertEquals(Tags.EXT_X_STREAM_INF
+        TextBuilder textBuilder = new TextBuilder();
+        textBuilder.addTag("EXT-X-STREAM-INF", variant, VariantAttribute.class);
+        assertEquals("#EXT-X-STREAM-INF"
                         + ":"
-                        + attributes
+                        + attributes.replace(",URI=uri", "")
                         + "\nuri\n",
-                stringBuilder.toString());
+                textBuilder.toString());
     }
 
     @Test(expected = PlaylistParserException.class)
@@ -70,6 +73,4 @@ public class VariantParserTest {
     public void readResolution() throws Exception {
         assertEquals(Resolution.of(1024, 768), ParserUtils.parseResolution("1024x768"));
     }
-
- */
 }
