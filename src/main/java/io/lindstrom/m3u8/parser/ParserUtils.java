@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static io.lindstrom.m3u8.parser.Tags.NO;
-import static io.lindstrom.m3u8.parser.Tags.YES;
-
 class ParserUtils {
     static final DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder()
             .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
@@ -20,6 +17,9 @@ class ParserUtils {
             .optionalStart().appendOffset("+HHMM", "+0000").optionalEnd()
             .optionalStart().appendOffset("+HH", "Z").optionalEnd()
             .toFormatter();
+
+    static final String YES = "YES";
+    static final String NO = "NO";
 
     private static final Pattern BYTE_RANGE_PATTERN = Pattern.compile("(\\d+)(?:@(\\d+))?");
 

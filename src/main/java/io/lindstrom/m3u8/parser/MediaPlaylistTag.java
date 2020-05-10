@@ -3,8 +3,8 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.MediaPlaylist;
 import io.lindstrom.m3u8.model.PlaylistType;
 
-import static io.lindstrom.m3u8.parser.Tags.NO;
-import static io.lindstrom.m3u8.parser.Tags.YES;
+import static io.lindstrom.m3u8.parser.ParserUtils.NO;
+import static io.lindstrom.m3u8.parser.ParserUtils.YES;
 
 enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
     EXT_X_VERSION {
@@ -41,19 +41,7 @@ enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
 
         @Override
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-            playlist.startTimeOffset().ifPresent(value -> textBuilder.add(tag(), value, StartTimeOffsetAttribute.class));
-        }
-    },
-
-    EXT_X_PLAYLIST_TYPE {
-        @Override
-        public void read(MediaPlaylist.Builder builder, String attributes) {
-            builder.playlistType(PlaylistType.valueOf(attributes));
-        }
-
-        @Override
-        public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-            playlist.playlistType().ifPresent(value -> textBuilder.addTag(tag(), value.toString()));
+            playlist.startTimeOffset().ifPresent(value -> textBuilder.addTag(tag(), value, StartTimeOffsetAttribute.class));
         }
     },
 
@@ -71,6 +59,30 @@ enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
         }
     },
 
+    EXT_X_ALLOW_CACHE {
+        @Override
+        public void read(MediaPlaylist.Builder builder, String attributes) throws PlaylistParserException {
+            builder.allowCache(ParserUtils.yesOrNo(attributes));
+        }
+
+        @Override
+        public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
+            playlist.allowCache().ifPresent(value -> textBuilder.addTag(tag(), value ? YES : NO));
+        }
+    },
+
+    EXT_X_PLAYLIST_TYPE {
+        @Override
+        public void read(MediaPlaylist.Builder builder, String attributes) {
+            builder.playlistType(PlaylistType.valueOf(attributes));
+        }
+
+        @Override
+        public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
+            playlist.playlistType().ifPresent(value -> textBuilder.addTag(tag(), value.toString()));
+        }
+    },
+
     EXT_X_TARGETDURATION {
         @Override
         public void read(MediaPlaylist.Builder builder, String attributes) {
@@ -83,15 +95,16 @@ enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
         }
     },
 
-    EXT_X_ENDLIST {
+    EXT_X_MEDIA_SEQUENCE {
         @Override
         public void read(MediaPlaylist.Builder builder, String attributes) {
-            builder.ongoing(false);
+            builder.mediaSequence(Long.parseLong(attributes));
+
         }
 
         @Override
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-            // written elsewhere
+            textBuilder.addTag(tag(), playlist.mediaSequence());
         }
     },
 
@@ -109,30 +122,15 @@ enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
         }
     },
 
-    EXT_X_MEDIA_SEQUENCE {
+    EXT_X_ENDLIST {
         @Override
         public void read(MediaPlaylist.Builder builder, String attributes) {
-            builder.mediaSequence(Long.parseLong(attributes));
-
+            builder.ongoing(false);
         }
 
         @Override
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-            textBuilder.add(tag()).add(":").add(playlist.mediaSequence()).add("\n");
-        }
-    },
-
-    EXT_X_ALLOW_CACHE {
-        @Override
-        public void read(MediaPlaylist.Builder builder, String attributes) throws PlaylistParserException {
-            builder.allowCache(ParserUtils.yesOrNo(attributes));
-        }
-
-        @Override
-        public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-            playlist.allowCache().ifPresent(value ->
-                    textBuilder.add(tag()).add(":").add(value ? YES : NO).add("\n")
-            );
+            // written elsewhere
         }
     }
 }

@@ -4,6 +4,9 @@ import io.lindstrom.m3u8.model.IFrameVariant;
 
 import static io.lindstrom.m3u8.parser.AbstractPlaylistParser.readAttributes;
 
+/*
+ * #EXT-X-I-FRAME-STREAM-INF:<attribute-list>
+ */
 enum IFrameVariantAttribute implements Attribute<IFrameVariant, IFrameVariant.Builder> {
     URI {
         @Override

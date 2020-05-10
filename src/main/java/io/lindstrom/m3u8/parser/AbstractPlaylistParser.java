@@ -12,10 +12,10 @@ import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static io.lindstrom.m3u8.parser.Tags.EXTM3U;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public abstract class AbstractPlaylistParser<T extends Playlist, B> {
+    private static final String EXTM3U = "#EXTM3U";
     static final Pattern ATTRIBUTE_LIST_PATTERN = Pattern.compile("([A-Z0-9\\-]+)=(?:(?:\"([^\"]+)\")|([^,]+))");
 
     public T readPlaylist(InputStream inputStream) throws IOException {
@@ -73,7 +73,7 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
         boolean extM3uFound = false;
         while (lineIterator.hasNext() && !extM3uFound) {
             String line = lineIterator.next();
-            if (Tags.EXTM3U.equals(line)) {
+            if (EXTM3U.equals(line)) {
                 extM3uFound = true;
             } else if (!line.isEmpty()) {
                 break; // invalid line  found

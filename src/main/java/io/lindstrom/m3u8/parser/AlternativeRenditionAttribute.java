@@ -3,6 +3,9 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.AlternativeRendition;
 import io.lindstrom.m3u8.model.MediaType;
 
+/*
+ * #EXT-X-MEDIA:<attribute-list>
+ */
 enum AlternativeRenditionAttribute implements Attribute<AlternativeRendition, AlternativeRendition.Builder> {
     TYPE {
         @Override

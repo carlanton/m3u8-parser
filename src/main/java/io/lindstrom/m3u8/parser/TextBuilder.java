@@ -3,40 +3,33 @@ package io.lindstrom.m3u8.parser;
 import java.util.EnumSet;
 import java.util.List;
 
-import static io.lindstrom.m3u8.parser.Tags.NO;
-import static io.lindstrom.m3u8.parser.Tags.YES;
+import static io.lindstrom.m3u8.parser.ParserUtils.NO;
+import static io.lindstrom.m3u8.parser.ParserUtils.YES;
 
-public class TextBuilder {
+class TextBuilder {
     private final StringBuilder stringBuilder;
 
     private int currentAttributeCount = 0;
 
-    public TextBuilder(StringBuilder stringBuilder) {
+    TextBuilder(StringBuilder stringBuilder) {
         this.stringBuilder = stringBuilder;
     }
 
-    public TextBuilder() {
+    TextBuilder() {
         this.stringBuilder = new StringBuilder();
     }
 
-    public <X, M extends Enum<M> & Attribute<X, ?>> void add(String tag,
-                                                                    List<X> values,
-                                                                    Class<M> mapperClass) {
-
-        values.forEach(value -> add(tag, value, mapperClass));
-
+    <T, M extends Enum<M> & Attribute<T, ?>> void addTag(String tag, List<T> values, Class<M> mapperClass) {
+        values.forEach(value -> addTag(tag, value, mapperClass));
     }
 
-    public <X, M extends Enum<M> & Attribute<X, ?>> void add(String tag, X value, Class<M> mapperClass) {
-
-
-
-        stringBuilder.append(tag).append(':');
+    <T, M extends Enum<M> & Attribute<T, ?>> void addTag(String tag, T value, Class<M> mapperClass) {
+        stringBuilder.append('#').append(tag).append(':');
         addAttributes(value, mapperClass);
         stringBuilder.append('\n');
     }
 
-    public <X, M extends Enum<M> & Attribute<X, ?>> TextBuilder addAttributes(X value, Class<M> mapperClass) {
+    <T, M extends Enum<M> & Attribute<T, ?>> TextBuilder addAttributes(T value, Class<M> mapperClass) {
         currentAttributeCount = 0;
         EnumSet.allOf(mapperClass).forEach(attribute -> attribute.write(value, this));
         return this;
@@ -58,36 +51,21 @@ public class TextBuilder {
         return this;
     }
 
-    public TextBuilder add(long l) {
-        stringBuilder.append(l);
-        return this;
-    }
-
-    public TextBuilder add(int i) {
-        stringBuilder.append(i);
-        return this;
-    }
-
-    public TextBuilder add(Object object) {
-        stringBuilder.append(object);
-        return this;
-    }
-
     // Tag helpers
     void addTag(String tag) {
-        stringBuilder.append(tag).append('\n');
+        stringBuilder.append('#').append(tag).append('\n');
     }
 
     void addTag(String tag, int attribute) {
-        stringBuilder.append(tag).append(":").append(attribute).append('\n');
+        stringBuilder.append('#').append(tag).append(":").append(attribute).append('\n');
     }
 
     void addTag(String tag, long attribute) {
-        stringBuilder.append(tag).append(":").append(attribute).append('\n');
+        stringBuilder.append('#').append(tag).append(":").append(attribute).append('\n');
     }
 
     void addTag(String tag, String attribute) {
-        stringBuilder.append(tag).append(":").append(attribute).append('\n');
+        stringBuilder.append('#').append(tag).append(":").append(attribute).append('\n');
     }
 
 

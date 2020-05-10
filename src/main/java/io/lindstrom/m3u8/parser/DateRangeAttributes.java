@@ -4,8 +4,11 @@ import io.lindstrom.m3u8.model.DateRange;
 
 import java.time.OffsetDateTime;
 
-import static io.lindstrom.m3u8.parser.Tags.YES;
+import static io.lindstrom.m3u8.parser.ParserUtils.YES;
 
+/*
+ * #EXT-X-DATERANGE:<attribute-list>
+ */
 enum DateRangeAttributes implements Attribute<DateRange, DateRange.Builder> {
     ID {
         @Override

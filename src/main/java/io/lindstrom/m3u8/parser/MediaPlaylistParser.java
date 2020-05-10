@@ -4,8 +4,6 @@ import io.lindstrom.m3u8.model.*;
 
 import java.util.Iterator;
 
-import static io.lindstrom.m3u8.parser.Tags.*;
-
 /**
  * MediaPlaylistParser can read and write Media Playlists according to RFC 8216 (HTTP Live Streaming).
  * <p>
@@ -31,6 +29,7 @@ import static io.lindstrom.m3u8.parser.Tags.*;
  * This implementation is reusable and thread safe.
  */
 public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, MediaPlaylistParser.Builder> {
+    private static final String EXT_X_ENDLIST = "#EXT-X-ENDLIST\n";
 
     @Override
     Builder newBuilder() {
@@ -53,7 +52,6 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
             }
         }
 
-        // unknown tag
         throw new PlaylistParserException("Tag not implemented: " + name.replace("_", "-"));
     }
 
@@ -83,7 +81,7 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
         });
 
         if (!playlist.ongoing()) {
-            textBuilder.add(EXT_X_ENDLIST).add('\n');
+            textBuilder.add(EXT_X_ENDLIST);
         }
     }
 

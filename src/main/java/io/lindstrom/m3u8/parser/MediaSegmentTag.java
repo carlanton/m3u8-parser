@@ -1,43 +1,21 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.*;
+import io.lindstrom.m3u8.model.MediaSegment;
 
 import java.time.OffsetDateTime;
 
 enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
-    EXT_X_BYTERANGE {
-        @Override
-        public void read(MediaSegment.Builder builder, String attributes) throws PlaylistParserException {
-            builder.byteRange(ParserUtils.parseByteRange(attributes));
-        }
-
-        @Override
-        public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            mediaSegment.byteRange().ifPresent(value -> textBuilder.addTag(tag(), ParserUtils.writeByteRange(value)));
-        }
-    },
-
-    EXTINF {
+    EXT_X_DISCONTINUITY {
         @Override
         public void read(MediaSegment.Builder builder, String attributes) {
-            int p = attributes.indexOf(',');
-
-            if (p < 0) {
-                builder.duration(Double.parseDouble(attributes));
-            } else {
-                builder.duration(Double.parseDouble(attributes.substring(0, p)));
-                String title = attributes.substring(p + 1);
-                if (!title.isEmpty()) {
-                    builder.title(title);
-                }
-            }
+            builder.discontinuity(true);
         }
 
         @Override
-        public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            textBuilder.add(tag()).add(":").add(mediaSegment.duration()).add(",");
-            mediaSegment.title().ifPresent(textBuilder::add);
-            textBuilder.add('\n');
+        public void write(MediaSegment value, TextBuilder textBuilder) {
+            if (value.discontinuity()) {
+                textBuilder.addTag(tag());
+            }
         }
     },
 
@@ -61,7 +39,7 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            mediaSegment.dateRange().ifPresent(value -> textBuilder.add(tag(), value, DateRangeAttributes.class));
+            mediaSegment.dateRange().ifPresent(value -> textBuilder.addTag(tag(), value, DateRangeAttributes.class));
         }
     },
 
@@ -73,7 +51,43 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            mediaSegment.segmentMap().ifPresent(value -> textBuilder.add(tag(), value, SegmentMapAttribute.class));
+            mediaSegment.segmentMap().ifPresent(value -> textBuilder.addTag(tag(), value, SegmentMapAttribute.class));
+        }
+    },
+
+    EXTINF {
+        @Override
+        public void read(MediaSegment.Builder builder, String attributes) {
+            int p = attributes.indexOf(',');
+
+            if (p < 0) {
+                builder.duration(Double.parseDouble(attributes));
+            } else {
+                builder.duration(Double.parseDouble(attributes.substring(0, p)));
+                String title = attributes.substring(p + 1);
+                if (!title.isEmpty()) {
+                    builder.title(title);
+                }
+            }
+        }
+
+        @Override
+        public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
+            textBuilder.add('#').add(tag()).add(":").add(mediaSegment.duration()).add(",");
+            mediaSegment.title().ifPresent(textBuilder::add);
+            textBuilder.add('\n');
+        }
+    },
+
+    EXT_X_BYTERANGE {
+        @Override
+        public void read(MediaSegment.Builder builder, String attributes) throws PlaylistParserException {
+            builder.byteRange(ParserUtils.parseByteRange(attributes));
+        }
+
+        @Override
+        public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
+            mediaSegment.byteRange().ifPresent(value -> textBuilder.addTag(tag(), ParserUtils.writeByteRange(value)));
         }
     },
 
@@ -85,21 +99,7 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            mediaSegment.segmentKey().ifPresent(key -> textBuilder.add(tag(), key, SegmentKeyAttribute.class));
-        }
-    },
-
-    EXT_X_DISCONTINUITY {
-        @Override
-        public void read(MediaSegment.Builder builder, String attributes) {
-            builder.discontinuity(true);
-        }
-
-        @Override
-        public void write(MediaSegment value, TextBuilder textBuilder) {
-            if (value.discontinuity()) {
-                textBuilder.add(tag()).add('\n');
-            }
+            mediaSegment.segmentKey().ifPresent(key -> textBuilder.addTag(tag(), key, SegmentKeyAttribute.class));
         }
     }
 }

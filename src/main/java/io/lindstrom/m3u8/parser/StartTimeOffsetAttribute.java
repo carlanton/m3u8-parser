@@ -2,7 +2,7 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.StartTimeOffset;
 
-import static io.lindstrom.m3u8.parser.Tags.YES;
+import static io.lindstrom.m3u8.parser.ParserUtils.YES;
 
 enum StartTimeOffsetAttribute implements Attribute<StartTimeOffset, StartTimeOffset.Builder> {
     TIME_OFFSET {
