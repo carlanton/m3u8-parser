@@ -41,6 +41,18 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
         }
     },
 
+    EXT_X_DEFINE {
+        @Override
+        public void read(MasterPlaylist.Builder builder, String attributes) throws PlaylistParserException {
+            builder.addVariables(PlaylistVariableAttribute.parse(attributes));
+        }
+
+        @Override
+        public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
+            textBuilder.addTag(tag(), playlist.variables(), PlaylistVariableAttribute.class);
+        }
+    },
+
     EXT_X_MEDIA {
         @Override
         public void read(MasterPlaylist.Builder builder, String attributes) throws PlaylistParserException {
