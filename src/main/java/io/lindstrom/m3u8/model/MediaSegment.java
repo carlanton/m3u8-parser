@@ -31,6 +31,11 @@ public interface MediaSegment {
         return false;
     }
 
+    @Value.Default
+    default boolean gap() {
+        return false;
+    }
+
     static Builder builder() {
         return new Builder();
     }

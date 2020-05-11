@@ -34,6 +34,20 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
         }
     },
 
+    EXT_X_GAP {
+        @Override
+        public void read(MediaSegment.Builder builder, String attributes) {
+            builder.gap(true);
+        }
+
+        @Override
+        public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
+            if (mediaSegment.gap()) {
+                textBuilder.addTag(tag());
+            }
+        }
+    },
+
     EXT_X_DATERANGE {
         @Override
         public void read(MediaSegment.Builder builder, String attributes) throws PlaylistParserException {
