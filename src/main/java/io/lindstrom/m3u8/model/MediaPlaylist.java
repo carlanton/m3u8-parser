@@ -38,6 +38,7 @@ public interface MediaPlaylist extends Playlist {
 
     List<MediaSegment> mediaSegments();
 
+    Optional<ServerControl> serverControl();
 
     static Builder builder() {
         return new Builder();

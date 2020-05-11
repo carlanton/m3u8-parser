@@ -79,6 +79,10 @@ class TextBuilder {
         add(key, value ? YES : NO);
     }
 
+    public void add(String key, double value) {
+        add(key, Double.toString(value));
+    }
+
     public void addQuoted(String key, String value) {
         add(key, "\"" + value + "\"");
     }
