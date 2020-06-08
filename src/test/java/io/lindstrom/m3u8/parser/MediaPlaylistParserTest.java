@@ -38,6 +38,21 @@ public class MediaPlaylistParserTest {
     }
 
     @Test
+    public void extInfDurationFormat() throws Exception {
+        String actual = parser.writePlaylistAsString(parser.readPlaylist(Paths.get("src/test/resources/media/issue-17.m3u8")));
+        String expected = "#EXTM3U\n" +
+                "#EXT-X-VERSION:3\n" +
+                "#EXT-X-TARGETDURATION:53\n" +
+                "#EXT-X-MEDIA-SEQUENCE:0\n" +
+                "#EXTINF:0.96,\n" +
+                "5UkiTad9_3021444571_copy7.ts\n" +
+                "#EXTINF:0.000011,\n" +
+                "5UkiTad9_3021444571_copy8.ts\n";
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
     public void programDateTimeFormat() throws PlaylistParserException {
         assertEquals(Optional.of(OffsetDateTime.of(2017, 10, 21, 15, 0, 10, 157000000, ZoneOffset.UTC)),
                 parser.readPlaylist(String.join("\n",

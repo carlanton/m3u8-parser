@@ -2,7 +2,10 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.MediaSegment;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.OffsetDateTime;
+import java.util.Locale;
 
 enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
     EXT_X_DISCONTINUITY {
@@ -73,7 +76,21 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            textBuilder.add('#').add(tag()).add(":").add(mediaSegment.duration()).add(",");
+            String duration;
+            double d = mediaSegment.duration();
+            if (d >= 0.001 && d < 10000000) {
+                duration = Double.toString(d);
+            } else {
+                // When d > 10^3 or d <= 10^7, Double.toString will use "computerized scientific notation" which is not
+                // supported by the HLS spec. As a workaround we use DecimalFormat. It's not thread-safe so we will
+                // create a new instance on each call. However, this should rarely happen since it's very strange
+                // segment size.
+                DecimalFormat format = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+                format.setMaximumFractionDigits(340);
+                duration = format.format(d);
+            }
+
+            textBuilder.add('#').add(tag()).add(":").add(duration).add(",");
             mediaSegment.title().ifPresent(textBuilder::add);
             textBuilder.add('\n');
         }
