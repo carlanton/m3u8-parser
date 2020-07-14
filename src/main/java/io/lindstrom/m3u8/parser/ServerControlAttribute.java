@@ -1,0 +1,73 @@
+package io.lindstrom.m3u8.parser;
+
+import io.lindstrom.m3u8.model.ServerControl;
+
+public enum ServerControlAttribute implements Attribute<ServerControl, ServerControl.Builder> {
+    CAN_SKIP_UNTIL {
+        @Override
+        public void read(ServerControl.Builder builder, String value) {
+            builder.canSkipUntil(Double.parseDouble(value));
+        }
+
+        @Override
+        public void write(ServerControl value, TextBuilder textBuilder) {
+            value.canSkipUntil().ifPresent(v -> textBuilder.add(key(), v));
+        }
+    },
+
+    CAN_SKIP_DATERANGES {
+        @Override
+        public void read(ServerControl.Builder builder, String value) throws PlaylistParserException {
+            builder.canSkipDateRanges(ParserUtils.yesOrNo(value));
+        }
+
+        @Override
+        public void write(ServerControl value, TextBuilder textBuilder) {
+            value.canSkipDateRanges().ifPresent(v -> textBuilder.add(key(), v));
+        }
+    },
+
+    HOLD_BACK {
+        @Override
+        public void read(ServerControl.Builder builder, String value) {
+            builder.holdBack(Double.parseDouble(value));
+        }
+
+        @Override
+        public void write(ServerControl value, TextBuilder textBuilder) {
+            value.holdBack().ifPresent(v -> textBuilder.add(key(), v));
+        }
+    },
+
+    PART_HOLD_BACK {
+        @Override
+        public void read(ServerControl.Builder builder, String value) {
+            builder.partHoldBack(Double.parseDouble(value));
+        }
+
+        @Override
+        public void write(ServerControl value, TextBuilder textBuilder) {
+            value.partHoldBack().ifPresent(v -> textBuilder.add(key(), v));
+        }
+    },
+
+    CAN_BLOCK_RELOAD {
+        @Override
+        public void read(ServerControl.Builder builder, String value) throws PlaylistParserException {
+            builder.canBlockReload(ParserUtils.yesOrNo(value));
+        }
+
+        @Override
+        public void write(ServerControl value, TextBuilder textBuilder) {
+            if (value.canBlockReload()) {
+                textBuilder.add(key(), ParserUtils.YES);
+            }
+        }
+    };
+
+    static ServerControl parse(String attributes) throws PlaylistParserException {
+        ServerControl.Builder builder = ServerControl.builder();
+        ParserUtils.readAttributes(ServerControlAttribute.class, attributes, builder);
+        return builder.build();
+    }
+}

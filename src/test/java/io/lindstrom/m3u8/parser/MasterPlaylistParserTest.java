@@ -1,7 +1,6 @@
 package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.*;
-import io.lindstrom.m3u8.parser.MasterPlaylistParser;
 import org.junit.Test;
 
 import java.nio.file.Paths;
@@ -31,6 +30,7 @@ public class MasterPlaylistParserTest {
                         .name("Default audio")
                         .groupId("AUDIO")
                         .build())
+                .addVariables(PlaylistVariable.of("auth", "xyz"))
                 .addVariants(
                         Variant.builder()
                                 .addCodecs("avc1.4d401f", "mp4a.40.2")
@@ -49,6 +49,7 @@ public class MasterPlaylistParserTest {
         String expected = "#EXTM3U\n" +
                 "#EXT-X-VERSION:4\n" +
                 "#EXT-X-INDEPENDENT-SEGMENTS\n" +
+                "#EXT-X-DEFINE:NAME=\"auth\",VALUE=\"xyz\"\n" +
                 "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"AUDIO\",NAME=\"Default audio\"\n" +
                 "#EXT-X-STREAM-INF:BANDWIDTH=900000,CODECS=\"avc1.4d401f,mp4a.40.2\"\n" +
                 "v0.m3u8\n" +

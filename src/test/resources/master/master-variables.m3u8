@@ -1,0 +1,6 @@
+#EXTM3U
+
+#EXT-X-DEFINE:NAME="auth",VALUE="?auth_token=/aazv/54334:pp2"
+
+#EXT-X-STREAM-INF:BANDWIDTH=1156000,RESOLUTION=640x480,CODECS="avc1.4d001e,mp4a.40.2"
+bipbop_gear1/prog_index.m3u8{$auth}

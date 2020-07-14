@@ -59,6 +59,18 @@ enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
         }
     },
 
+    EXT_X_SERVER_CONTROL {
+        @Override
+        public void read(MediaPlaylist.Builder builder, String attributes) throws PlaylistParserException {
+            builder.serverControl(ServerControlAttribute.parse(attributes));
+        }
+
+        @Override
+        public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
+            playlist.serverControl().ifPresent(v -> textBuilder.addTag(tag(), v, ServerControlAttribute.class));
+        }
+    },
+
     EXT_X_ALLOW_CACHE {
         @Override
         public void read(MediaPlaylist.Builder builder, String attributes) throws PlaylistParserException {
