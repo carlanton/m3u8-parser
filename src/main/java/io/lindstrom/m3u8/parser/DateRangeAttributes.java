@@ -3,6 +3,7 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.DateRange;
 
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static io.lindstrom.m3u8.parser.ParserUtils.YES;
 
@@ -42,7 +43,7 @@ enum DateRangeAttributes implements Attribute<DateRange, DateRange.Builder> {
 
         @Override
         public void write(DateRange value, TextBuilder textBuilder) {
-            textBuilder.addQuoted(key(), value.startDate().toString());
+            textBuilder.addQuoted(key(), DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(value.startDate()));
         }
     },
 
@@ -54,7 +55,7 @@ enum DateRangeAttributes implements Attribute<DateRange, DateRange.Builder> {
 
         @Override
         public void write(DateRange value, TextBuilder textBuilder) {
-            value.endDate().ifPresent(v -> textBuilder.addQuoted(key(), v.toString()));
+            value.endDate().ifPresent(v -> textBuilder.addQuoted(key(), DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(v)));
         }
     },
 
