@@ -3,11 +3,16 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.KeyMethod;
 import io.lindstrom.m3u8.model.SegmentKey;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static io.lindstrom.m3u8.parser.Tags.*;
 
 class SegmentKeyParser extends AbstractLineParser<SegmentKey> {
+    private static final Pattern ATTRIBUTE_LIST_PATTERN = Pattern.compile("([A-Z0-9\\-]+)=(?:(?:\"([^\"]+)\"))");
+
     SegmentKeyParser() {
         super(EXT_X_KEY);
     }
@@ -42,5 +47,15 @@ class SegmentKeyParser extends AbstractLineParser<SegmentKey> {
         segmentKey.keyFormat().ifPresent(keyFormat -> attributes.addQuoted(KEYFORMAT, keyFormat));
         segmentKey.keyFormatVersions().ifPresent(value -> attributes.addQuoted(KEYFORMATVERSIONS, value));
         return attributes.toString();
+    }
+
+    @Override
+    Map<String, String> parseAttributes(String attributeList) {
+        Matcher matcher = ATTRIBUTE_LIST_PATTERN.matcher(attributeList);
+        Map<String, String> attributes = new HashMap<>();
+        while (matcher.find()) {
+            attributes.put(matcher.group(1), matcher.group(2) != null ? matcher.group(2) : matcher.group(3));
+        }
+        return attributes;
     }
 }
