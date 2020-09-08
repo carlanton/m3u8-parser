@@ -5,6 +5,7 @@ import io.lindstrom.m3u8.model.MediaSegment;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
@@ -30,7 +31,8 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            mediaSegment.programDateTime().ifPresent(value -> textBuilder.addTag(tag(), value.toString()));
+            mediaSegment.programDateTime().ifPresent(value ->
+                    textBuilder.addTag(tag(), DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(value)));
         }
     },
 
