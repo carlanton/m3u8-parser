@@ -60,6 +60,32 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
         }
     },
 
+    EXT_X_CUE_OUT {
+        @Override
+        public void read(MediaSegment.Builder builder, String attributes){
+            builder.cueOut(Integer.parseInt(attributes));
+        }
+
+        @Override
+        public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
+            mediaSegment.cueOut().ifPresent(cueOut -> textBuilder.addTag(tag(), cueOut));
+        }
+    },
+
+    EXT_X_CUE_IN {
+        @Override
+        public void read(MediaSegment.Builder builder, String attributes) {
+            builder.cueIn(true);
+        }
+
+        @Override
+        public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
+            if (mediaSegment.cueIn()) {
+                textBuilder.addTag(tag());
+            }
+        }
+    },
+
     EXT_X_BITRATE {
         @Override
         public void read(MediaSegment.Builder builder, String attributes) {
