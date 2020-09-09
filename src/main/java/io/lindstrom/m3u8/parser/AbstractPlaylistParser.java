@@ -127,12 +127,4 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
         return ByteBuffer.wrap(writePlaylistAsBytes(playlist));
     }
 
-
-    static <T extends Tag<?,?>> Map<String, T> tagArrayToMap(T[] tags) {
-        LinkedHashMap<String, T> map = new LinkedHashMap<>(tags.length);
-        for (T tag : tags) {
-            map.put(tag.tag(), tag);
-        }
-        return map;
-     }
 }

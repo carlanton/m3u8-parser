@@ -2,6 +2,8 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.SegmentMap;
 
+import java.util.Map;
+
 /*
  * #EXT-X-MAP:<attribute-list>
  */
@@ -31,9 +33,11 @@ enum SegmentMapAttribute implements Attribute<SegmentMap, SegmentMap.Builder> {
         }
     };
 
+    private final static Map<String, SegmentMapAttribute> values = ParserUtils.attributeMap(values());
+
     static SegmentMap parse(String attributes) throws PlaylistParserException {
         SegmentMap.Builder builder = SegmentMap.builder();
-        ParserUtils.readAttributes(SegmentMapAttribute.class, attributes, builder);
+        ParserUtils.readAttributes(values, attributes, builder);
         return builder.build();
     }
 }

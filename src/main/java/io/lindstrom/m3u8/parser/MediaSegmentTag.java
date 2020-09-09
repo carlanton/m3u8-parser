@@ -53,12 +53,12 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
     EXT_X_DATERANGE {
         @Override
         public void read(MediaSegment.Builder builder, String attributes) throws PlaylistParserException {
-            builder.dateRange(DateRangeAttributes.parse(attributes));
+            builder.dateRange(DateRangeAttribute.parse(attributes));
         }
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            mediaSegment.dateRange().ifPresent(value -> textBuilder.addTag(tag(), value, DateRangeAttributes.class));
+            mediaSegment.dateRange().ifPresent(value -> textBuilder.addTag(tag(), value, DateRangeAttribute.class));
         }
     },
 

@@ -2,6 +2,8 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.Variant;
 
+import java.util.Map;
+
 /*
  * #EXT-X-STREAM-INF:<attribute-list>
  */
@@ -175,9 +177,11 @@ enum VariantAttribute implements Attribute<Variant, Variant.Builder> {
         }
     };
 
+    private final static Map<String, VariantAttribute> values = ParserUtils.attributeMap(values());
+
     static Variant parse(String attributes) throws PlaylistParserException {
         Variant.Builder builder = Variant.builder();
-        ParserUtils.readAttributes(VariantAttribute.class, attributes, builder);
+        ParserUtils.readAttributes(values, attributes, builder);
         return builder.build();
     }
 }

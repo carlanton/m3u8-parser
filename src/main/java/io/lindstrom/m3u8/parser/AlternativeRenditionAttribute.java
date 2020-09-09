@@ -3,6 +3,8 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.AlternativeRendition;
 import io.lindstrom.m3u8.model.MediaType;
 
+import java.util.Map;
+
 /*
  * #EXT-X-MEDIA:<attribute-list>
  */
@@ -157,9 +159,11 @@ enum AlternativeRenditionAttribute implements Attribute<AlternativeRendition, Al
         }
     };
 
+    private final static Map<String, AlternativeRenditionAttribute> values = ParserUtils.attributeMap(values());
+
     static AlternativeRendition parse(String attributes) throws PlaylistParserException {
         AlternativeRendition.Builder builder = AlternativeRendition.builder();
-        ParserUtils.readAttributes(AlternativeRenditionAttribute.class, attributes, builder);
+        ParserUtils.readAttributes(values, attributes, builder);
         return builder.build();
     }
 }

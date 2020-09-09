@@ -31,8 +31,8 @@ import java.util.Map;
  * This implementation is reusable and thread safe.
  */
 public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, MediaPlaylistParser.Builder> {
-    private final Map<String, MediaPlaylistTag> playlistTags = tagArrayToMap(MediaPlaylistTag.values());
-    private final Map<String, MediaSegmentTag> segmentTags = tagArrayToMap(MediaSegmentTag.values());
+    private final Map<String, MediaPlaylistTag> playlistTags = ParserUtils.tagMap(MediaPlaylistTag.values());
+    private final Map<String, MediaSegmentTag> segmentTags = ParserUtils.tagMap(MediaSegmentTag.values());
 
     @Override
     Builder newBuilder() {

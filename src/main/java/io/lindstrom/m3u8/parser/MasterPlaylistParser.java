@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist, MasterPlaylist.Builder> {
 
-    private final Map<String, MasterPlaylistTag> tags = tagArrayToMap(MasterPlaylistTag.values());
+    private final Map<String, MasterPlaylistTag> tags = ParserUtils.tagMap(MasterPlaylistTag.values());
 
     @Override
     void write(MasterPlaylist playlist, TextBuilder textBuilder) {

@@ -2,7 +2,7 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.IFrameVariant;
 
-import static io.lindstrom.m3u8.parser.ParserUtils.readAttributes;
+import java.util.Map;
 
 /*
  * #EXT-X-I-FRAME-STREAM-INF:<attribute-list>
@@ -118,9 +118,11 @@ enum IFrameVariantAttribute implements Attribute<IFrameVariant, IFrameVariant.Bu
         }
     };
 
+    private final static Map<String, IFrameVariantAttribute> values = ParserUtils.attributeMap(values());
+
     static IFrameVariant parse(String attributes) throws PlaylistParserException {
         IFrameVariant.Builder builder = IFrameVariant.builder();
-        readAttributes(IFrameVariantAttribute.class, attributes, builder);
+        ParserUtils.readAttributes(values, attributes, builder);
         return builder.build();
     }
 }

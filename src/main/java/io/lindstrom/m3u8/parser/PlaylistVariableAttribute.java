@@ -2,6 +2,8 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.PlaylistVariable;
 
+import java.util.Map;
+
 /*
  * #EXT-X-DEFINE:<attribute-list>
  */
@@ -42,9 +44,11 @@ public enum PlaylistVariableAttribute implements Attribute<PlaylistVariable, Pla
         }
     };
 
+    private final static Map<String, PlaylistVariableAttribute> values = ParserUtils.attributeMap(values());
+
     static PlaylistVariable parse(String attributes) throws PlaylistParserException {
         PlaylistVariable.Builder builder = PlaylistVariable.builder();
-        ParserUtils.readAttributes(PlaylistVariableAttribute.class, attributes, builder);
+        ParserUtils.readAttributes(values, attributes, builder);
         return builder.build();
     }
 }
