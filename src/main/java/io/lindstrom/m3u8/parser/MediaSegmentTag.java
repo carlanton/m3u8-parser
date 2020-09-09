@@ -62,7 +62,7 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
     EXT_X_CUE_OUT {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes){
+        public void read(MediaSegment.Builder builder, String attributes) {
             builder.cueOut(Integer.parseInt(attributes));
         }
 

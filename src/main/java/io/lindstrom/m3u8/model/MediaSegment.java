@@ -30,11 +30,11 @@ public interface MediaSegment {
     default boolean discontinuity() {
         return false;
     }
+
     Optional<Integer> cueOut();
 
     @Value.Default
-    default boolean cueIn()
-    {
+    default boolean cueIn() {
         return false;
     }
 
