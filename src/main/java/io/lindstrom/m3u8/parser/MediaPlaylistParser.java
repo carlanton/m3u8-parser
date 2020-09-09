@@ -64,13 +64,13 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
 
     @Override
     void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-        for (MediaPlaylistTag mapper : playlistTags.values()) {
-            mapper.write(playlist, textBuilder);
+        for (MediaPlaylistTag tag : playlistTags.values()) {
+            tag.write(playlist, textBuilder);
         }
 
         playlist.mediaSegments().forEach(mediaSegment -> {
-            for (MediaSegmentTag mapper : segmentTags.values()) {
-                mapper.write(mediaSegment, textBuilder);
+            for (MediaSegmentTag tag : segmentTags.values()) {
+                tag.write(mediaSegment, textBuilder);
             }
             textBuilder.add(mediaSegment.uri()).add('\n');
         });
