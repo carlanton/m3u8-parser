@@ -152,7 +152,7 @@ enum DateRangeAttribute implements Attribute<DateRange, DateRange.Builder> {
         }
     };
 
-    private final static Map<String, DateRangeAttribute> values = ParserUtils.attributeMap(values());
+    final static Map<String, DateRangeAttribute> values = ParserUtils.attributeMap(values());
 
     static DateRange parse(String attributes) throws PlaylistParserException {
         DateRange.Builder builder = DateRange.builder();

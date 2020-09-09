@@ -41,7 +41,7 @@ enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
 
         @Override
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-            playlist.startTimeOffset().ifPresent(value -> textBuilder.addTag(tag(), value, StartTimeOffsetAttribute.class));
+            playlist.startTimeOffset().ifPresent(value -> textBuilder.addTag(tag(), value, StartTimeOffsetAttribute.values));
         }
     },
 
@@ -67,7 +67,7 @@ enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
 
         @Override
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-            playlist.serverControl().ifPresent(v -> textBuilder.addTag(tag(), v, ServerControlAttribute.class));
+            playlist.serverControl().ifPresent(v -> textBuilder.addTag(tag(), v, ServerControlAttribute.values));
         }
     },
 

@@ -56,7 +56,7 @@ enum SessionDataAttribute implements Attribute<SessionData, SessionData.Builder>
         }
     };
 
-    private final static Map<String, SessionDataAttribute> values = ParserUtils.attributeMap(values());
+    final static Map<String, SessionDataAttribute> values = ParserUtils.attributeMap(values());
 
     static SessionData parse(String attributes) throws PlaylistParserException {
         SessionData.Builder builder = SessionData.builder();

@@ -67,7 +67,7 @@ public enum ServerControlAttribute implements Attribute<ServerControl, ServerCon
         }
     };
 
-    private final static Map<String, ServerControlAttribute> values = ParserUtils.attributeMap(values());
+    final static Map<String, ServerControlAttribute> values = ParserUtils.attributeMap(values());
 
     static ServerControl parse(String attributes) throws PlaylistParserException {
         ServerControl.Builder builder = ServerControl.builder();

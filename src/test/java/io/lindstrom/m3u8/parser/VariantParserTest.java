@@ -46,7 +46,7 @@ public class VariantParserTest {
     @Test
     public void write() throws Exception {
         TextBuilder textBuilder = new TextBuilder();
-        textBuilder.addTag("EXT-X-STREAM-INF", variant, VariantAttribute.class);
+        textBuilder.addTag("EXT-X-STREAM-INF", variant, VariantAttribute.values);
         assertEquals("#EXT-X-STREAM-INF"
                         + ":"
                         + attributes.replace(",URI=uri", "")

@@ -36,7 +36,7 @@ enum StartTimeOffsetAttribute implements Attribute<StartTimeOffset, StartTimeOff
         }
     };
 
-    private final static Map<String, StartTimeOffsetAttribute> values = ParserUtils.attributeMap(values());
+    final static Map<String, StartTimeOffsetAttribute> values = ParserUtils.attributeMap(values());
 
     static StartTimeOffset parse(String attributes) throws PlaylistParserException {
         StartTimeOffset.Builder builder = StartTimeOffset.builder();

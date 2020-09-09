@@ -37,7 +37,7 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
 
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-            playlist.startTimeOffset().ifPresent(value -> textBuilder.addTag(tag(), value, StartTimeOffsetAttribute.class));
+            playlist.startTimeOffset().ifPresent(value -> textBuilder.addTag(tag(), value, StartTimeOffsetAttribute.values));
         }
     },
 
@@ -49,7 +49,7 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
 
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-            textBuilder.addTag(tag(), playlist.variables(), PlaylistVariableAttribute.class);
+            textBuilder.addTag(tag(), playlist.variables(), PlaylistVariableAttribute.values);
         }
     },
 
@@ -61,7 +61,7 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
 
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-            textBuilder.addTag(tag(), playlist.alternativeRenditions(), AlternativeRenditionAttribute.class);
+            textBuilder.addTag(tag(), playlist.alternativeRenditions(), AlternativeRenditionAttribute.values);
         }
     },
 
@@ -73,7 +73,7 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
 
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-            textBuilder.addTag(tag(), playlist.variants(), VariantAttribute.class);
+            textBuilder.addTag(tag(), playlist.variants(), VariantAttribute.values);
         }
     },
 
@@ -85,7 +85,7 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
 
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-            textBuilder.addTag(tag(), playlist.iFrameVariants(), IFrameVariantAttribute.class);
+            textBuilder.addTag(tag(), playlist.iFrameVariants(), IFrameVariantAttribute.values);
         }
     },
 
@@ -97,7 +97,7 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
 
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-            textBuilder.addTag(tag(), playlist.sessionData(), SessionDataAttribute.class);
+            textBuilder.addTag(tag(), playlist.sessionData(), SessionDataAttribute.values);
         }
     },
 
@@ -109,7 +109,7 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
 
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-            textBuilder.addTag(tag(), playlist.sessionKeys(), SegmentKeyAttribute.class);
+            textBuilder.addTag(tag(), playlist.sessionKeys(), SegmentKeyAttribute.values);
         }
     }
 }

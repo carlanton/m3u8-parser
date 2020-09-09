@@ -118,7 +118,7 @@ enum IFrameVariantAttribute implements Attribute<IFrameVariant, IFrameVariant.Bu
         }
     };
 
-    private final static Map<String, IFrameVariantAttribute> values = ParserUtils.attributeMap(values());
+    final static Map<String, IFrameVariantAttribute> values = ParserUtils.attributeMap(values());
 
     static IFrameVariant parse(String attributes) throws PlaylistParserException {
         IFrameVariant.Builder builder = IFrameVariant.builder();

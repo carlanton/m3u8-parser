@@ -177,7 +177,7 @@ enum VariantAttribute implements Attribute<Variant, Variant.Builder> {
         }
     };
 
-    private final static Map<String, VariantAttribute> values = ParserUtils.attributeMap(values());
+    final static Map<String, VariantAttribute> values = ParserUtils.attributeMap(values());
 
     static Variant parse(String attributes) throws PlaylistParserException {
         Variant.Builder builder = Variant.builder();
