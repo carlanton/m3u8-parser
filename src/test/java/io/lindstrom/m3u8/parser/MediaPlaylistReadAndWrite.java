@@ -30,6 +30,7 @@ public class MediaPlaylistReadAndWrite {
                 "media/mp4-iframe.m3u8",
                 "media/mp4.m3u8",
                 "media/media-playlist-with-date-range.m3u8",
+                "media/media-playlist-with-date-range-and-cue-out-cue-in.m3u8",
                 "media/issue-17.m3u8",
                 "media/ll-hls.m3u8",
                 "open-m3u8/liveMediaPlaylist.m3u8",

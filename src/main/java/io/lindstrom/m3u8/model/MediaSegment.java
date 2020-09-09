@@ -31,6 +31,13 @@ public interface MediaSegment {
         return false;
     }
 
+    Optional<Integer> cueOut();
+
+    @Value.Default
+    default boolean cueIn() {
+        return false;
+    }
+
     @Value.Default
     default boolean gap() {
         return false;
