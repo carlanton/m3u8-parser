@@ -26,7 +26,7 @@ Maven:
 ```
 Gradle:
 ```
-compile 'io.lindstrom:m3u8-parser:0.14'
+compile 'io.lindstrom:m3u8-parser:0.15'
 ```
 
 ## Usage
@@ -178,6 +178,9 @@ EXT-X-DEFINE
 EXT-X-GAP
 EXT-X-BITRATE
 EXT-X-SERVER-CONTROL
+
+EXT-X-CUE-OUT:<duration>
+EXT-X-CUE-IN
 ```
 
 The following tags are currently not implemented:
