@@ -159,11 +159,11 @@ enum AlternativeRenditionAttribute implements Attribute<AlternativeRendition, Al
         }
     };
 
-    final static Map<String, AlternativeRenditionAttribute> values = ParserUtils.attributeMap(values());
+    final static Map<String, AlternativeRenditionAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
 
     static AlternativeRendition parse(String attributes) throws PlaylistParserException {
         AlternativeRendition.Builder builder = AlternativeRendition.builder();
-        ParserUtils.readAttributes(values, attributes, builder);
+        ParserUtils.readAttributes(attributeMap, attributes, builder);
         return builder.build();
     }
 }

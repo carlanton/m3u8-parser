@@ -53,7 +53,7 @@ public class SegmentKeyParserTest {
 
     private String writeAttributes(SegmentKey segmentKey) {
         return new TextBuilder()
-                .addTag("EXT-X-KEY", segmentKey, SegmentKeyAttribute.values)
+                .addTag("EXT-X-KEY", segmentKey, SegmentKeyAttribute.attributeMap)
                 .toString()
                 .substring(11)
                 .trim();

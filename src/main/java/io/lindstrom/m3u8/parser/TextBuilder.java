@@ -19,6 +19,23 @@ class TextBuilder {
         this.stringBuilder = new StringBuilder();
     }
 
+    <V, T extends Attribute<V, ?>> void addTag(String tag, List<V> values, Map<String, T> attributeMap) {
+        values.forEach(v -> addTag(tag, v, attributeMap));
+    }
+
+    <V, T extends Attribute<V, ?>> TextBuilder addTag(String tag, V value, Map<String, T> attributeMap) {
+
+        stringBuilder.append('#').append(tag).append(':');
+
+        currentAttributeCount = 0;
+        for (T attribute : attributeMap.values()) {
+            attribute.write(value, this);
+        }
+        stringBuilder.append('\n');
+
+        return this;
+    }
+
     public TextBuilder add(String text) {
         stringBuilder.append(text);
         return this;
@@ -81,24 +98,5 @@ class TextBuilder {
     @Override
     public String toString() {
         return stringBuilder.toString();
-    }
-
-
-    <V, T extends Attribute<V, ?>> void addTag(String tag, List<V> values, Map<String, T> attributeMap) {
-        values.forEach(v -> addTag(tag, v, attributeMap));
-    }
-
-
-    <V, T extends Attribute<V, ?>> TextBuilder addTag(String tag, V value, Map<String, T> attributeMap) {
-
-        stringBuilder.append('#').append(tag).append(':');
-
-        currentAttributeCount = 0;
-        for (T attribute : attributeMap.values()) {
-            attribute.write(value, this);
-        }
-        stringBuilder.append('\n');
-
-        return this;
     }
 }

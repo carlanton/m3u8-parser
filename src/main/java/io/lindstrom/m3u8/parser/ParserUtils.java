@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,18 +75,10 @@ class ParserUtils {
         return byteRange.length() + byteRange.offset().map(offset -> "@" + offset).orElse("");
     }
 
-    static <T extends Attribute<?, ?>> Map<String, T> attributeMap(T[] attributes) {
-        Map<String, T> map = new LinkedHashMap<>(attributes.length);
-        for (T attribute : attributes) {
-            map.put(attribute.key(), attribute);
-        }
-        return map;
-    }
-
-    static <T extends Tag<?, ?>> Map<String, T> tagMap(T[] tags) {
-        LinkedHashMap<String, T> map = new LinkedHashMap<>(tags.length);
-        for (T tag : tags) {
-            map.put(tag.tag(), tag);
+    static <T> Map<String, T> toMap(T[] values, Function<T, String> keyMapper) {
+        Map<String, T> map = new LinkedHashMap<>(values.length);
+        for (T tag : values) {
+            map.put(keyMapper.apply(tag), tag);
         }
         return map;
     }

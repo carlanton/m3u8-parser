@@ -177,11 +177,11 @@ enum VariantAttribute implements Attribute<Variant, Variant.Builder> {
         }
     };
 
-    final static Map<String, VariantAttribute> values = ParserUtils.attributeMap(values());
+    final static Map<String, VariantAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
 
     static Variant parse(String attributes) throws PlaylistParserException {
         Variant.Builder builder = Variant.builder();
-        ParserUtils.readAttributes(values, attributes, builder);
+        ParserUtils.readAttributes(attributeMap, attributes, builder);
         return builder.build();
     }
 }

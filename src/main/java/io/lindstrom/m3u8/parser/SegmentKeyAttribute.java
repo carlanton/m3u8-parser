@@ -69,11 +69,11 @@ public enum SegmentKeyAttribute implements Attribute<SegmentKey, SegmentKey.Buil
         }
     };
 
-    final static Map<String, SegmentKeyAttribute> values = ParserUtils.attributeMap(values());
+    final static Map<String, SegmentKeyAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
 
     static SegmentKey parse(String attributes) throws PlaylistParserException {
         SegmentKey.Builder builder = SegmentKey.builder();
-        ParserUtils.readAttributes(values, attributes, builder);
+        ParserUtils.readAttributes(attributeMap, attributes, builder);
         return builder.build();
     }
 }

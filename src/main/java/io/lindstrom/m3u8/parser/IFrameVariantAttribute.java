@@ -118,11 +118,11 @@ enum IFrameVariantAttribute implements Attribute<IFrameVariant, IFrameVariant.Bu
         }
     };
 
-    final static Map<String, IFrameVariantAttribute> values = ParserUtils.attributeMap(values());
+    final static Map<String, IFrameVariantAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
 
     static IFrameVariant parse(String attributes) throws PlaylistParserException {
         IFrameVariant.Builder builder = IFrameVariant.builder();
-        ParserUtils.readAttributes(values, attributes, builder);
+        ParserUtils.readAttributes(attributeMap, attributes, builder);
         return builder.build();
     }
 }

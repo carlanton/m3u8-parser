@@ -33,11 +33,11 @@ enum SegmentMapAttribute implements Attribute<SegmentMap, SegmentMap.Builder> {
         }
     };
 
-    final static Map<String, SegmentMapAttribute> values = ParserUtils.attributeMap(values());
+    final static Map<String, SegmentMapAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
 
     static SegmentMap parse(String attributes) throws PlaylistParserException {
         SegmentMap.Builder builder = SegmentMap.builder();
-        ParserUtils.readAttributes(values, attributes, builder);
+        ParserUtils.readAttributes(attributeMap, attributes, builder);
         return builder.build();
     }
 }

@@ -3,7 +3,6 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.MasterPlaylist;
 
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * MasterPlaylistParser can read and write Master Playlists according to RFC 8216 (HTTP Live Streaming).
@@ -31,11 +30,9 @@ import java.util.Map;
  */
 public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist, MasterPlaylist.Builder> {
 
-    private final Map<String, MasterPlaylistTag> tags = ParserUtils.tagMap(MasterPlaylistTag.values());
-
     @Override
     void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-        for (MasterPlaylistTag tag : tags.values()) {
+        for (MasterPlaylistTag tag : MasterPlaylistTag.tags.values()) {
             tag.write(playlist, textBuilder);
         }
     }
@@ -47,7 +44,7 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
 
     @Override
     void onTag(MasterPlaylist.Builder builder, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException{
-        MasterPlaylistTag tag = tags.get(name);
+        MasterPlaylistTag tag = MasterPlaylistTag.tags.get(name);
         if (tag == null) {
             throw new PlaylistParserException("Tag not implemented: " + name);
         }

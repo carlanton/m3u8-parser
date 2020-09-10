@@ -3,6 +3,8 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.MediaPlaylist;
 import io.lindstrom.m3u8.model.PlaylistType;
 
+import java.util.Map;
+
 import static io.lindstrom.m3u8.parser.ParserUtils.NO;
 import static io.lindstrom.m3u8.parser.ParserUtils.YES;
 
@@ -41,7 +43,7 @@ enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
 
         @Override
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-            playlist.startTimeOffset().ifPresent(value -> textBuilder.addTag(tag(), value, StartTimeOffsetAttribute.values));
+            playlist.startTimeOffset().ifPresent(value -> textBuilder.addTag(tag(), value, StartTimeOffsetAttribute.attributeMap));
         }
     },
 
@@ -67,7 +69,7 @@ enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
 
         @Override
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-            playlist.serverControl().ifPresent(v -> textBuilder.addTag(tag(), v, ServerControlAttribute.values));
+            playlist.serverControl().ifPresent(v -> textBuilder.addTag(tag(), v, ServerControlAttribute.attributeMap));
         }
     },
 
@@ -144,5 +146,7 @@ enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
             // written elsewhere
         }
-    }
+    };
+
+    static final Map<String, MediaPlaylistTag> tags = ParserUtils.toMap(values(), Tag::tag);
 }

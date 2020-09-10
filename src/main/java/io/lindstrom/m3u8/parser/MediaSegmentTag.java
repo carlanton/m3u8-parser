@@ -7,6 +7,7 @@ import java.text.DecimalFormatSymbols;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Map;
 
 enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
     EXT_X_DISCONTINUITY {
@@ -58,7 +59,7 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            mediaSegment.dateRange().ifPresent(value -> textBuilder.addTag(tag(), value, DateRangeAttribute.values));
+            mediaSegment.dateRange().ifPresent(value -> textBuilder.addTag(tag(), value, DateRangeAttribute.attributeMap));
         }
     },
 
@@ -82,7 +83,7 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            mediaSegment.segmentMap().ifPresent(value -> textBuilder.addTag(tag(), value, SegmentMapAttribute.values));
+            mediaSegment.segmentMap().ifPresent(value -> textBuilder.addTag(tag(), value, SegmentMapAttribute.attributeMap));
         }
     },
 
@@ -144,7 +145,9 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            mediaSegment.segmentKey().ifPresent(key -> textBuilder.addTag(tag(), key, SegmentKeyAttribute.values));
+            mediaSegment.segmentKey().ifPresent(key -> textBuilder.addTag(tag(), key, SegmentKeyAttribute.attributeMap));
         }
-    }
+    };
+
+    static final Map<String, MediaSegmentTag> tags = ParserUtils.toMap(values(), Tag::tag);
 }
