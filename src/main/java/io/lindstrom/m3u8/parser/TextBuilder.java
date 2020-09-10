@@ -1,7 +1,7 @@
 package io.lindstrom.m3u8.parser;
 
-import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 
 import static io.lindstrom.m3u8.parser.ParserUtils.NO;
 import static io.lindstrom.m3u8.parser.ParserUtils.YES;
@@ -19,19 +19,20 @@ class TextBuilder {
         this.stringBuilder = new StringBuilder();
     }
 
-    <T, M extends Enum<M> & Attribute<T, ?>> void addTag(String tag, List<T> values, Class<M> mapperClass) {
-        values.forEach(value -> addTag(tag, value, mapperClass));
+    <V, T extends Attribute<V, ?>> void addTag(String tag, List<V> values, Map<String, T> attributeMap) {
+        values.forEach(v -> addTag(tag, v, attributeMap));
     }
 
-    <T, M extends Enum<M> & Attribute<T, ?>> void addTag(String tag, T value, Class<M> mapperClass) {
+    <V, T extends Attribute<V, ?>> TextBuilder addTag(String tag, V value, Map<String, T> attributeMap) {
+
         stringBuilder.append('#').append(tag).append(':');
-        addAttributes(value, mapperClass);
-        stringBuilder.append('\n');
-    }
 
-    <T, M extends Enum<M> & Attribute<T, ?>> TextBuilder addAttributes(T value, Class<M> mapperClass) {
         currentAttributeCount = 0;
-        EnumSet.allOf(mapperClass).forEach(attribute -> attribute.write(value, this));
+        for (T attribute : attributeMap.values()) {
+            attribute.write(value, this);
+        }
+        stringBuilder.append('\n');
+
         return this;
     }
 
@@ -39,7 +40,6 @@ class TextBuilder {
         stringBuilder.append(text);
         return this;
     }
-
 
     public TextBuilder add(char ch) {
         stringBuilder.append(ch);

@@ -6,7 +6,10 @@ import io.lindstrom.m3u8.model.Resolution;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,6 +23,7 @@ class ParserUtils {
 
     static final String YES = "YES";
     static final String NO = "NO";
+    static final String CLIENT_ATTRIBUTE = "CLIENT-ATTRIBUTE";
     static final Pattern ATTRIBUTE_LIST_PATTERN = Pattern.compile("([A-Z0-9\\-]+)=(?:(?:\"([^\"]+)\")|([^,]+))");
 
     private static final Pattern BYTE_RANGE_PATTERN = Pattern.compile("(\\d+)(?:@(\\d+))?");
@@ -71,23 +75,34 @@ class ParserUtils {
         return byteRange.length() + byteRange.offset().map(offset -> "@" + offset).orElse("");
     }
 
-    static <X, Y, Z extends Enum<Z> & Attribute<X, Y>> void readAttributes(Class<Z> mapperClass,
-                                                                           String attributes,
-                                                                           Y builder) throws PlaylistParserException {
+    static <T> Map<String, T> toMap(T[] values, Function<T, String> keyMapper) {
+        Map<String, T> map = new LinkedHashMap<>(values.length);
+        for (T tag : values) {
+            map.put(keyMapper.apply(tag), tag);
+        }
+        return map;
+    }
+
+    static <B, T extends Attribute<?, B>> void readAttributes(
+            Map<String, T> attributeMap, String attributes, B builder) throws PlaylistParserException {
+
         Matcher matcher = ATTRIBUTE_LIST_PATTERN.matcher(attributes);
 
         while (matcher.find()) {
-            String attribute = matcher.group(1);
+            String key = matcher.group(1);
             String value = matcher.group(2) != null ? matcher.group(2) : matcher.group(3);
+            boolean clientAttribute = key.startsWith("X-");
 
-            try {
-                if (attribute.startsWith("X-")) {
-                    Enum.valueOf(mapperClass, "CLIENT_ATTRIBUTE").read(builder, attribute, value);
-                } else {
-                    Enum.valueOf(mapperClass, attribute.replace("-", "_")).read(builder, value);
-                }
-            } catch (IllegalArgumentException e) {
-                throw new PlaylistParserException("Unknown attribute: " + attribute);
+            T attribute = attributeMap.get(clientAttribute ? CLIENT_ATTRIBUTE : key);
+
+            if (attribute == null) {
+                throw new PlaylistParserException("Unknown attribute: " + key);
+            }
+
+            if (clientAttribute) {
+                attribute.read(builder, key, value);
+            } else {
+                attribute.read(builder, value);
             }
         }
     }

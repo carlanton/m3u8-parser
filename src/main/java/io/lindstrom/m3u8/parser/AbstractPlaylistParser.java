@@ -6,11 +6,7 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -93,9 +89,7 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
                 String prefix = colonPosition > 0 ? line.substring(1, colonPosition) : line.substring(1);
                 String attributes = colonPosition > 0 ? line.substring(colonPosition + 1) : "";
 
-                String tagName = prefix.contains("-") ? prefix.replace("-", "_") : prefix;
-
-                onTag(builder, tagName, attributes, lineIterator);
+                onTag(builder, prefix, attributes, lineIterator);
             } else if (!(line.startsWith("#") || line.isEmpty())) {
                 onURI(builder, line); // <-- TODO silly?
             }
@@ -132,6 +126,5 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
     public ByteBuffer writePlaylistAsByteBuffer(T playlist) {
         return ByteBuffer.wrap(writePlaylistAsBytes(playlist));
     }
-
 
 }

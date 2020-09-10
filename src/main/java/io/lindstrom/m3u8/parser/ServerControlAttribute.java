@@ -2,6 +2,8 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.ServerControl;
 
+import java.util.Map;
+
 public enum ServerControlAttribute implements Attribute<ServerControl, ServerControl.Builder> {
     CAN_SKIP_UNTIL {
         @Override
@@ -65,9 +67,11 @@ public enum ServerControlAttribute implements Attribute<ServerControl, ServerCon
         }
     };
 
+    final static Map<String, ServerControlAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
+
     static ServerControl parse(String attributes) throws PlaylistParserException {
         ServerControl.Builder builder = ServerControl.builder();
-        ParserUtils.readAttributes(ServerControlAttribute.class, attributes, builder);
+        ParserUtils.readAttributes(attributeMap, attributes, builder);
         return builder.build();
     }
 }

@@ -1,6 +1,7 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.*;
+import io.lindstrom.m3u8.model.MediaPlaylist;
+import io.lindstrom.m3u8.model.MediaSegment;
 
 import java.util.Iterator;
 
@@ -29,7 +30,6 @@ import java.util.Iterator;
  * This implementation is reusable and thread safe.
  */
 public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, MediaPlaylistParser.Builder> {
-    private static final String EXT_X_ENDLIST = "#EXT-X-ENDLIST\n";
 
     @Override
     Builder newBuilder() {
@@ -38,21 +38,13 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
 
     @Override
     void onTag(Builder builderWrapper, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
-        for (MediaPlaylistTag tag : MediaPlaylistTag.values()) {
-            if (tag.name().equals(name)) {
-                tag.read(builderWrapper.playlistBuilder, attributes);
-                return;
-            }
+        if (MediaPlaylistTag.tags.containsKey(name)) {
+            MediaPlaylistTag.tags.get(name).read(builderWrapper.playlistBuilder, attributes);
+        } else if (MediaSegmentTag.tags.containsKey(name)) {
+            MediaSegmentTag.tags.get(name).read(builderWrapper.segmentBuilder, attributes);
+        } else {
+            throw new PlaylistParserException("Tag not implemented: " + name);
         }
-
-        for (MediaSegmentTag tag : MediaSegmentTag.values()) {
-            if (tag.name().equals(name)) {
-                tag.read(builderWrapper.segmentBuilder, attributes);
-                return;
-            }
-        }
-
-        throw new PlaylistParserException("Tag not implemented: " + name.replace("_", "-"));
     }
 
     @Override
@@ -69,19 +61,19 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
 
     @Override
     void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-        for (MediaPlaylistTag mapper : MediaPlaylistTag.values()) {
-            mapper.write(playlist, textBuilder);
+        for (MediaPlaylistTag tag : MediaPlaylistTag.tags.values()) {
+            tag.write(playlist, textBuilder);
         }
 
         playlist.mediaSegments().forEach(mediaSegment -> {
-            for (MediaSegmentTag mapper : MediaSegmentTag.values()) {
-                mapper.write(mediaSegment, textBuilder);
+            for (MediaSegmentTag tag : MediaSegmentTag.tags.values()) {
+                tag.write(mediaSegment, textBuilder);
             }
             textBuilder.add(mediaSegment.uri()).add('\n');
         });
 
         if (!playlist.ongoing()) {
-            textBuilder.add(EXT_X_ENDLIST);
+            textBuilder.addTag(MediaPlaylistTag.EXT_X_ENDLIST.tag());
         }
     }
 

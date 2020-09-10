@@ -4,13 +4,14 @@ import io.lindstrom.m3u8.model.DateRange;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 import static io.lindstrom.m3u8.parser.ParserUtils.YES;
 
 /*
  * #EXT-X-DATERANGE:<attribute-list>
  */
-enum DateRangeAttributes implements Attribute<DateRange, DateRange.Builder> {
+enum DateRangeAttribute implements Attribute<DateRange, DateRange.Builder> {
     ID {
         @Override
         public void read(DateRange.Builder builder, String value) {
@@ -151,9 +152,11 @@ enum DateRangeAttributes implements Attribute<DateRange, DateRange.Builder> {
         }
     };
 
+    final static Map<String, DateRangeAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
+
     static DateRange parse(String attributes) throws PlaylistParserException {
         DateRange.Builder builder = DateRange.builder();
-        ParserUtils.readAttributes(DateRangeAttributes.class, attributes, builder);
+        ParserUtils.readAttributes(attributeMap, attributes, builder);
         return builder.build();
     }
 }

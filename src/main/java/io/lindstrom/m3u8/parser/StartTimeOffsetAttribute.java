@@ -2,6 +2,8 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.StartTimeOffset;
 
+import java.util.Map;
+
 import static io.lindstrom.m3u8.parser.ParserUtils.YES;
 
 /*
@@ -34,9 +36,11 @@ enum StartTimeOffsetAttribute implements Attribute<StartTimeOffset, StartTimeOff
         }
     };
 
+    final static Map<String, StartTimeOffsetAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
+
     static StartTimeOffset parse(String attributes) throws PlaylistParserException {
         StartTimeOffset.Builder builder = StartTimeOffset.builder();
-        ParserUtils.readAttributes(StartTimeOffsetAttribute.class, attributes, builder);
+        ParserUtils.readAttributes(attributeMap, attributes, builder);
         return builder.build();
     }
 }
