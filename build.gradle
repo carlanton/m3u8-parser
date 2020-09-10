@@ -1,5 +1,5 @@
 group 'io.lindstrom'
-version '0.15'
+version '0.16'
 
 apply plugin: 'idea'
 apply plugin: 'java'
