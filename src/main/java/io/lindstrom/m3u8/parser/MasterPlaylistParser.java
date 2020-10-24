@@ -47,18 +47,15 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
         MasterPlaylistTag tag = MasterPlaylistTag.tags.get(name);
         if (tag == null) {
             throw new PlaylistParserException("Tag not implemented: " + name);
-        }
-
-        if (tag == MasterPlaylistTag.EXT_X_STREAM_INF) {
+        } else if (tag == MasterPlaylistTag.EXT_X_STREAM_INF) {
             String uriLine = lineIterator.next();
             if (uriLine == null || uriLine.startsWith("#")) {
                 throw new PlaylistParserException("Expected URI, got " + uriLine);
             }
-
-            attributes += (attributes.isEmpty() ? "" : ",") + "URI=" + uriLine;
+            builder.addVariants(VariantAttribute.parse(attributes, uriLine));
+        } else {
+            tag.read(builder, attributes);
         }
-
-        tag.read(builder, attributes);
     }
 
     @Override

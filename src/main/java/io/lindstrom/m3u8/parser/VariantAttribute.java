@@ -163,25 +163,14 @@ enum VariantAttribute implements Attribute<Variant, Variant.Builder> {
         public void write(Variant value, TextBuilder textBuilder) {
             value.videoRange().ifPresent(v -> textBuilder.add(key(), v));
         }
-    },
-
-    URI {
-        @Override
-        public void read(Variant.Builder builder, String value) {
-            builder.uri(value);
-        }
-
-        @Override
-        public void write(Variant value, TextBuilder textBuilder) {
-            textBuilder.add("\n").add(value.uri());
-        }
     };
 
     final static Map<String, VariantAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
 
-    static Variant parse(String attributes) throws PlaylistParserException {
+    static Variant parse(String attributes, String uri) throws PlaylistParserException {
         Variant.Builder builder = Variant.builder();
         ParserUtils.readAttributes(attributeMap, attributes, builder);
+        builder.uri(uri);
         return builder.build();
     }
 }
