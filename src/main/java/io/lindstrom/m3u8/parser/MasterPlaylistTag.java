@@ -69,13 +69,16 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
 
     EXT_X_STREAM_INF {
         @Override
-        public void read(MasterPlaylist.Builder builder, String attributes) throws PlaylistParserException {
-            builder.addVariants(VariantAttribute.parse(attributes));
+        public void read(MasterPlaylist.Builder builder, String attributes) {
+            // Not used. This is handled by the MasterPlaylistParser directly.
         }
 
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-            textBuilder.addTag(tag(), playlist.variants(), VariantAttribute.attributeMap);
+            String tag = tag();
+            playlist.variants().forEach(variant -> textBuilder.addTag(tag, variant, VariantAttribute.attributeMap)
+                    .add(variant.uri())
+                    .add("\n"));
         }
     },
 

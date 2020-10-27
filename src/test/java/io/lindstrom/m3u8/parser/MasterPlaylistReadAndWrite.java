@@ -6,10 +6,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -50,5 +52,24 @@ public class MasterPlaylistReadAndWrite {
         String written = masterPlaylistParser.writePlaylistAsString(masterPlaylistParser.readPlaylist(original));
 
         TestUtils.attributeConsistencyCheck(original, written, playlistPath);
+    }
+
+    @Test
+    public void streamInfoUriTest() throws IOException {
+        String original = new String(Files.readAllBytes(playlistPath), StandardCharsets.UTF_8);
+        String written = masterPlaylistParser.writePlaylistAsString(masterPlaylistParser.readPlaylist(playlistPath));
+        assertEquals(variantUris(original), variantUris(written));
+    }
+
+    private static List<String> variantUris(String playlist) {
+        List<String> uris = new ArrayList<>();
+        String[] lines = playlist.split("\n");
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
+            if (line.startsWith("#EXT-X-STREAM-INF:")) {
+                uris.add(lines[i + 1]);
+            }
+        }
+        return uris;
     }
 }
