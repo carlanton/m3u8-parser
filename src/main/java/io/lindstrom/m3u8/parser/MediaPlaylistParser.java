@@ -30,6 +30,15 @@ import java.util.Iterator;
  * This implementation is reusable and thread safe.
  */
 public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, MediaPlaylistParser.Builder> {
+    private final ParsingMode parsingMode;
+
+    public MediaPlaylistParser() {
+        this(ParsingMode.STRICT);
+    }
+
+    public MediaPlaylistParser(ParsingMode parsingMode) {
+        this.parsingMode = parsingMode;
+    }
 
     @Override
     Builder newBuilder() {
@@ -39,9 +48,9 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
     @Override
     void onTag(Builder builderWrapper, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
         if (MediaPlaylistTag.tags.containsKey(name)) {
-            MediaPlaylistTag.tags.get(name).read(builderWrapper.playlistBuilder, attributes);
+            MediaPlaylistTag.tags.get(name).read(builderWrapper.playlistBuilder, attributes, parsingMode);
         } else if (MediaSegmentTag.tags.containsKey(name)) {
-            MediaSegmentTag.tags.get(name).read(builderWrapper.segmentBuilder, attributes);
+            MediaSegmentTag.tags.get(name).read(builderWrapper.segmentBuilder, attributes, parsingMode);
         } else {
             throw new PlaylistParserException("Tag not implemented: " + name);
         }

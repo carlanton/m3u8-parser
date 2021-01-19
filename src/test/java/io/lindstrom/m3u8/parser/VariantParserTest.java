@@ -29,7 +29,7 @@ public class VariantParserTest {
 
    @Test
     public void parseAttributes() throws Exception {
-        assertEquals(variant, VariantAttribute.parse(attributes, "uri"));
+        assertEquals(variant, VariantAttribute.parse(attributes, "uri", ParsingMode.STRICT));
     }
 
     @Test
@@ -39,7 +39,7 @@ public class VariantParserTest {
                 .closedCaptions(Optional.empty())
                 .build();
 
-        assertEquals(variantLocal, VariantAttribute.parse(attributes.replace("\"cc\"", "NONE"), "uri"));
+        assertEquals(variantLocal, VariantAttribute.parse(attributes.replace("\"cc\"", "NONE"), "uri", ParsingMode.STRICT));
     }
 
     @Test(expected = PlaylistParserException.class)

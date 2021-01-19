@@ -84,7 +84,7 @@ class ParserUtils {
     }
 
     static <B, T extends Attribute<?, B>> void readAttributes(
-            Map<String, T> attributeMap, String attributes, B builder) throws PlaylistParserException {
+            Map<String, T> attributeMap, String attributes, B builder, ParsingMode parsingMode) throws PlaylistParserException {
 
         Matcher matcher = ATTRIBUTE_LIST_PATTERN.matcher(attributes);
 
@@ -95,14 +95,14 @@ class ParserUtils {
 
             T attribute = attributeMap.get(clientAttribute ? CLIENT_ATTRIBUTE : key);
 
-            if (attribute == null) {
+            if (attribute != null) {
+                if (clientAttribute) {
+                    attribute.read(builder, key, value);
+                } else {
+                    attribute.read(builder, value);
+                }
+            } else if (parsingMode.failOnUnknownAttributes()) {
                 throw new PlaylistParserException("Unknown attribute: " + key);
-            }
-
-            if (clientAttribute) {
-                attribute.read(builder, key, value);
-            } else {
-                attribute.read(builder, value);
             }
         }
     }

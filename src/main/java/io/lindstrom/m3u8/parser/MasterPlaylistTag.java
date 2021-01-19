@@ -7,7 +7,7 @@ import java.util.Map;
 enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
     EXT_X_VERSION {
         @Override
-        public void read(MasterPlaylist.Builder builder, String attributes) {
+        public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) {
             builder.version(Integer.parseInt(attributes));
         }
 
@@ -19,7 +19,7 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
 
     EXT_X_INDEPENDENT_SEGMENTS {
         @Override
-        public void read(MasterPlaylist.Builder builder, String attributes) {
+        public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) {
             builder.independentSegments(true);
         }
 
@@ -33,8 +33,8 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
 
     EXT_X_START {
         @Override
-        public void read(MasterPlaylist.Builder builder, String attributes) throws PlaylistParserException {
-            builder.startTimeOffset(StartTimeOffsetAttribute.parse(attributes));
+        public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
+            builder.startTimeOffset(StartTimeOffsetAttribute.parse(attributes, parsingMode));
         }
 
         @Override
@@ -45,8 +45,8 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
 
     EXT_X_DEFINE {
         @Override
-        public void read(MasterPlaylist.Builder builder, String attributes) throws PlaylistParserException {
-            builder.addVariables(PlaylistVariableAttribute.parse(attributes));
+        public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
+            builder.addVariables(PlaylistVariableAttribute.parse(attributes, parsingMode));
         }
 
         @Override
@@ -57,8 +57,8 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
 
     EXT_X_MEDIA {
         @Override
-        public void read(MasterPlaylist.Builder builder, String attributes) throws PlaylistParserException {
-            builder.addAlternativeRenditions(AlternativeRenditionAttribute.parse(attributes));
+        public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
+            builder.addAlternativeRenditions(AlternativeRenditionAttribute.parse(attributes, parsingMode));
         }
 
         @Override
@@ -69,7 +69,7 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
 
     EXT_X_STREAM_INF {
         @Override
-        public void read(MasterPlaylist.Builder builder, String attributes) {
+        public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) {
             // Not used. This is handled by the MasterPlaylistParser directly.
         }
 
@@ -84,8 +84,8 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
 
     EXT_X_I_FRAME_STREAM_INF {
         @Override
-        public void read(MasterPlaylist.Builder builder, String attributes) throws PlaylistParserException {
-            builder.addIFrameVariants(IFrameVariantAttribute.parse(attributes));
+        public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
+            builder.addIFrameVariants(IFrameVariantAttribute.parse(attributes, parsingMode));
         }
 
         @Override
@@ -96,8 +96,8 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
 
     EXT_X_SESSION_DATA {
         @Override
-        public void read(MasterPlaylist.Builder builder, String attributes) throws PlaylistParserException {
-            builder.addSessionData(SessionDataAttribute.parse(attributes));
+        public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
+            builder.addSessionData(SessionDataAttribute.parse(attributes, parsingMode));
         }
 
         @Override
@@ -108,8 +108,8 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
 
     EXT_X_SESSION_KEY {
         @Override
-        public void read(MasterPlaylist.Builder builder, String attributes) throws PlaylistParserException {
-            builder.addSessionKeys(SegmentKeyAttribute.parse(attributes));
+        public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
+            builder.addSessionKeys(SegmentKeyAttribute.parse(attributes, parsingMode));
         }
 
         @Override

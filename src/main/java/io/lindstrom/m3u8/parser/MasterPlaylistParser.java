@@ -29,6 +29,15 @@ import java.util.Iterator;
  * This implementation is reusable and thread safe.
  */
 public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist, MasterPlaylist.Builder> {
+    private final ParsingMode parsingMode;
+
+    public MasterPlaylistParser() {
+        this(ParsingMode.STRICT);
+    }
+
+    public MasterPlaylistParser(ParsingMode parsingMode) {
+        this.parsingMode = parsingMode;
+    }
 
     @Override
     void write(MasterPlaylist playlist, TextBuilder textBuilder) {
@@ -52,9 +61,9 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
             if (uriLine == null || uriLine.startsWith("#")) {
                 throw new PlaylistParserException("Expected URI, got " + uriLine);
             }
-            builder.addVariants(VariantAttribute.parse(attributes, uriLine));
+            builder.addVariants(VariantAttribute.parse(attributes, uriLine, parsingMode));
         } else {
-            tag.read(builder, attributes);
+            tag.read(builder, attributes, parsingMode);
         }
     }
 
