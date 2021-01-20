@@ -84,7 +84,7 @@ class ParserUtils {
         return map;
     }
 
-    static <T, B extends IBuilder<T>, A extends Attribute<T, B>> void readAttributes(
+    static <T, B extends IBuilder<T>, A extends Attribute<T, B>> T readAttributes(
             Map<String, A> attributeMap, String attributes, B builder, ParsingMode parsingMode) throws PlaylistParserException {
 
         Matcher matcher = ATTRIBUTE_LIST_PATTERN.matcher(attributes);
@@ -106,5 +106,7 @@ class ParserUtils {
                 throw new PlaylistParserException("Unknown attribute: " + key);
             }
         }
+
+        return builder.build();
     }
 }

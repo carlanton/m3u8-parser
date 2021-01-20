@@ -168,9 +168,6 @@ enum VariantAttribute implements Attribute<Variant, Variant.Builder> {
     final static Map<String, VariantAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
 
     static Variant parse(String attributes, String uri, ParsingMode parsingMode) throws PlaylistParserException {
-        Variant.Builder builder = Variant.builder();
-        ParserUtils.readAttributes(attributeMap, attributes, builder, parsingMode);
-        builder.uri(uri);
-        return builder.build();
+        return ParserUtils.readAttributes(attributeMap, attributes, Variant.builder().uri(uri), parsingMode);
     }
 }

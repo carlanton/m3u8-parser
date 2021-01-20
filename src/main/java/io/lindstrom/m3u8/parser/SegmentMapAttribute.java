@@ -36,8 +36,6 @@ enum SegmentMapAttribute implements Attribute<SegmentMap, SegmentMap.Builder> {
     final static Map<String, SegmentMapAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
 
     static SegmentMap parse(String attributes, ParsingMode parsingMode) throws PlaylistParserException {
-        SegmentMap.Builder builder = SegmentMap.builder();
-        ParserUtils.readAttributes(attributeMap, attributes, builder, parsingMode);
-        return builder.build();
+        return ParserUtils.readAttributes(attributeMap, attributes, SegmentMap.builder(), parsingMode);
     }
 }
