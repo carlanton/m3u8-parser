@@ -21,6 +21,6 @@ public interface SessionData {
         return new Builder();
     }
 
-    class Builder extends SessionDataBuilder {
+    class Builder extends SessionDataBuilder implements IBuilder<SessionData> {
     }
 }

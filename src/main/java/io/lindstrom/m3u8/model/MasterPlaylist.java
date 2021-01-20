@@ -59,6 +59,6 @@ public interface MasterPlaylist extends Playlist {
         return new Builder();
     }
 
-    class Builder extends MasterPlaylistBuilder implements PlaylistBuilder<MasterPlaylist> {
+    class Builder extends MasterPlaylistBuilder implements IBuilder<MasterPlaylist> {
     }
 }

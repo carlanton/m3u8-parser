@@ -1,6 +1,8 @@
 package io.lindstrom.m3u8.parser;
 
-public interface Attribute<T, B> {
+import io.lindstrom.m3u8.model.IBuilder;
+
+public interface Attribute<T, B extends IBuilder<T>> {
     void read(B builder, String value) throws PlaylistParserException;
     void write(T value, TextBuilder textBuilder);
     String name();

@@ -20,7 +20,7 @@ public interface SegmentMap {
         return new Builder();
     }
 
-    class Builder extends SegmentMapBuilder {
+    class Builder extends SegmentMapBuilder implements IBuilder<SegmentMap> {
     }
 
     static SegmentMap of(String uri) {

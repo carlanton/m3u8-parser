@@ -1,7 +1,7 @@
 package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.Playlist;
-import io.lindstrom.m3u8.model.PlaylistBuilder;
+import io.lindstrom.m3u8.model.IBuilder;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -11,7 +11,7 @@ import java.util.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public abstract class AbstractPlaylistParser<T extends Playlist, B extends PlaylistBuilder<T>> {
+public abstract class AbstractPlaylistParser<T extends Playlist, B extends IBuilder<T>> {
     private static final String EXTM3U = "#EXTM3U";
 
     public T readPlaylist(InputStream inputStream) throws IOException {

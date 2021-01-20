@@ -23,6 +23,6 @@ public interface ServerControl {
         return new Builder();
     }
 
-    class Builder extends ServerControlBuilder {
+    class Builder extends ServerControlBuilder implements IBuilder<ServerControl> {
     }
 }

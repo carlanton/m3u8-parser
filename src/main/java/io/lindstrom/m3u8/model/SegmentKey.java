@@ -26,5 +26,6 @@ public interface SegmentKey {
         return new Builder();
     }
 
-    class Builder extends SegmentKeyBuilder {}
+    class Builder extends SegmentKeyBuilder implements IBuilder<SegmentKey> {
+    }
 }

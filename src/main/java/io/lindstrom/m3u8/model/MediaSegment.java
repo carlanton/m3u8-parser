@@ -49,6 +49,6 @@ public interface MediaSegment {
         return new Builder();
     }
 
-    class Builder extends MediaSegmentBuilder {
+    class Builder extends MediaSegmentBuilder implements IBuilder<MediaSegment> {
     }
 }

@@ -93,11 +93,11 @@ public interface Variant {
         return new Builder();
     }
 
-    class Builder extends VariantBuilder {
+    class Builder extends VariantBuilder implements IBuilder<Variant> {
         public Builder resolution(int width, int height) {
             return resolution(Resolution.of(width, height));
         }
-        
+
         public Builder videoRange(String value) {
             return videoRange(VideoRange.valueOf(value));
         }

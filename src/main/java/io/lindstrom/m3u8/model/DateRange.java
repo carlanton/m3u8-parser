@@ -37,6 +37,6 @@ public interface DateRange {
         return new Builder();
     }
 
-    class Builder extends DateRangeBuilder {
+    class Builder extends DateRangeBuilder implements IBuilder<DateRange> {
     }
 }

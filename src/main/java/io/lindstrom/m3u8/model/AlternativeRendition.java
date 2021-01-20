@@ -93,6 +93,6 @@ public interface AlternativeRendition {
         return new Builder();
     }
 
-    class Builder extends AlternativeRenditionBuilder {
+    class Builder extends AlternativeRenditionBuilder implements IBuilder<AlternativeRendition> {
     }
 }
