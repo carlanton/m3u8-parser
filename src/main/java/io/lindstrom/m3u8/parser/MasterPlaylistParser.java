@@ -68,8 +68,4 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
         }
     }
 
-    @Override
-    MasterPlaylist build(MasterPlaylist.Builder builder) {
-        return builder.build();
-    }
 }

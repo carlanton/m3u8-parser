@@ -1,6 +1,7 @@
 package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.Playlist;
+import io.lindstrom.m3u8.model.PlaylistBuilder;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -10,7 +11,7 @@ import java.util.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public abstract class AbstractPlaylistParser<T extends Playlist, B> {
+public abstract class AbstractPlaylistParser<T extends Playlist, B extends PlaylistBuilder<T>> {
     private static final String EXTM3U = "#EXTM3U";
 
     public T readPlaylist(InputStream inputStream) throws IOException {
@@ -95,7 +96,7 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
             }
         }
 
-        return build(builder);
+        return builder.build();
     }
 
     abstract B newBuilder();
@@ -105,8 +106,6 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
     void onURI(B builder, String uri) throws PlaylistParserException {
         throw new PlaylistParserException("Unexpected URI in playlist: " + uri);
     }
-
-    abstract T build(B builder);
 
     abstract void write(T playlist, TextBuilder textBuilder);
 

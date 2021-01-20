@@ -35,11 +35,6 @@ public class RawPlaylistParser extends AbstractPlaylistParser<RawPlaylist, RawPl
     }
 
     @Override
-    RawPlaylist build(RawPlaylist.Builder builder) {
-        return builder.build();
-    }
-
-    @Override
     void write(RawPlaylist playlist, TextBuilder textBuilder) {
         throw new UnsupportedOperationException("not implemented");
     }

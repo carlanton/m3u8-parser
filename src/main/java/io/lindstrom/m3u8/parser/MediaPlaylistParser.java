@@ -2,6 +2,7 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.MediaPlaylist;
 import io.lindstrom.m3u8.model.MediaSegment;
+import io.lindstrom.m3u8.model.PlaylistBuilder;
 
 import java.util.Iterator;
 
@@ -64,11 +65,6 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
     }
 
     @Override
-    MediaPlaylist build(Builder builderWrapper) {
-        return builderWrapper.playlistBuilder.build();
-    }
-
-    @Override
     void write(MediaPlaylist playlist, TextBuilder textBuilder) {
         for (MediaPlaylistTag tag : MediaPlaylistTag.tags.values()) {
             tag.write(playlist, textBuilder);
@@ -89,8 +85,13 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
     /**
      * Wrapper class for playlist and segment builders
      */
-    static class Builder {
+    static class Builder implements PlaylistBuilder<MediaPlaylist> {
         private final MediaPlaylist.Builder playlistBuilder = MediaPlaylist.builder();
         private MediaSegment.Builder segmentBuilder = MediaSegment.builder();
+
+        @Override
+        public MediaPlaylist build() {
+            return playlistBuilder.build();
+        }
     }
 }
