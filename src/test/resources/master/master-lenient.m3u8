@@ -1,0 +1,5 @@
+#EXTM3U
+
+#EXT-X-MY-CUSTOM-TAG:WithSomeAttributes=8
+#EXT-X-STREAM-INF:BANDWIDTH=1156000,RESOLUTION=640x480,CODECS="avc1.4d001e,mp4a.40.2",XYZ=9
+bipbop_gear1/prog_index.m3u8

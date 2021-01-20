@@ -51,7 +51,7 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
             MediaPlaylistTag.tags.get(name).read(builderWrapper.playlistBuilder, attributes, parsingMode);
         } else if (MediaSegmentTag.tags.containsKey(name)) {
             MediaSegmentTag.tags.get(name).read(builderWrapper.segmentBuilder, attributes, parsingMode);
-        } else {
+        } else if (parsingMode.failOnUnknownTags()) {
             throw new PlaylistParserException("Tag not implemented: " + name);
         }
     }

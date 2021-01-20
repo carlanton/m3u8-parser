@@ -54,16 +54,17 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
     @Override
     void onTag(MasterPlaylist.Builder builder, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException{
         MasterPlaylistTag tag = MasterPlaylistTag.tags.get(name);
-        if (tag == null) {
-            throw new PlaylistParserException("Tag not implemented: " + name);
-        } else if (tag == MasterPlaylistTag.EXT_X_STREAM_INF) {
+
+        if (tag == MasterPlaylistTag.EXT_X_STREAM_INF) {
             String uriLine = lineIterator.next();
             if (uriLine == null || uriLine.startsWith("#")) {
                 throw new PlaylistParserException("Expected URI, got " + uriLine);
             }
             builder.addVariants(VariantAttribute.parse(attributes, uriLine, parsingMode));
-        } else {
+        } else if (tag != null) {
             tag.read(builder, attributes, parsingMode);
+        } else if (parsingMode.failOnUnknownTags()) {
+            throw new PlaylistParserException("Tag not implemented: " + name);
         }
     }
 
