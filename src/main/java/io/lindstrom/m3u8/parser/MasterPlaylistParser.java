@@ -1,8 +1,10 @@
 package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.MasterPlaylist;
+import io.lindstrom.m3u8.model.Variant;
 
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * MasterPlaylistParser can read and write Master Playlists according to RFC 8216 (HTTP Live Streaming).
@@ -30,6 +32,8 @@ import java.util.Iterator;
  */
 public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist, MasterPlaylist.Builder> {
     private final ParsingMode parsingMode;
+    private static final Map<String, MasterPlaylistTag> tags = ParserUtils.toMap(MasterPlaylistTag.values());
+    private static final Map<String, VariantAttribute> variantAttributeMap = ParserUtils.toMap(VariantAttribute.values());
 
     public MasterPlaylistParser() {
         this(ParsingMode.STRICT);
@@ -41,7 +45,7 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
 
     @Override
     void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-        for (MasterPlaylistTag tag : MasterPlaylistTag.tags.values()) {
+        for (MasterPlaylistTag tag : tags.values()) {
             tag.write(playlist, textBuilder);
         }
     }
@@ -53,19 +57,18 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
 
     @Override
     void onTag(MasterPlaylist.Builder builder, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException{
-        MasterPlaylistTag tag = MasterPlaylistTag.tags.get(name);
+        MasterPlaylistTag tag = tags.get(name);
 
         if (tag == MasterPlaylistTag.EXT_X_STREAM_INF) {
             String uriLine = lineIterator.next();
             if (uriLine == null || uriLine.startsWith("#")) {
                 throw new PlaylistParserException("Expected URI, got " + uriLine);
             }
-            builder.addVariants(VariantAttribute.parse(attributes, uriLine, parsingMode));
+            builder.addVariants(ParserUtils.readAttributes(variantAttributeMap, attributes, Variant.builder().uri(uriLine), parsingMode));
         } else if (tag != null) {
             tag.read(builder, attributes, parsingMode);
         } else if (parsingMode.failOnUnknownTags()) {
             throw new PlaylistParserException("Tag not implemented: " + name);
         }
     }
-
 }

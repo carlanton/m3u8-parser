@@ -2,6 +2,8 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.MediaPlaylist;
 import io.lindstrom.m3u8.model.PlaylistType;
+import io.lindstrom.m3u8.model.ServerControl;
+import io.lindstrom.m3u8.model.StartTimeOffset;
 
 import java.util.Map;
 
@@ -36,14 +38,16 @@ enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
     },
 
     EXT_X_START {
+        private final Map<String, StartTimeOffsetAttribute> attributeMap = ParserUtils.toMap(StartTimeOffsetAttribute.values());
+
         @Override
         public void read(MediaPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
-            builder.startTimeOffset(StartTimeOffsetAttribute.parse(attributes, parsingMode));
+            builder.startTimeOffset(ParserUtils.readAttributes(attributeMap, attributes, StartTimeOffset.builder(), parsingMode));
         }
 
         @Override
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-            playlist.startTimeOffset().ifPresent(value -> textBuilder.addTag(tag(), value, StartTimeOffsetAttribute.attributeMap));
+            playlist.startTimeOffset().ifPresent(value -> textBuilder.addTag(tag(), value, attributeMap));
         }
     },
 
@@ -62,14 +66,16 @@ enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
     },
 
     EXT_X_SERVER_CONTROL {
+        private final Map<String, ServerControlAttribute> attributeMap = ParserUtils.toMap(ServerControlAttribute.values());
+
         @Override
         public void read(MediaPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
-            builder.serverControl(ServerControlAttribute.parse(attributes, parsingMode));
+            builder.serverControl(ParserUtils.readAttributes(attributeMap, attributes, ServerControl.builder(), parsingMode));
         }
 
         @Override
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-            playlist.serverControl().ifPresent(v -> textBuilder.addTag(tag(), v, ServerControlAttribute.attributeMap));
+            playlist.serverControl().ifPresent(v -> textBuilder.addTag(tag(), v, attributeMap));
         }
     },
 
@@ -146,7 +152,5 @@ enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
         public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
             // written elsewhere
         }
-    };
-
-    static final Map<String, MediaPlaylistTag> tags = ParserUtils.toMap(values(), Tag::tag);
+    }
 }

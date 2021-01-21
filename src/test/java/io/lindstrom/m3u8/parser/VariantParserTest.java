@@ -6,11 +6,13 @@ import io.lindstrom.m3u8.model.VideoRange;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 
 public class VariantParserTest {
+    private final Map<String, VariantAttribute> attributeMap = ParserUtils.toMap(VariantAttribute.values());
     private final String attributes = "BANDWIDTH=123456789,AVERAGE-BANDWIDTH=12345678,CODECS=\"a,b,c\",RESOLUTION=1024x768,FRAME-RATE=50.0,HDCP-LEVEL=0,AUDIO=\"audio\",VIDEO=\"video\",SUBTITLES=\"subtitles\",CLOSED-CAPTIONS=\"cc\",VIDEO-RANGE=SDR";
     private final Variant variant = Variant.builder()
             .uri("uri")
@@ -29,7 +31,7 @@ public class VariantParserTest {
 
    @Test
     public void parseAttributes() throws Exception {
-        assertEquals(variant, VariantAttribute.parse(attributes, "uri", ParsingMode.STRICT));
+       assertEquals(variant, ParserUtils.readAttributes(attributeMap, attributes, Variant.builder().uri("uri"), ParsingMode.STRICT));
     }
 
     @Test
@@ -39,7 +41,7 @@ public class VariantParserTest {
                 .closedCaptions(Optional.empty())
                 .build();
 
-        assertEquals(variantLocal, VariantAttribute.parse(attributes.replace("\"cc\"", "NONE"), "uri", ParsingMode.STRICT));
+        assertEquals(variantLocal, ParserUtils.readAttributes(attributeMap, attributes.replace("\"cc\"", "NONE"), Variant.builder().uri("uri"), ParsingMode.STRICT));
     }
 
     @Test(expected = PlaylistParserException.class)

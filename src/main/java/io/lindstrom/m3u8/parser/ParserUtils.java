@@ -76,7 +76,15 @@ class ParserUtils {
         return byteRange.length() + byteRange.offset().map(offset -> "@" + offset).orElse("");
     }
 
-    static <T> Map<String, T> toMap(T[] values, Function<T, String> keyMapper) {
+    static <T extends Attribute<?, ?>> Map<String, T> toMap(T[] values) {
+        return toMap(values, Attribute::key);
+    }
+
+    static <T extends Tag<?, ?>> Map<String, T> toMap(T[] values) {
+        return toMap(values, Tag::name);
+    }
+
+    private static <T> Map<String, T> toMap(T[] values, Function<T, String> keyMapper) {
         Map<String, T> map = new LinkedHashMap<>(values.length);
         for (T tag : values) {
             map.put(keyMapper.apply(tag), tag);

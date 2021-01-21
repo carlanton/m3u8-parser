@@ -2,8 +2,6 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.SessionData;
 
-import java.util.Map;
-
 /*
  * #EXT-X-SESSION-DATA:<attribute-list>
  */
@@ -54,11 +52,5 @@ enum SessionDataAttribute implements Attribute<SessionData, SessionData.Builder>
         public void write(SessionData value, TextBuilder textBuilder) {
             value.language().ifPresent(v -> textBuilder.addQuoted(name(), v));
         }
-    };
-
-    final static Map<String, SessionDataAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
-
-    static SessionData parse(String attributes, ParsingMode parsingMode) throws PlaylistParserException {
-        return ParserUtils.readAttributes(attributeMap, attributes, SessionData.builder(), parsingMode);
     }
 }

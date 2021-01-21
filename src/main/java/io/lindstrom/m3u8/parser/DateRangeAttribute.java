@@ -4,7 +4,6 @@ import io.lindstrom.m3u8.model.DateRange;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
 
 import static io.lindstrom.m3u8.parser.ParserUtils.YES;
 
@@ -150,11 +149,5 @@ enum DateRangeAttribute implements Attribute<DateRange, DateRange.Builder> {
             // TODO: support client attribute types (quoted-string, hexadecimal-sequence & decimal-floating-point)
             value.clientAttributes().forEach(textBuilder::addQuoted);
         }
-    };
-
-    final static Map<String, DateRangeAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
-
-    static DateRange parse(String attributes, ParsingMode parsingMode) throws PlaylistParserException {
-        return ParserUtils.readAttributes(attributeMap, attributes, DateRange.builder(), parsingMode);
     }
 }

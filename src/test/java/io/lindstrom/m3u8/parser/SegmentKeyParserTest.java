@@ -3,6 +3,8 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.SegmentKey;
 import org.junit.Test;
 
+import java.util.Map;
+
 import static io.lindstrom.m3u8.model.KeyMethod.*;
 import static org.junit.Assert.assertEquals;
 
@@ -21,9 +23,11 @@ public class SegmentKeyParserTest {
             "KEYFORMAT=\"identity\"," +
             "KEYFORMATVERSIONS=\"1/2/5\"";
 
+    private final Map<String, SegmentKeyAttribute> attributeMap = ParserUtils.toMap(SegmentKeyAttribute.values());
+
     @Test
     public void parseAttributes() throws Exception {
-        assertEquals(SegmentKeyAttribute.parse(attributes, ParsingMode.STRICT), key);
+        assertEquals(ParserUtils.readAttributes(attributeMap, attributes, SegmentKey.builder(), ParsingMode.STRICT), key);
     }
 
     @Test
@@ -33,9 +37,9 @@ public class SegmentKeyParserTest {
 
     @Test
     public void parseMethods() throws Exception {
-        assertEquals(AES_128, SegmentKeyAttribute.parse("METHOD=AES-128", ParsingMode.STRICT).method());
-        assertEquals(SAMPLE_AES, SegmentKeyAttribute.parse("METHOD=SAMPLE-AES", ParsingMode.STRICT).method());
-        assertEquals(NONE, SegmentKeyAttribute.parse("METHOD=NONE", ParsingMode.STRICT).method());
+        assertEquals(AES_128, ParserUtils.readAttributes(attributeMap, "METHOD=AES-128", SegmentKey.builder(), ParsingMode.STRICT).method());
+        assertEquals(SAMPLE_AES, ParserUtils.readAttributes(attributeMap, "METHOD=SAMPLE-AES", SegmentKey.builder(), ParsingMode.STRICT).method());
+        assertEquals(NONE, ParserUtils.readAttributes(attributeMap, "METHOD=NONE", SegmentKey.builder(), ParsingMode.STRICT).method());
     }
 
     @Test
@@ -53,7 +57,7 @@ public class SegmentKeyParserTest {
 
     private String writeAttributes(SegmentKey segmentKey) {
         return new TextBuilder()
-                .addTag("EXT-X-KEY", segmentKey, SegmentKeyAttribute.attributeMap)
+                .addTag("EXT-X-KEY", segmentKey, attributeMap)
                 .toString()
                 .substring(11)
                 .trim();

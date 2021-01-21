@@ -2,8 +2,6 @@ package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.IFrameVariant;
 
-import java.util.Map;
-
 /*
  * #EXT-X-I-FRAME-STREAM-INF:<attribute-list>
  */
@@ -116,11 +114,5 @@ enum IFrameVariantAttribute implements Attribute<IFrameVariant, IFrameVariant.Bu
         public void write(IFrameVariant value, TextBuilder textBuilder) {
             value.videoRange().ifPresent(v -> textBuilder.add(key(), v));
         }
-    };
-
-    final static Map<String, IFrameVariantAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
-
-    static IFrameVariant parse(String attributes, ParsingMode parsingMode) throws PlaylistParserException {
-        return ParserUtils.readAttributes(attributeMap, attributes, IFrameVariant.builder(), parsingMode);
     }
 }

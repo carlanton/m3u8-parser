@@ -5,6 +5,7 @@ import io.lindstrom.m3u8.model.MediaPlaylist;
 import io.lindstrom.m3u8.model.MediaSegment;
 
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * MediaPlaylistParser can read and write Media Playlists according to RFC 8216 (HTTP Live Streaming).
@@ -32,6 +33,8 @@ import java.util.Iterator;
  */
 public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, MediaPlaylistParser.Builder> {
     private final ParsingMode parsingMode;
+    private static final Map<String, MediaSegmentTag> mediaSegmentTags = ParserUtils.toMap(MediaSegmentTag.values());
+    private static final Map<String, MediaPlaylistTag> mediaPlaylistTags = ParserUtils.toMap(MediaPlaylistTag.values());
 
     public MediaPlaylistParser() {
         this(ParsingMode.STRICT);
@@ -48,10 +51,10 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
 
     @Override
     void onTag(Builder builderWrapper, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
-        if (MediaPlaylistTag.tags.containsKey(name)) {
-            MediaPlaylistTag.tags.get(name).read(builderWrapper.playlistBuilder, attributes, parsingMode);
-        } else if (MediaSegmentTag.tags.containsKey(name)) {
-            MediaSegmentTag.tags.get(name).read(builderWrapper.segmentBuilder, attributes, parsingMode);
+        if (mediaPlaylistTags.containsKey(name)) {
+            mediaPlaylistTags.get(name).read(builderWrapper.playlistBuilder, attributes, parsingMode);
+        } else if (mediaSegmentTags.containsKey(name)) {
+            mediaSegmentTags.get(name).read(builderWrapper.segmentBuilder, attributes, parsingMode);
         } else if (parsingMode.failOnUnknownTags()) {
             throw new PlaylistParserException("Tag not implemented: " + name);
         }
@@ -66,12 +69,12 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
 
     @Override
     void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-        for (MediaPlaylistTag tag : MediaPlaylistTag.tags.values()) {
+        for (MediaPlaylistTag tag : mediaPlaylistTags.values()) {
             tag.write(playlist, textBuilder);
         }
 
         playlist.mediaSegments().forEach(mediaSegment -> {
-            for (MediaSegmentTag tag : MediaSegmentTag.tags.values()) {
+            for (MediaSegmentTag tag : mediaSegmentTags.values()) {
                 tag.write(mediaSegment, textBuilder);
             }
             textBuilder.add(mediaSegment.uri()).add('\n');

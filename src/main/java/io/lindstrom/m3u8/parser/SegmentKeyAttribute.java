@@ -3,8 +3,6 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.KeyMethod;
 import io.lindstrom.m3u8.model.SegmentKey;
 
-import java.util.Map;
-
 /*
  * #EXT-X-KEY:<attribute-list>
  */
@@ -67,11 +65,5 @@ public enum SegmentKeyAttribute implements Attribute<SegmentKey, SegmentKey.Buil
         public void write(SegmentKey segmentKey, TextBuilder textBuilder) {
             segmentKey.keyFormatVersions().ifPresent(v -> textBuilder.addQuoted(name(), v));
         }
-    };
-
-    final static Map<String, SegmentKeyAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
-
-    static SegmentKey parse(String attributes, ParsingMode parsingMode) throws PlaylistParserException {
-        return ParserUtils.readAttributes(attributeMap, attributes, SegmentKey.builder(), parsingMode);
     }
 }
