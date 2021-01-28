@@ -81,7 +81,7 @@ class ParserUtils {
     }
 
     static <T extends Tag<?, ?>> Map<String, T> toMap(T[] values) {
-        return toMap(values, Tag::name);
+        return toMap(values, Tag::tag);
     }
 
     private static <T> Map<String, T> toMap(T[] values, Function<T, String> keyMapper) {
