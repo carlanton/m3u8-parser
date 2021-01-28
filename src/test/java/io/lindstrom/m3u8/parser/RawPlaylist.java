@@ -1,6 +1,6 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.IBuilder;
+import io.lindstrom.m3u8.model.Buildable;
 import io.lindstrom.m3u8.model.Playlist;
 import io.lindstrom.m3u8.model.PlaylistVariable;
 import io.lindstrom.m3u8.model.StartTimeOffset;
@@ -33,7 +33,7 @@ public class RawPlaylist implements Playlist {
         return tags;
     }
 
-    static class Builder implements IBuilder<RawPlaylist> {
+    static class Builder implements Buildable<RawPlaylist> {
         private final Map<String, List<List<RawAttribute>>> tags = new TreeMap<>();
         void addTag(String tag, List<RawAttribute> attributes) {
             tags.computeIfAbsent(tag, k -> new ArrayList<>()).add(attributes);

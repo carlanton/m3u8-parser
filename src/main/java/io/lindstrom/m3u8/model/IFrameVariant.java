@@ -36,7 +36,7 @@ public interface IFrameVariant {
         return new Builder();
     }
 
-    class Builder extends IFrameVariantBuilder implements IBuilder<IFrameVariant> {
+    class Builder extends IFrameVariantBuilder implements Buildable<IFrameVariant> {
         public Builder videoRange(String value) {
             return videoRange(VideoRange.valueOf(value));
         }

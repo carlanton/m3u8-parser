@@ -93,7 +93,7 @@ public interface Variant {
         return new Builder();
     }
 
-    class Builder extends VariantBuilder implements IBuilder<Variant> {
+    class Builder extends VariantBuilder implements Buildable<Variant> {
         public Builder resolution(int width, int height) {
             return resolution(Resolution.of(width, height));
         }

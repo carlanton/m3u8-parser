@@ -44,6 +44,6 @@ public interface MediaPlaylist extends Playlist {
         return new Builder();
     }
 
-    class Builder extends MediaPlaylistBuilder implements IBuilder<MediaPlaylist> {
+    class Builder extends MediaPlaylistBuilder implements Buildable<MediaPlaylist> {
     }
 }

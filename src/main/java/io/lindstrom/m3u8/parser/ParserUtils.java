@@ -1,7 +1,7 @@
 package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.ByteRange;
-import io.lindstrom.m3u8.model.IBuilder;
+import io.lindstrom.m3u8.model.Buildable;
 import io.lindstrom.m3u8.model.Resolution;
 
 import java.time.format.DateTimeFormatter;
@@ -92,7 +92,7 @@ class ParserUtils {
         return map;
     }
 
-    static <T, B extends IBuilder<T>, A extends Attribute<T, B>> T readAttributes(
+    static <T, B extends Buildable<T>, A extends Attribute<T, B>> T readAttributes(
             Map<String, A> attributeMap, String attributes, B builder, ParsingMode parsingMode) throws PlaylistParserException {
 
         Matcher matcher = ATTRIBUTE_LIST_PATTERN.matcher(attributes);

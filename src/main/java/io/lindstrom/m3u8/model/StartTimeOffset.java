@@ -25,7 +25,7 @@ public interface StartTimeOffset {
         return new Builder();
     }
 
-    class Builder extends StartTimeOffsetBuilder implements IBuilder<StartTimeOffset> {
+    class Builder extends StartTimeOffsetBuilder implements Buildable<StartTimeOffset> {
     }
 
     static StartTimeOffset of(double timeOffset) {
