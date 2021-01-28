@@ -147,6 +147,21 @@ MediaPlaylist updated = MediaPlaylist.builder()
 System.out.println(parser.writePlaylistAsString(updated));
 ```
 
+### Parsing mode
+
+By default, the parser will throw an exception on unsupported tags and attributes. This can be configured by
+passing a `ParsingMode` to the parser. Example:
+
+```java
+MasterPlaylistParser lenientParser = new MasterPlaylistParser(ParsingMode.LENIENT);
+```
+
+Currently two modes are available:
+```java
+ParsingMode.STRICT   // fail on unsupported things (this is default)
+ParsingMode.LENIENT  // ignore unsupported things
+```
+
 ## Supported tags
 The following tags should be fully supported:
 ```

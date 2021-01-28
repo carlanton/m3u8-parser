@@ -29,6 +29,15 @@ import java.util.Iterator;
  * This implementation is reusable and thread safe.
  */
 public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist, MasterPlaylist.Builder> {
+    private final ParsingMode parsingMode;
+
+    public MasterPlaylistParser() {
+        this(ParsingMode.STRICT);
+    }
+
+    public MasterPlaylistParser(ParsingMode parsingMode) {
+        this.parsingMode = parsingMode;
+    }
 
     @Override
     void write(MasterPlaylist playlist, TextBuilder textBuilder) {
@@ -45,16 +54,17 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
     @Override
     void onTag(MasterPlaylist.Builder builder, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException{
         MasterPlaylistTag tag = MasterPlaylistTag.tags.get(name);
-        if (tag == null) {
-            throw new PlaylistParserException("Tag not implemented: " + name);
-        } else if (tag == MasterPlaylistTag.EXT_X_STREAM_INF) {
+
+        if (tag == MasterPlaylistTag.EXT_X_STREAM_INF) {
             String uriLine = lineIterator.next();
             if (uriLine == null || uriLine.startsWith("#")) {
                 throw new PlaylistParserException("Expected URI, got " + uriLine);
             }
-            builder.addVariants(VariantAttribute.parse(attributes, uriLine));
-        } else {
-            tag.read(builder, attributes);
+            builder.addVariants(VariantAttribute.parse(attributes, uriLine, parsingMode));
+        } else if (tag != null) {
+            tag.read(builder, attributes, parsingMode);
+        } else if (parsingMode.failOnUnknownTags()) {
+            throw new PlaylistParserException("Tag not implemented: " + name);
         }
     }
 

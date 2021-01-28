@@ -12,7 +12,7 @@ import java.util.Map;
 enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
     EXT_X_DISCONTINUITY {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes) {
+        public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) {
             builder.discontinuity(true);
         }
 
@@ -26,7 +26,7 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
     EXT_X_PROGRAM_DATE_TIME {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes) {
+        public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) {
             builder.programDateTime(OffsetDateTime.parse(attributes, ParserUtils.FORMATTER));
         }
 
@@ -39,7 +39,7 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
     EXT_X_GAP {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes) {
+        public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) {
             builder.gap(true);
         }
 
@@ -53,8 +53,8 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
     EXT_X_DATERANGE {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes) throws PlaylistParserException {
-            builder.dateRange(DateRangeAttribute.parse(attributes));
+        public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
+            builder.dateRange(DateRangeAttribute.parse(attributes, parsingMode));
         }
 
         @Override
@@ -65,7 +65,7 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
     EXT_X_CUE_OUT {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes) {
+        public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) {
             builder.cueOut(Integer.parseInt(attributes));
         }
 
@@ -77,7 +77,7 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
     EXT_X_CUE_IN {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes) {
+        public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) {
             builder.cueIn(true);
         }
 
@@ -91,7 +91,7 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
     EXT_X_BITRATE {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes) {
+        public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) {
             builder.bitrate(Long.parseLong(attributes));
         }
 
@@ -103,8 +103,8 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
     EXT_X_MAP {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes) throws PlaylistParserException {
-            builder.segmentMap(SegmentMapAttribute.parse(attributes));
+        public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
+            builder.segmentMap(SegmentMapAttribute.parse(attributes, parsingMode));
         }
 
         @Override
@@ -115,7 +115,7 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
     EXTINF {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes) {
+        public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) {
             int p = attributes.indexOf(',');
 
             if (p < 0) {
@@ -153,7 +153,7 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
     EXT_X_BYTERANGE {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes) throws PlaylistParserException {
+        public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
             builder.byteRange(ParserUtils.parseByteRange(attributes));
         }
 
@@ -165,8 +165,8 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
     EXT_X_KEY {
         @Override
-        public void read(MediaSegment.Builder builder, String attributes) throws PlaylistParserException {
-            builder.segmentKey(SegmentKeyAttribute.parse(attributes));
+        public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
+            builder.segmentKey(SegmentKeyAttribute.parse(attributes, parsingMode));
         }
 
         @Override

@@ -46,9 +46,9 @@ public enum PlaylistVariableAttribute implements Attribute<PlaylistVariable, Pla
 
     final static Map<String, PlaylistVariableAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
 
-    static PlaylistVariable parse(String attributes) throws PlaylistParserException {
+    static PlaylistVariable parse(String attributes, ParsingMode parsingMode) throws PlaylistParserException {
         PlaylistVariable.Builder builder = PlaylistVariable.builder();
-        ParserUtils.readAttributes(attributeMap, attributes, builder);
+        ParserUtils.readAttributes(attributeMap, attributes, builder, parsingMode);
         return builder.build();
     }
 }

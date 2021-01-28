@@ -23,7 +23,7 @@ public class SegmentKeyParserTest {
 
     @Test
     public void parseAttributes() throws Exception {
-        assertEquals(SegmentKeyAttribute.parse(attributes), key);
+        assertEquals(SegmentKeyAttribute.parse(attributes, ParsingMode.STRICT), key);
     }
 
     @Test
@@ -33,9 +33,9 @@ public class SegmentKeyParserTest {
 
     @Test
     public void parseMethods() throws Exception {
-        assertEquals(AES_128, SegmentKeyAttribute.parse("METHOD=AES-128").method());
-        assertEquals(SAMPLE_AES, SegmentKeyAttribute.parse("METHOD=SAMPLE-AES").method());
-        assertEquals(NONE, SegmentKeyAttribute.parse("METHOD=NONE").method());
+        assertEquals(AES_128, SegmentKeyAttribute.parse("METHOD=AES-128", ParsingMode.STRICT).method());
+        assertEquals(SAMPLE_AES, SegmentKeyAttribute.parse("METHOD=SAMPLE-AES", ParsingMode.STRICT).method());
+        assertEquals(NONE, SegmentKeyAttribute.parse("METHOD=NONE", ParsingMode.STRICT).method());
     }
 
     @Test

@@ -154,9 +154,9 @@ enum DateRangeAttribute implements Attribute<DateRange, DateRange.Builder> {
 
     final static Map<String, DateRangeAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
 
-    static DateRange parse(String attributes) throws PlaylistParserException {
+    static DateRange parse(String attributes, ParsingMode parsingMode) throws PlaylistParserException {
         DateRange.Builder builder = DateRange.builder();
-        ParserUtils.readAttributes(attributeMap, attributes, builder);
+        ParserUtils.readAttributes(attributeMap, attributes, builder, parsingMode);
         return builder.build();
     }
 }
