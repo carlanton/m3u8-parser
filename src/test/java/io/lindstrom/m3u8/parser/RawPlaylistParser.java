@@ -30,6 +30,11 @@ public class RawPlaylistParser extends AbstractPlaylistParser<RawPlaylist, RawPl
     }
 
     @Override
+    void onComment(RawPlaylist.Builder builder, String value) {
+        // ignore
+    }
+
+    @Override
     void onURI(RawPlaylist.Builder builder, String uri) {
         // ignore
     }

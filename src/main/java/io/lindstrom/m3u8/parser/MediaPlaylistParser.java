@@ -48,6 +48,13 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
     }
 
     @Override
+    void onComment(Builder builder, String value) {
+        builder.playlistBuilder.addComments(
+                value
+        );
+    }
+
+    @Override
     void onURI(Builder builderWrapper, String uri) {
         builderWrapper.segmentBuilder.uri(uri);
         builderWrapper.playlistBuilder.addMediaSegments(builderWrapper.segmentBuilder.build());

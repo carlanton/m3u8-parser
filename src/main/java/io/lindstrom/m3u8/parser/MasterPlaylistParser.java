@@ -59,6 +59,13 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
     }
 
     @Override
+    void onComment(MasterPlaylist.Builder builder, String value) {
+        builder.addComments(
+                value
+        );
+    }
+
+    @Override
     MasterPlaylist build(MasterPlaylist.Builder builder) {
         return builder.build();
     }

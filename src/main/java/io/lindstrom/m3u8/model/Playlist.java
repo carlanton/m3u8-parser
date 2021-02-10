@@ -48,4 +48,12 @@ public interface Playlist {
      * RFC 8216bis-07 - 4.4.2.3.  EXT-X-DEFINE</a>
      * */
     List<PlaylistVariable> variables();
+
+
+    /**
+     * @return a list of comments.
+     * @see <a href="https://tools.ietf.org/html/rfc8216#section-4.1" target="_blank">
+     * RFC 8216 - 4.1  non #EXT comments</a>
+     * */
+    List<String> comments();
 }
