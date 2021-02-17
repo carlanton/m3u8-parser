@@ -1,9 +1,11 @@
 package io.lindstrom.m3u8.parser;
 
+import io.lindstrom.m3u8.model.Buildable;
 import io.lindstrom.m3u8.model.MediaPlaylist;
 import io.lindstrom.m3u8.model.MediaSegment;
 
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * MediaPlaylistParser can read and write Media Playlists according to RFC 8216 (HTTP Live Streaming).
@@ -29,8 +31,10 @@ import java.util.Iterator;
  *
  * This implementation is reusable and thread safe.
  */
-public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, MediaPlaylistParser.Builder> {
+public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, MediaPlaylist.Builder> {
     private final ParsingMode parsingMode;
+    private static final Map<String, MediaSegmentTag> mediaSegmentTags = ParserUtils.toMap(MediaSegmentTag.values());
+    private static final Map<String, MediaPlaylistTag> mediaPlaylistTags = ParserUtils.toMap(MediaPlaylistTag.values());
 
     public MediaPlaylistParser() {
         this(ParsingMode.STRICT);
@@ -41,41 +45,35 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
     }
 
     @Override
-    Builder newBuilder() {
-        return new Builder();
+    MediaPlaylist.Builder newBuilder() {
+        return new MediaPlaylist.Builder();
     }
 
     @Override
-    void onTag(Builder builderWrapper, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
-        if (MediaPlaylistTag.tags.containsKey(name)) {
-            MediaPlaylistTag.tags.get(name).read(builderWrapper.playlistBuilder, attributes, parsingMode);
-        } else if (MediaSegmentTag.tags.containsKey(name)) {
-            MediaSegmentTag.tags.get(name).read(builderWrapper.segmentBuilder, attributes, parsingMode);
+    void onTag(MediaPlaylist.Builder builder, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+        if (mediaPlaylistTags.containsKey(name)) {
+            mediaPlaylistTags.get(name).read(builder, attributes, parsingMode);
+        } else if (mediaSegmentTags.containsKey(name)) {
+            mediaSegmentTags.get(name).read(builder.segmentBuilder(), attributes, parsingMode);
         } else if (parsingMode.failOnUnknownTags()) {
             throw new PlaylistParserException("Tag not implemented: " + name);
         }
     }
 
     @Override
-    void onURI(Builder builderWrapper, String uri) {
-        builderWrapper.segmentBuilder.uri(uri);
-        builderWrapper.playlistBuilder.addMediaSegments(builderWrapper.segmentBuilder.build());
-        builderWrapper.segmentBuilder = MediaSegment.builder();
-    }
-
-    @Override
-    MediaPlaylist build(Builder builderWrapper) {
-        return builderWrapper.playlistBuilder.build();
+    void onURI(MediaPlaylist.Builder builder, String uri) {
+        builder.addMediaSegments(builder.segmentBuilder().uri(uri).build());
+        builder.segmentBuilder(MediaSegment.builder());
     }
 
     @Override
     void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-        for (MediaPlaylistTag tag : MediaPlaylistTag.tags.values()) {
+        for (MediaPlaylistTag tag : mediaPlaylistTags.values()) {
             tag.write(playlist, textBuilder);
         }
 
         playlist.mediaSegments().forEach(mediaSegment -> {
-            for (MediaSegmentTag tag : MediaSegmentTag.tags.values()) {
+            for (MediaSegmentTag tag : mediaSegmentTags.values()) {
                 tag.write(mediaSegment, textBuilder);
             }
             textBuilder.add(mediaSegment.uri()).add('\n');
@@ -84,13 +82,5 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
         if (!playlist.ongoing()) {
             textBuilder.addTag(MediaPlaylistTag.EXT_X_ENDLIST.tag());
         }
-    }
-
-    /**
-     * Wrapper class for playlist and segment builders
-     */
-    static class Builder {
-        private final MediaPlaylist.Builder playlistBuilder = MediaPlaylist.builder();
-        private MediaSegment.Builder segmentBuilder = MediaSegment.builder();
     }
 }

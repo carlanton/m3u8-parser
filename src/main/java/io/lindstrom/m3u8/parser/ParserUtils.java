@@ -1,6 +1,7 @@
 package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.ByteRange;
+import io.lindstrom.m3u8.model.Buildable;
 import io.lindstrom.m3u8.model.Resolution;
 
 import java.time.format.DateTimeFormatter;
@@ -75,7 +76,15 @@ class ParserUtils {
         return byteRange.length() + byteRange.offset().map(offset -> "@" + offset).orElse("");
     }
 
-    static <T> Map<String, T> toMap(T[] values, Function<T, String> keyMapper) {
+    static <T extends Attribute<?, ?>> Map<String, T> toMap(T[] values) {
+        return toMap(values, Attribute::key);
+    }
+
+    static <T extends Tag<?, ?>> Map<String, T> toMap(T[] values) {
+        return toMap(values, Tag::tag);
+    }
+
+    private static <T> Map<String, T> toMap(T[] values, Function<T, String> keyMapper) {
         Map<String, T> map = new LinkedHashMap<>(values.length);
         for (T tag : values) {
             map.put(keyMapper.apply(tag), tag);
@@ -83,8 +92,8 @@ class ParserUtils {
         return map;
     }
 
-    static <B, T extends Attribute<?, B>> void readAttributes(
-            Map<String, T> attributeMap, String attributes, B builder, ParsingMode parsingMode) throws PlaylistParserException {
+    static <T, B extends Buildable<T>, A extends Attribute<T, B>> T readAttributes(
+            Map<String, A> attributeMap, String attributes, B builder, ParsingMode parsingMode) throws PlaylistParserException {
 
         Matcher matcher = ATTRIBUTE_LIST_PATTERN.matcher(attributes);
 
@@ -93,7 +102,7 @@ class ParserUtils {
             String value = matcher.group(2) != null ? matcher.group(2) : matcher.group(3);
             boolean clientAttribute = key.startsWith("X-");
 
-            T attribute = attributeMap.get(clientAttribute ? CLIENT_ATTRIBUTE : key);
+            A attribute = attributeMap.get(clientAttribute ? CLIENT_ATTRIBUTE : key);
 
             if (attribute != null) {
                 if (clientAttribute) {
@@ -105,5 +114,7 @@ class ParserUtils {
                 throw new PlaylistParserException("Unknown attribute: " + key);
             }
         }
+
+        return builder.build();
     }
 }

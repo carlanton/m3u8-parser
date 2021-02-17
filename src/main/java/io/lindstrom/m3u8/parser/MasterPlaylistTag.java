@@ -1,6 +1,6 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.MasterPlaylist;
+import io.lindstrom.m3u8.model.*;
 
 import java.util.Map;
 
@@ -32,42 +32,51 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
     },
 
     EXT_X_START {
+        private final Map<String, StartTimeOffsetAttribute> attributeMap = ParserUtils.toMap(StartTimeOffsetAttribute.values());
+
         @Override
         public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
-            builder.startTimeOffset(StartTimeOffsetAttribute.parse(attributes, parsingMode));
+            builder.startTimeOffset(ParserUtils.readAttributes(attributeMap, attributes, StartTimeOffset.builder(), parsingMode));
         }
 
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-            playlist.startTimeOffset().ifPresent(value -> textBuilder.addTag(tag(), value, StartTimeOffsetAttribute.attributeMap));
+            playlist.startTimeOffset().ifPresent(value -> textBuilder.addTag(tag(), value, attributeMap));
         }
     },
 
     EXT_X_DEFINE {
+        private final Map<String, PlaylistVariableAttribute> attributeMap = ParserUtils.toMap(PlaylistVariableAttribute.values());
+
         @Override
         public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
-            builder.addVariables(PlaylistVariableAttribute.parse(attributes, parsingMode));
+            builder.addVariables(ParserUtils.readAttributes(attributeMap, attributes, PlaylistVariable.builder(), parsingMode));
         }
 
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-            textBuilder.addTag(tag(), playlist.variables(), PlaylistVariableAttribute.attributeMap);
+            textBuilder.addTag(tag(), playlist.variables(), attributeMap);
         }
     },
 
     EXT_X_MEDIA {
+        private final Map<String, AlternativeRenditionAttribute> attributeMap =
+                ParserUtils.toMap(AlternativeRenditionAttribute.values());
+
         @Override
         public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
-            builder.addAlternativeRenditions(AlternativeRenditionAttribute.parse(attributes, parsingMode));
+            builder.addAlternativeRenditions(ParserUtils.readAttributes(attributeMap, attributes, AlternativeRendition.builder(), parsingMode));
         }
 
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-            textBuilder.addTag(tag(), playlist.alternativeRenditions(), AlternativeRenditionAttribute.attributeMap);
+            textBuilder.addTag(tag(), playlist.alternativeRenditions(), attributeMap);
         }
     },
 
     EXT_X_STREAM_INF {
+        private final Map<String, VariantAttribute> attributeMap = ParserUtils.toMap(VariantAttribute.values());
+
         @Override
         public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) {
             // Not used. This is handled by the MasterPlaylistParser directly.
@@ -76,47 +85,51 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
             String tag = tag();
-            playlist.variants().forEach(variant -> textBuilder.addTag(tag, variant, VariantAttribute.attributeMap)
+            playlist.variants().forEach(variant -> textBuilder.addTag(tag, variant, attributeMap)
                     .add(variant.uri())
                     .add("\n"));
         }
     },
 
     EXT_X_I_FRAME_STREAM_INF {
+        private final Map<String, IFrameVariantAttribute> attributeMap = ParserUtils.toMap(IFrameVariantAttribute.values());
+
         @Override
         public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
-            builder.addIFrameVariants(IFrameVariantAttribute.parse(attributes, parsingMode));
+            builder.addIFrameVariants(ParserUtils.readAttributes(attributeMap, attributes, IFrameVariant.builder(), parsingMode));
         }
 
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-            textBuilder.addTag(tag(), playlist.iFrameVariants(), IFrameVariantAttribute.attributeMap);
+            textBuilder.addTag(tag(), playlist.iFrameVariants(), attributeMap);
         }
     },
 
     EXT_X_SESSION_DATA {
+        private final Map<String, SessionDataAttribute> attributeMap = ParserUtils.toMap(SessionDataAttribute.values());
+
         @Override
         public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
-            builder.addSessionData(SessionDataAttribute.parse(attributes, parsingMode));
+            builder.addSessionData(ParserUtils.readAttributes(attributeMap, attributes, SessionData.builder(), parsingMode));
         }
 
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-            textBuilder.addTag(tag(), playlist.sessionData(), SessionDataAttribute.attributeMap);
+            textBuilder.addTag(tag(), playlist.sessionData(), attributeMap);
         }
     },
 
     EXT_X_SESSION_KEY {
+        private final Map<String, SegmentKeyAttribute> attributeMap = ParserUtils.toMap(SegmentKeyAttribute.values());
+
         @Override
         public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
-            builder.addSessionKeys(SegmentKeyAttribute.parse(attributes, parsingMode));
+            builder.addSessionKeys(ParserUtils.readAttributes(attributeMap, attributes, SegmentKey.builder(), parsingMode));
         }
 
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-            textBuilder.addTag(tag(), playlist.sessionKeys(), SegmentKeyAttribute.attributeMap);
+            textBuilder.addTag(tag(), playlist.sessionKeys(), attributeMap);
         }
-    };
-
-    static final Map<String, MasterPlaylistTag> tags = ParserUtils.toMap(values(), Tag::tag);
+    }
 }

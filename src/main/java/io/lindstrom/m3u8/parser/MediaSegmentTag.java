@@ -1,6 +1,9 @@
 package io.lindstrom.m3u8.parser;
 
+import io.lindstrom.m3u8.model.DateRange;
 import io.lindstrom.m3u8.model.MediaSegment;
+import io.lindstrom.m3u8.model.SegmentKey;
+import io.lindstrom.m3u8.model.SegmentMap;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -52,14 +55,21 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
     },
 
     EXT_X_DATERANGE {
+        private final Map<String, DateRangeAttribute> attributeMap = ParserUtils.toMap(DateRangeAttribute.values());
+
         @Override
         public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
-            builder.dateRange(DateRangeAttribute.parse(attributes, parsingMode));
+            builder.dateRange(
+                    ParserUtils.readAttributes(
+                            attributeMap,
+                            attributes,
+                            DateRange.builder(),
+                            parsingMode));
         }
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            mediaSegment.dateRange().ifPresent(value -> textBuilder.addTag(tag(), value, DateRangeAttribute.attributeMap));
+            mediaSegment.dateRange().ifPresent(value -> textBuilder.addTag(tag(), value, attributeMap));
         }
     },
 
@@ -102,14 +112,16 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
     },
 
     EXT_X_MAP {
+        private final Map<String, SegmentMapAttribute> attributeMap = ParserUtils.toMap(SegmentMapAttribute.values());
+
         @Override
         public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
-            builder.segmentMap(SegmentMapAttribute.parse(attributes, parsingMode));
+            builder.segmentMap(ParserUtils.readAttributes(attributeMap, attributes, SegmentMap.builder(), parsingMode));
         }
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            mediaSegment.segmentMap().ifPresent(value -> textBuilder.addTag(tag(), value, SegmentMapAttribute.attributeMap));
+            mediaSegment.segmentMap().ifPresent(value -> textBuilder.addTag(tag(), value, attributeMap));
         }
     },
 
@@ -164,16 +176,16 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
     },
 
     EXT_X_KEY {
+        private final Map<String, SegmentKeyAttribute> attributeMap = ParserUtils.toMap(SegmentKeyAttribute.values());
+
         @Override
         public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
-            builder.segmentKey(SegmentKeyAttribute.parse(attributes, parsingMode));
+            builder.segmentKey(ParserUtils.readAttributes(attributeMap, attributes, SegmentKey.builder(), parsingMode));
         }
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            mediaSegment.segmentKey().ifPresent(key -> textBuilder.addTag(tag(), key, SegmentKeyAttribute.attributeMap));
+            mediaSegment.segmentKey().ifPresent(key -> textBuilder.addTag(tag(), key, attributeMap));
         }
-    };
-
-    static final Map<String, MediaSegmentTag> tags = ParserUtils.toMap(values(), Tag::tag);
+    }
 }

@@ -14,7 +14,8 @@ public interface PlaylistVariable {
         return new Builder();
     }
 
-    class Builder extends PlaylistVariableBuilder { }
+    class Builder extends PlaylistVariableBuilder implements Buildable<PlaylistVariable> {
+    }
 
     static PlaylistVariable of(String name, String value) {
         return PlaylistVariable.builder()
