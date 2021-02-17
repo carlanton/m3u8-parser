@@ -31,7 +31,7 @@ import java.util.Map;
  *
  * This implementation is reusable and thread safe.
  */
-public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, MediaPlaylistParser.Builder> {
+public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, MediaPlaylist.Builder> {
     private final ParsingMode parsingMode;
     private static final Map<String, MediaSegmentTag> mediaSegmentTags = ParserUtils.toMap(MediaSegmentTag.values());
     private static final Map<String, MediaPlaylistTag> mediaPlaylistTags = ParserUtils.toMap(MediaPlaylistTag.values());
@@ -45,26 +45,25 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
     }
 
     @Override
-    Builder newBuilder() {
-        return new Builder();
+    MediaPlaylist.Builder newBuilder() {
+        return new MediaPlaylist.Builder();
     }
 
     @Override
-    void onTag(Builder builderWrapper, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+    void onTag(MediaPlaylist.Builder builder, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
         if (mediaPlaylistTags.containsKey(name)) {
-            mediaPlaylistTags.get(name).read(builderWrapper.playlistBuilder, attributes, parsingMode);
+            mediaPlaylistTags.get(name).read(builder, attributes, parsingMode);
         } else if (mediaSegmentTags.containsKey(name)) {
-            mediaSegmentTags.get(name).read(builderWrapper.segmentBuilder, attributes, parsingMode);
+            mediaSegmentTags.get(name).read(builder.segmentBuilder(), attributes, parsingMode);
         } else if (parsingMode.failOnUnknownTags()) {
             throw new PlaylistParserException("Tag not implemented: " + name);
         }
     }
 
     @Override
-    void onURI(Builder builderWrapper, String uri) {
-        builderWrapper.segmentBuilder.uri(uri);
-        builderWrapper.playlistBuilder.addMediaSegments(builderWrapper.segmentBuilder.build());
-        builderWrapper.segmentBuilder = MediaSegment.builder();
+    void onURI(MediaPlaylist.Builder builder, String uri) {
+        builder.addMediaSegments(builder.segmentBuilder().uri(uri).build());
+        builder.segmentBuilder(MediaSegment.builder());
     }
 
     @Override
@@ -82,19 +81,6 @@ public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, M
 
         if (!playlist.ongoing()) {
             textBuilder.addTag(MediaPlaylistTag.EXT_X_ENDLIST.tag());
-        }
-    }
-
-    /**
-     * Wrapper class for playlist and segment builders
-     */
-    static class Builder implements Buildable<MediaPlaylist> {
-        private final MediaPlaylist.Builder playlistBuilder = MediaPlaylist.builder();
-        private MediaSegment.Builder segmentBuilder = MediaSegment.builder();
-
-        @Override
-        public MediaPlaylist build() {
-            return playlistBuilder.build();
         }
     }
 }

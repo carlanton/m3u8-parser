@@ -45,5 +45,14 @@ public interface MediaPlaylist extends Playlist {
     }
 
     class Builder extends MediaPlaylistBuilder implements Buildable<MediaPlaylist> {
+        private MediaSegment.Builder segmentBuilder = MediaSegment.builder();
+
+        public MediaSegment.Builder segmentBuilder() {
+            return segmentBuilder;
+        }
+
+        public void segmentBuilder(MediaSegment.Builder segmentBuilder) {
+            this.segmentBuilder = segmentBuilder;
+        }
     }
 }
