@@ -19,6 +19,11 @@ public class RawPlaylist implements Playlist {
     }
 
     @Override
+    public List<String> comments() {
+        return Collections.emptyList();
+    }
+
+    @Override
     public Optional<StartTimeOffset> startTimeOffset() {
         return Optional.empty();
     }

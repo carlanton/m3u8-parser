@@ -90,8 +90,12 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
                 String attributes = colonPosition > 0 ? line.substring(colonPosition + 1) : "";
 
                 onTag(builder, prefix, attributes, lineIterator);
-            } else if (!(line.startsWith("#") || line.isEmpty())) {
-                onURI(builder, line); // <-- TODO silly?
+            } else if (!line.isEmpty()) {
+                if (line.startsWith("#")) {
+                    onComment(builder, line.substring(1));
+                } else {
+                    onURI(builder, line); // <-- TODO silly?
+                }
             }
         }
 
@@ -101,6 +105,8 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
     abstract B newBuilder();
 
     abstract void onTag(B builder, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException;
+
+    abstract void onComment(B builder, String value);
 
     void onURI(B builder, String uri) throws PlaylistParserException {
         throw new PlaylistParserException("Unexpected URI in playlist: " + uri);
@@ -115,6 +121,13 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
         stringBuilder.append(EXTM3U).append('\n');
 
         TextBuilder textBuilder = new TextBuilder(stringBuilder);
+
+        for (String comment : playlist.comments()) {
+            if (!comment.startsWith("EXT")) {
+                textBuilder.add("#").add(comment).add("\n");
+            }
+        }
+
         write(playlist, textBuilder);
         return stringBuilder.toString();
     }

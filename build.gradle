@@ -7,7 +7,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 ext {
-    ideaGeneratedSources = file('out/production/classes/generated')
+    ideaGeneratedSources = file('build/generated/sources/annotationProcessor/java')
 }
 
 idea.module {
@@ -23,6 +23,7 @@ repositories {
 
 dependencies {
     compileOnly 'org.immutables:value:2.5.6'
+    annotationProcessor "org.immutables:value:2.5.6"
     testCompile 'junit:junit:4.12'
 }
 
