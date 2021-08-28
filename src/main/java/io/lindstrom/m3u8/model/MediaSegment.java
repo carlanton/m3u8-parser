@@ -31,7 +31,7 @@ public interface MediaSegment {
         return false;
     }
 
-    Optional<Integer> cueOut();
+    Optional<Double> cueOut();
 
     @Value.Default
     default boolean cueIn() {

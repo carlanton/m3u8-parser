@@ -66,12 +66,15 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
     EXT_X_CUE_OUT {
         @Override
         public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) {
-            builder.cueOut(Integer.parseInt(attributes));
+            builder.cueOut(Double.parseDouble(attributes));
         }
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            mediaSegment.cueOut().ifPresent(cueOut -> textBuilder.addTag(tag(), cueOut));
+            mediaSegment.cueOut().ifPresent(cueOut -> {
+                String duration = durationToString(cueOut);
+                textBuilder.add('#').add(tag()).add(":").add(duration).add('\n');
+            });
         }
     },
 
@@ -131,20 +134,8 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
 
         @Override
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
-            String duration;
             double d = mediaSegment.duration();
-            if (d >= 0.001 && d < 10000000) {
-                duration = Double.toString(d);
-            } else {
-                // When d > 10^3 or d <= 10^7, Double.toString will use "computerized scientific notation" which is not
-                // supported by the HLS spec. As a workaround we use DecimalFormat. It's not thread-safe so we will
-                // create a new instance on each call. However, this should rarely happen since it's very strange
-                // segment size.
-                DecimalFormat format = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
-                format.setMaximumFractionDigits(340);
-                duration = format.format(d);
-            }
-
+            String duration = durationToString(d);
             textBuilder.add('#').add(tag()).add(":").add(duration).add(",");
             mediaSegment.title().ifPresent(textBuilder::add);
             textBuilder.add('\n');
@@ -174,6 +165,22 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
             mediaSegment.segmentKey().ifPresent(key -> textBuilder.addTag(tag(), key, SegmentKeyAttribute.attributeMap));
         }
     };
+
+    private static String durationToString(double d) {
+        final String duration;
+        if (d >= 0.001 && d < 10000000) {
+           duration = Double.toString(d);
+        } else {
+            // When d > 10^3 or d <= 10^7, Double.toString will use "computerized scientific notation" which is not
+            // supported by the HLS spec. As a workaround we use DecimalFormat. It's not thread-safe so we will
+            // create a new instance on each call. However, this should rarely happen since it's very strange
+            // segment size.
+            DecimalFormat format = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+            format.setMaximumFractionDigits(340);
+            duration = format.format(d);
+        }
+        return duration;
+    }
 
     static final Map<String, MediaSegmentTag> tags = ParserUtils.toMap(values(), Tag::tag);
 }
