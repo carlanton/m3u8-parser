@@ -66,7 +66,18 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
     EXT_X_CUE_OUT {
         @Override
         public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) {
-            builder.cueOut(Double.parseDouble(attributes));
+            try {
+                int p = attributes.indexOf('"');
+                final String durStr = (p < 0)
+                        ? (attributes.startsWith("DURATION=")
+                            ? attributes.substring(9)
+                            : attributes)
+                        : attributes.substring(p+1,attributes.indexOf('"', p+1));
+                builder.cueOut(Double.parseDouble(durStr));
+            } catch (IndexOutOfBoundsException | NumberFormatException e) {
+                if (parsingMode == ParsingMode.STRICT)
+                    throw e;
+            }
         }
 
         @Override
