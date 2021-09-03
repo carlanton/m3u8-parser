@@ -20,11 +20,17 @@ public interface IFrameVariant {
 
     Optional<Long> averageBandwidth();
 
+    Optional<Double> score();
+
     List<String> codecs();
 
     Optional<Resolution> resolution();
 
     Optional<String> hdcpLevel();
+
+    List<String> allowedCpc();
+
+    Optional<String> stableVariantId();
 
     Optional<String> video();
 

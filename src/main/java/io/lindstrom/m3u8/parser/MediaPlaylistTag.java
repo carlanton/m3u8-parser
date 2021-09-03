@@ -136,6 +136,31 @@ enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
         }
     },
 
+    EXT_X_SKIP {
+        @Override
+        public void read(MediaPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
+            builder.skip(SkipAttribute.parse(attributes, parsingMode));
+        }
+
+        @Override
+        public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
+            playlist.skip().ifPresent(v -> textBuilder.addTag(tag(), v, SkipAttribute.attributeMap));
+        }
+    },
+
+    EXT_X_PART_INF {
+        @Override
+        public void read(MediaPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
+            builder.partialSegmentInformation(PartialSegmentInformationAttribute.parse(attributes, parsingMode));
+        }
+
+        @Override
+        public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
+            playlist.partialSegmentInformation()
+                    .ifPresent(p -> textBuilder.addTag(tag(), p, PartialSegmentInformationAttribute.attributeMap));
+        }
+    },
+
     EXT_X_ENDLIST {
         @Override
         public void read(MediaPlaylist.Builder builder, String attributes, ParsingMode parsingMode) {

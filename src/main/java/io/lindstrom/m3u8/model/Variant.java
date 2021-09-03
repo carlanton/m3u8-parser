@@ -30,6 +30,11 @@ public interface Variant {
     Optional<Long> averageBandwidth();
 
     /**
+     * @return variant attribute SCORE
+     */
+    Optional<Double> score();
+
+    /**
      * @return variant attribute CODECS
      */
     List<String> codecs();
@@ -48,6 +53,16 @@ public interface Variant {
      * @return variant attribute HDCP-LEVEL
      */
     Optional<String> hdcpLevel();
+
+    /**
+     * @return variant attribute ALLOWED-CPC
+     */
+    List<String> allowedCpc();
+
+    /**
+     * @return variant attribute STABLE-VARIANT-ID
+     */
+    Optional<String> stableVariantId();
 
     /**
      * @return variant attribute AUDIO

@@ -1,6 +1,7 @@
 package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.ByteRange;
+import io.lindstrom.m3u8.model.Channels;
 import io.lindstrom.m3u8.model.Resolution;
 
 import java.time.format.DateTimeFormatter;
@@ -73,6 +74,28 @@ class ParserUtils {
 
     static String writeByteRange(ByteRange byteRange) {
         return byteRange.length() + byteRange.offset().map(offset -> "@" + offset).orElse("");
+    }
+
+    static Channels parseChannels(String attributes) throws PlaylistParserException {
+        Channels.Builder builder = Channels.builder();
+        String[] parameters = attributes.split("/");
+        try {
+            builder.count(Integer.parseInt(parameters[0]));
+        } catch (NumberFormatException e) {
+            throw new PlaylistParserException("Invalid channels: " + attributes);
+        }
+        if (parameters.length > 1) {
+            builder.objectCodingIdentifiers(split(parameters[1], ","));
+        }
+        return builder.build();
+    }
+
+    static String writeChannels(Channels channels) {
+        String attributes = String.valueOf(channels.count());
+        if (!channels.objectCodingIdentifiers().isEmpty()) {
+            attributes += "/" + String.join(",", channels.objectCodingIdentifiers());
+        }
+        return attributes;
     }
 
     static <T> Map<String, T> toMap(T[] values, Function<T, String> keyMapper) {

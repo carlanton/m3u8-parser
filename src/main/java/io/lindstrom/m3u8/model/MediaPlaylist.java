@@ -40,6 +40,16 @@ public interface MediaPlaylist extends Playlist {
 
     Optional<ServerControl> serverControl();
 
+    Optional<PartialSegmentInformation> partialSegmentInformation();
+
+    List<PartialSegment> partialSegments();
+
+    Optional<Skip> skip();
+
+    Optional<PreloadHint> preloadHint();
+
+    List<RenditionReport> renditionReports();
+
     static Builder builder() {
         return new Builder();
     }

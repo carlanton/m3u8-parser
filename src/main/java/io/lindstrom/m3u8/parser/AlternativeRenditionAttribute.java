@@ -81,6 +81,18 @@ enum AlternativeRenditionAttribute implements Attribute<AlternativeRendition, Al
         }
     },
 
+    STABLE_RENDITION_ID {
+        @Override
+        public void read(AlternativeRendition.Builder builder, String value) throws PlaylistParserException {
+            builder.stableRenditionId(value);
+        }
+
+        @Override
+        public void write(AlternativeRendition value, TextBuilder textBuilder) {
+            value.stableRenditionId().ifPresent(v -> textBuilder.addQuoted(key(), v));
+        }
+    },
+
     DEFAULT {
         @Override
         public void read(AlternativeRendition.Builder builder, String value) throws PlaylistParserException {
@@ -147,15 +159,13 @@ enum AlternativeRenditionAttribute implements Attribute<AlternativeRendition, Al
 
     CHANNELS {
         @Override
-        public void read(AlternativeRendition.Builder builder, String value) {
-            builder.channels(ParserUtils.split(value, "/"));
+        public void read(AlternativeRendition.Builder builder, String value) throws PlaylistParserException {
+            builder.channels(ParserUtils.parseChannels(value));
         }
 
         @Override
         public void write(AlternativeRendition value, TextBuilder textBuilder) {
-            if (!value.channels().isEmpty()) {
-                textBuilder.addQuoted(name(), String.join("/", value.channels()));
-            }
+            value.channels().ifPresent(v -> textBuilder.addQuoted(name(), ParserUtils.writeChannels(v)));
         }
     };
 
