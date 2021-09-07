@@ -60,6 +60,11 @@ public interface AlternativeRendition {
     String name();
 
     /**
+     * @return rendition attribute STABLE-RENDITION-ID
+     */
+    Optional<String> stableRenditionId();
+
+    /**
      * @return rendition attribute DEFAULT
      */
     Optional<Boolean> defaultRendition();
@@ -87,7 +92,7 @@ public interface AlternativeRendition {
     /**
      * @return rendition attributes CHANNELS
      */
-    List<String> channels();
+    Optional<Channels> channels();
 
     static Builder builder() {
         return new Builder();

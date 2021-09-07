@@ -3,6 +3,7 @@ package io.lindstrom.m3u8.model;
 import org.immutables.value.Value;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -44,6 +45,8 @@ public interface MediaSegment {
     }
 
     Optional<Long> bitrate();
+
+    List<PartialSegment> partialSegments();
 
     static Builder builder() {
         return new Builder();

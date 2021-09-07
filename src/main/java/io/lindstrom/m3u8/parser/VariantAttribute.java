@@ -32,6 +32,18 @@ enum VariantAttribute implements Attribute<Variant, Variant.Builder> {
         }
     },
 
+    SCORE {
+        @Override
+        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+            builder.score(Double.parseDouble(value));
+        }
+
+        @Override
+        public void write(Variant value, TextBuilder textBuilder) {
+            value.score().ifPresent(v -> textBuilder.add(key(), v));
+        }
+    },
+
     CODECS {
         @Override
         public void read(Variant.Builder builder, String value) {
@@ -80,6 +92,32 @@ enum VariantAttribute implements Attribute<Variant, Variant.Builder> {
         @Override
         public void write(Variant value, TextBuilder textBuilder) {
             value.hdcpLevel().ifPresent(v -> textBuilder.add(key(), v));
+        }
+    },
+
+    ALLOWED_CPC {
+        @Override
+        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+            builder.allowedCpc(ParserUtils.split(value, ","));
+        }
+
+        @Override
+        public void write(Variant value, TextBuilder textBuilder) {
+            if (!value.allowedCpc().isEmpty()) {
+                textBuilder.addQuoted(key(), String.join(",", value.allowedCpc()));
+            }
+        }
+    },
+
+    STABLE_VARIANT_ID {
+        @Override
+        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+            builder.stableVariantId(value);
+        }
+
+        @Override
+        public void write(Variant value, TextBuilder textBuilder) {
+            value.stableVariantId().ifPresent(v -> textBuilder.addQuoted(key(), v));
         }
     },
 

@@ -44,6 +44,18 @@ enum IFrameVariantAttribute implements Attribute<IFrameVariant, IFrameVariant.Bu
         }
     },
 
+    SCORE {
+        @Override
+        public void read(IFrameVariant.Builder builder, String value) throws PlaylistParserException {
+            builder.score(Double.parseDouble(value));
+        }
+
+        @Override
+        public void write(IFrameVariant value, TextBuilder textBuilder) {
+            value.score().ifPresent(v -> textBuilder.add(key(),v));
+        }
+    },
+
     CODECS {
         @Override
         public void read(IFrameVariant.Builder builder, String value) {
@@ -79,6 +91,32 @@ enum IFrameVariantAttribute implements Attribute<IFrameVariant, IFrameVariant.Bu
         @Override
         public void write(IFrameVariant value, TextBuilder textBuilder) {
             value.hdcpLevel().ifPresent(v -> textBuilder.add(key(), v));
+        }
+    },
+
+    ALLOWED_CPC {
+        @Override
+        public void read(IFrameVariant.Builder builder, String value) throws PlaylistParserException {
+            builder.allowedCpc(ParserUtils.split(value,","));
+        }
+
+        @Override
+        public void write(IFrameVariant value, TextBuilder textBuilder) {
+            if (!value.allowedCpc().isEmpty()) {
+                textBuilder.addQuoted(key(), String.join(",", value.allowedCpc()));
+            }
+        }
+    },
+
+    STABLE_VARIANT_ID {
+        @Override
+        public void read(IFrameVariant.Builder builder, String value) throws PlaylistParserException {
+            builder.stableVariantId(value);
+        }
+
+        @Override
+        public void write(IFrameVariant value, TextBuilder textBuilder) {
+            value.stableVariantId().ifPresent(v -> textBuilder.addQuoted(key(), v));
         }
     },
 

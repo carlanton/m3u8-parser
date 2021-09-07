@@ -175,6 +175,18 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
         public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
             mediaSegment.segmentKey().ifPresent(key -> textBuilder.addTag(tag(), key, SegmentKeyAttribute.attributeMap));
         }
+    },
+
+    EXT_X_PART{
+        @Override
+        public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
+            builder.addPartialSegments(PartialSegmentAttribute.parse(attributes, parsingMode));
+        }
+
+        @Override
+        public void write(MediaSegment playlist, TextBuilder textBuilder) {
+            playlist.partialSegments().forEach(p -> textBuilder.addTag(tag(), p, PartialSegmentAttribute.attributeMap));
+        }
     };
 
     private static String durationToString(double d) {
