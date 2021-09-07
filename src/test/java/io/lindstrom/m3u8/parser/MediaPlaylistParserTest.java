@@ -1,13 +1,18 @@
 package io.lindstrom.m3u8.parser;
 
+import io.lindstrom.m3u8.model.MediaPlaylist;
+import io.lindstrom.m3u8.model.MediaSegment;
 import org.junit.Test;
 
 import java.nio.file.Paths;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class MediaPlaylistParserTest {
     private final MediaPlaylistParser parser = new MediaPlaylistParser();
@@ -78,4 +83,29 @@ public class MediaPlaylistParserTest {
                         "#EXTINF:10",
                         "1.ts")).mediaSegments().get(0).programDateTime());
     }
+
+    @Test
+    public void parseCueOut() throws Exception {
+        // Second segment has #EXT-X-CUE-OUT duration of 19 seconds, done in multiple representations
+        checkCueOut("src/test/resources/media/media-playlist-with-date-range-and-cue-out-cue-in.m3u8", 1, 19.0);
+        checkCueOut("src/test/resources/media/media-playlist-with-date-range-and-cue-out-cue-in_2.m3u8", 1 , 19.0);
+        checkCueOut("src/test/resources/media/media-playlist-with-date-range-and-cue-out-cue-in_3.m3u8", 1 , 19.0);
+        checkCueOut("src/test/resources/media/media-playlist-with-date-range-and-cue-out-cue-in_4.m3u8", 1, 19.0);
+        checkCueOut("src/test/resources/media/media-playlist-with-date-range-and-cue-out-cue-in_5.m3u8", 1, 19.0);
+    }
+
+    private void checkCueOut(String path, int segNum, double expectedCueOut) throws Exception {
+        MediaPlaylist playlist = parser.readPlaylist(Paths.get(path));
+        List<MediaSegment> segments = playlist.mediaSegments();
+        for (int i = 0; i < segments.size(); i++) {
+            MediaSegment segment = segments.get(i);
+            if (i == segNum) {
+                assertTrue(segment.cueOut().isPresent());
+                assertEquals(expectedCueOut, segment.cueOut().get(), 0);
+            } else {
+                assertFalse(segment.cueOut().isPresent());
+            }
+        }
+    }
+
 }
