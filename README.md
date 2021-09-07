@@ -203,4 +203,4 @@ The following tags are currently not implemented:
 ```
 
 ## Android
-This library uses `java.time.*` which requires [core library desugaring](https://developer.android.com/studio/preview/features#j8-desugar) when running on Android API level < 26.
+This library uses `java.time.*` which requires [core library desugaring](https://developer.android.com/studio/write/java8-support#library-desugaring) when running on Android API level < 26.
