@@ -1,6 +1,6 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.MasterPlaylist;
+import io.lindstrom.m3u8.model.MainPlaylist;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -20,19 +20,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.runners.Parameterized.Parameter;
 
 @RunWith(Parameterized.class)
-public class MasterPlaylistReadAndWrite {
-    private final MasterPlaylistParser masterPlaylistParser = new MasterPlaylistParser();
+public class MainPlaylistReadAndWrite {
+    private final MainPlaylistParser mainPlaylistParser = new MainPlaylistParser();
 
     @Parameters
     public static List<Path> data() {
         return Stream.of(
-                "master/apple-master.m3u8",
-                "master/master.m3u8",
-                "master/master-variables.m3u8",
-                "open-m3u8/masterPlaylist.m3u8",
-                "open-m3u8/masterPlaylistWithAlternativeAudio.m3u8",
-                "open-m3u8/masterPlaylistWithAlternativeVideo.m3u8",
-                "open-m3u8/masterPlaylistWithIFrames.m3u8")
+                "main/apple-main.m3u8",
+                "main/main.m3u8",
+                "main/main-variables.m3u8",
+                "open-m3u8/mainPlaylist.m3u8",
+                "open-m3u8/mainPlaylistWithAlternativeAudio.m3u8",
+                "open-m3u8/mainPlaylistWithAlternativeVideo.m3u8",
+                "open-m3u8/mainPlaylistWithIFrames.m3u8")
                 .map(p -> Paths.get("src/test/resources/", p))
                 .collect(Collectors.toList());
     }
@@ -42,14 +42,14 @@ public class MasterPlaylistReadAndWrite {
 
     @Test
     public void readAndWrite() throws Exception {
-        MasterPlaylist playlist = masterPlaylistParser.readPlaylist(playlistPath);
-        assertEquals(playlist, masterPlaylistParser.readPlaylist(masterPlaylistParser.writePlaylistAsString(playlist)));
+        MainPlaylist playlist = mainPlaylistParser.readPlaylist(playlistPath);
+        assertEquals(playlist, mainPlaylistParser.readPlaylist(mainPlaylistParser.writePlaylistAsString(playlist)));
     }
 
     @Test
     public void readAndWriteAttributeQuoting() throws Exception {
         String original = new String(Files.readAllBytes(playlistPath), StandardCharsets.UTF_8);
-        String written = masterPlaylistParser.writePlaylistAsString(masterPlaylistParser.readPlaylist(original));
+        String written = mainPlaylistParser.writePlaylistAsString(mainPlaylistParser.readPlaylist(original));
 
         TestUtils.attributeConsistencyCheck(original, written, playlistPath);
     }
@@ -57,7 +57,7 @@ public class MasterPlaylistReadAndWrite {
     @Test
     public void streamInfoUriTest() throws IOException {
         String original = new String(Files.readAllBytes(playlistPath), StandardCharsets.UTF_8);
-        String written = masterPlaylistParser.writePlaylistAsString(masterPlaylistParser.readPlaylist(playlistPath));
+        String written = mainPlaylistParser.writePlaylistAsString(mainPlaylistParser.readPlaylist(playlistPath));
         assertEquals(variantUris(original), variantUris(written));
     }
 

@@ -1,9 +1,6 @@
 package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.*;
-import io.lindstrom.m3u8.parser.MasterPlaylistParser;
-import io.lindstrom.m3u8.parser.MediaPlaylistParser;
-import io.lindstrom.m3u8.parser.PlaylistParserException;
 import org.junit.Test;
 
 import java.nio.file.Path;
@@ -18,7 +15,7 @@ import static org.junit.Assert.*;
 
 public class PlaylistParserTests {
     private final Path resources = Paths.get("src/test/resources/");
-    private final MasterPlaylistParser masterPlaylistParser = new MasterPlaylistParser();
+    private final MainPlaylistParser mainPlaylistParser = new MainPlaylistParser();
     private final MediaPlaylistParser mediaPlaylistParser = new MediaPlaylistParser();
 
     @Test
@@ -45,8 +42,8 @@ public class PlaylistParserTests {
     }
 
     @Test
-    public void masterPlaylist() throws Exception {
-        MasterPlaylist playlist = masterPlaylistParser.readPlaylist(resources.resolve("open-m3u8/masterPlaylist.m3u8"));
+    public void mainPlaylist() throws Exception {
+        MainPlaylist playlist = mainPlaylistParser.readPlaylist(resources.resolve("open-m3u8/mainPlaylist.m3u8"));
         assertFalse(playlist.version().isPresent());
         assertThat(playlist.variants(), is(Arrays.asList(
                 Variant.builder()
@@ -72,8 +69,8 @@ public class PlaylistParserTests {
     }
 
     @Test
-    public void masterPlaylistWithAlternativeAudio() throws Exception {
-        MasterPlaylist playlist = masterPlaylistParser.readPlaylist(resources.resolve("open-m3u8/masterPlaylistWithAlternativeAudio.m3u8"));
+    public void mainPlaylistWithAlternativeAudio() throws Exception {
+        MainPlaylist playlist = mainPlaylistParser.readPlaylist(resources.resolve("open-m3u8/mainPlaylistWithAlternativeAudio.m3u8"));
         assertFalse(playlist.version().isPresent());
         assertThat(playlist.alternativeRenditions(), is(Arrays.asList(
                 AlternativeRendition.builder()
@@ -132,8 +129,8 @@ public class PlaylistParserTests {
     }
 
     @Test
-    public void masterPlaylistWithAlternativeVideo() throws Exception {
-        MasterPlaylist playlist = masterPlaylistParser.readPlaylist(resources.resolve("open-m3u8/masterPlaylistWithAlternativeVideo.m3u8"));
+    public void mainPlaylistWithAlternativeVideo() throws Exception {
+        MainPlaylist playlist = mainPlaylistParser.readPlaylist(resources.resolve("open-m3u8/mainPlaylistWithAlternativeVideo.m3u8"));
         assertFalse(playlist.version().isPresent());
 
         List<AlternativeRendition> lowVideo = Arrays.asList(
@@ -238,8 +235,8 @@ public class PlaylistParserTests {
     }
 
     @Test
-    public void masterPlaylistWithIFrames() throws Exception {
-        MasterPlaylist playlist = masterPlaylistParser.readPlaylist(resources.resolve("open-m3u8/masterPlaylistWithIFrames.m3u8"));
+    public void mainPlaylistWithIFrames() throws Exception {
+        MainPlaylist playlist = mainPlaylistParser.readPlaylist(resources.resolve("open-m3u8/mainPlaylistWithIFrames.m3u8"));
         assertFalse(playlist.version().isPresent());
 
         assertThat(playlist.variants(), is(Arrays.asList(

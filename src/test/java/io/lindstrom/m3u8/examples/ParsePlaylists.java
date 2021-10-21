@@ -1,7 +1,7 @@
 package io.lindstrom.m3u8.examples;
 
-import io.lindstrom.m3u8.parser.MasterPlaylistParser;
-import io.lindstrom.m3u8.model.MasterPlaylist;
+import io.lindstrom.m3u8.parser.MainPlaylistParser;
+import io.lindstrom.m3u8.model.MainPlaylist;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -18,40 +18,40 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class ParsePlaylists {
-    private final Path masterPlaylist = Paths.get("src/test/resources/master/master.m3u8");
-    private final MasterPlaylistParser masterPlaylistParser  = new MasterPlaylistParser();
+    private final Path mainPlaylist = Paths.get("src/test/resources/main/main.m3u8");
+    private final MainPlaylistParser mainPlaylistParser = new MainPlaylistParser();
 
     @Test
     public void readPlaylist() throws Exception {
-        Set<MasterPlaylist> playlists = new HashSet<>();
+        Set<MainPlaylist> playlists = new HashSet<>();
 
         playlists.add(
                 // From Path
-                masterPlaylistParser.readPlaylist(masterPlaylist)
+                mainPlaylistParser.readPlaylist(mainPlaylist)
         );
 
         playlists.add(
                 // From String
-                masterPlaylistParser.readPlaylist(new String(Files.readAllBytes(masterPlaylist), UTF_8))
+                mainPlaylistParser.readPlaylist(new String(Files.readAllBytes(mainPlaylist), UTF_8))
         );
 
-        try (InputStream inputStream = Files.newInputStream(masterPlaylist)) {
+        try (InputStream inputStream = Files.newInputStream(mainPlaylist)) {
             playlists.add(
                     // From InputStream
-                    masterPlaylistParser.readPlaylist(inputStream)
+                    mainPlaylistParser.readPlaylist(inputStream)
             );
         }
 
-        try (BufferedReader bufferedReader = Files.newBufferedReader(masterPlaylist, UTF_8)) {
+        try (BufferedReader bufferedReader = Files.newBufferedReader(mainPlaylist, UTF_8)) {
             playlists.add(
                     // From BufferedReader
-                    masterPlaylistParser.readPlaylist(bufferedReader)
+                    mainPlaylistParser.readPlaylist(bufferedReader)
             );
         }
 
         playlists.add(
                 // From Iterator<String>
-                masterPlaylistParser.readPlaylist(Files.readAllLines(masterPlaylist, UTF_8).iterator())
+                mainPlaylistParser.readPlaylist(Files.readAllLines(mainPlaylist, UTF_8).iterator())
         );
 
         // All methods should produce the same playlist
@@ -60,11 +60,11 @@ public class ParsePlaylists {
 
     @Test
     public void writePlaylist() throws Exception {
-        MasterPlaylist playlist = masterPlaylistParser.readPlaylist(masterPlaylist);
+        MainPlaylist playlist = mainPlaylistParser.readPlaylist(mainPlaylist);
 
-        byte[] bytes = masterPlaylistParser.writePlaylistAsBytes(playlist);
-        String string = masterPlaylistParser.writePlaylistAsString(playlist);
-        ByteBuffer byteBuffer = masterPlaylistParser.writePlaylistAsByteBuffer(playlist);
+        byte[] bytes = mainPlaylistParser.writePlaylistAsBytes(playlist);
+        String string = mainPlaylistParser.writePlaylistAsString(playlist);
+        ByteBuffer byteBuffer = mainPlaylistParser.writePlaylistAsByteBuffer(playlist);
 
         assertArrayEquals(bytes, string.getBytes(UTF_8));
         assertArrayEquals(bytes, byteBuffer.array());
