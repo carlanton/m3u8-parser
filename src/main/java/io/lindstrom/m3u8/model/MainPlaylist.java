@@ -5,10 +5,10 @@ import org.immutables.value.Value;
 import java.util.List;
 
 /**
- * Master playlist interface
+ * Main playlist interface
  */
 @Value.Immutable
-public interface MasterPlaylist extends Playlist {
+public interface MainPlaylist extends Playlist {
 
     /**
      * A list of alternate renditions related to this playlist.
@@ -59,6 +59,6 @@ public interface MasterPlaylist extends Playlist {
         return new Builder();
     }
 
-    class Builder extends MasterPlaylistBuilder {
+    class Builder extends MainPlaylistBuilder {
     }
 }

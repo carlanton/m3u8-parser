@@ -31,9 +31,9 @@ implementation 'io.lindstrom:m3u8-parser:0.21'
 
 ## Usage
 
-### Create master playlist
+### Create main playlist
 ```java
-MasterPlaylist playlist = MasterPlaylist.builder()
+MainPlaylist playlist = MainPlaylist.builder()
     .version(4)
     .independentSegments(true)
     .addAlternativeRenditions(AlternativeRendition.builder()
@@ -55,11 +55,11 @@ MasterPlaylist playlist = MasterPlaylist.builder()
             .build())
     .build();
 
-MasterPlaylistParser parser = new MasterPlaylistParser();
+MainPlaylistParser parser = new MainPlaylistParser();
 System.out.println(parser.writePlaylistAsString(playlist));
 ```
 
-This code should produce the following master playlist:
+This code should produce the following main playlist:
 ```
 #EXTM3U
 #EXT-X-VERSION:4
@@ -113,15 +113,15 @@ http://media.example.com/third.ts
 #EXT-X-ENDLIST
 ```
 
-### Parse master playlist
+### Parse main playlist
 ```java
-MasterPlaylistParser parser = new MasterPlaylistParser();
+MainPlaylistParser parser = new MainPlaylistParser();
 
 // Parse playlist
-MasterPlaylist playlist = parser.readPlaylist(Paths.get("path/to/master.m3u8"));
+MainPlaylist playlist = parser.readPlaylist(Paths.get("path/to/main.m3u8"));
 
 // Update playlist version
-MasterPlaylist updated = MasterPlaylist.builder()
+MainPlaylist updated = MainPlaylist.builder()
                                         .from(playlist)
                                         .version(2)
                                         .build();
@@ -153,7 +153,7 @@ By default, the parser will throw an exception on unsupported tags and attribute
 passing a `ParsingMode` to the parser. Example:
 
 ```java
-MasterPlaylistParser lenientParser = new MasterPlaylistParser(ParsingMode.LENIENT);
+MainPlaylistParser lenientParser = new MainPlaylistParser(ParsingMode.LENIENT);
 ```
 
 Currently two modes are available:

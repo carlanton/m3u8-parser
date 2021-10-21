@@ -1,22 +1,22 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.MasterPlaylist;
+import io.lindstrom.m3u8.model.MainPlaylist;
 
 import java.util.Iterator;
 
 /**
- * MasterPlaylistParser can read and write Master Playlists according to RFC 8216 (HTTP Live Streaming).
+ * MainPlaylistParser can read and write Main Playlists according to RFC 8216 (HTTP Live Streaming).
  * <p>
  * Example usage:
  * <pre>
  * {@code
- * MasterPlaylistParser parser = new MasterPlaylistParser();
+ * MainPlaylistParser parser = new MainPlaylistParser();
  *
  * // Parse playlist
- * MasterPlaylist playlist = parser.readPlaylist(Paths.get("path/to/master.m3u8"));
+ * MainPlaylist playlist = parser.readPlaylist(Paths.get("path/to/main.m3u8"));
  *
  * // Update playlist version
- * MasterPlaylist updated = MasterPlaylist.builder()
+ * MainPlaylist updated = MainPlaylist.builder()
  *                                        .from(playlist)
  *                                        .version(2)
  *                                        .build();
@@ -28,34 +28,34 @@ import java.util.Iterator;
  *
  * This implementation is reusable and thread safe.
  */
-public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist, MasterPlaylist.Builder> {
+public class MainPlaylistParser extends AbstractPlaylistParser<MainPlaylist, MainPlaylist.Builder> {
     private final ParsingMode parsingMode;
 
-    public MasterPlaylistParser() {
+    public MainPlaylistParser() {
         this(ParsingMode.STRICT);
     }
 
-    public MasterPlaylistParser(ParsingMode parsingMode) {
+    public MainPlaylistParser(ParsingMode parsingMode) {
         this.parsingMode = parsingMode;
     }
 
     @Override
-    void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-        for (MasterPlaylistTag tag : MasterPlaylistTag.tags.values()) {
+    void write(MainPlaylist playlist, TextBuilder textBuilder) {
+        for (MainPlaylistTag tag : MainPlaylistTag.tags.values()) {
             tag.write(playlist, textBuilder);
         }
     }
 
     @Override
-    MasterPlaylist.Builder newBuilder() {
-        return MasterPlaylist.builder();
+    MainPlaylist.Builder newBuilder() {
+        return MainPlaylist.builder();
     }
 
     @Override
-    void onTag(MasterPlaylist.Builder builder, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException{
-        MasterPlaylistTag tag = MasterPlaylistTag.tags.get(name);
+    void onTag(MainPlaylist.Builder builder, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException{
+        MainPlaylistTag tag = MainPlaylistTag.tags.get(name);
 
-        if (tag == MasterPlaylistTag.EXT_X_STREAM_INF) {
+        if (tag == MainPlaylistTag.EXT_X_STREAM_INF) {
             String uriLine = lineIterator.next();
             if (uriLine == null || uriLine.startsWith("#")) {
                 throw new PlaylistParserException("Expected URI, got " + uriLine);
@@ -69,14 +69,14 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
     }
 
     @Override
-    void onComment(MasterPlaylist.Builder builder, String value) {
+    void onComment(MainPlaylist.Builder builder, String value) {
         builder.addComments(
                 value
         );
     }
 
     @Override
-    MasterPlaylist build(MasterPlaylist.Builder builder) {
+    MainPlaylist build(MainPlaylist.Builder builder) {
         return builder.build();
     }
 }

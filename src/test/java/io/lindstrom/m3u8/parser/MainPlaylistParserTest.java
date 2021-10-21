@@ -7,22 +7,22 @@ import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
 
-public class MasterPlaylistParserTest {
-    private final MasterPlaylistParser parser = new MasterPlaylistParser();
+public class MainPlaylistParserTest {
+    private final MainPlaylistParser parser = new MainPlaylistParser();
 
     @Test
-    public void masterParser() throws Exception {
-        parser.readPlaylist(Paths.get("src/test/resources/master/master.m3u8"));
+    public void mainParser() throws Exception {
+        parser.readPlaylist(Paths.get("src/test/resources/main/main.m3u8"));
     }
 
     @Test
-    public void masterParser2() throws Exception {
-        parser.readPlaylist(Paths.get("src/test/resources/master/apple-master.m3u8"));
+    public void mainParser2() throws Exception {
+        parser.readPlaylist(Paths.get("src/test/resources/main/apple-main.m3u8"));
     }
 
     @Test
     public void custom() throws Exception {
-        MasterPlaylist playlist = MasterPlaylist.builder()
+        MainPlaylist playlist = MainPlaylist.builder()
                 .version(4)
                 .independentSegments(true)
                 .addAlternativeRenditions(AlternativeRendition.builder()

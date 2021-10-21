@@ -1,6 +1,6 @@
 package io.lindstrom.m3u8.examples;
 
-import io.lindstrom.m3u8.parser.MasterPlaylistParser;
+import io.lindstrom.m3u8.parser.MainPlaylistParser;
 import io.lindstrom.m3u8.parser.MediaPlaylistParser;
 import io.lindstrom.m3u8.parser.ParsingMode;
 import io.lindstrom.m3u8.parser.PlaylistParserException;
@@ -11,15 +11,15 @@ import java.nio.file.Paths;
 
 public class ParserModeTest {
     @Test(expected = PlaylistParserException.class)
-    public void strictParsingMasterPlaylist() throws IOException {
-        MasterPlaylistParser parser = new MasterPlaylistParser(ParsingMode.STRICT);
-        parser.readPlaylist(Paths.get("src/test/resources/master/master-lenient.m3u8"));
+    public void strictParsingMainPlaylist() throws IOException {
+        MainPlaylistParser parser = new MainPlaylistParser(ParsingMode.STRICT);
+        parser.readPlaylist(Paths.get("src/test/resources/main/main-lenient.m3u8"));
     }
 
     @Test
-    public void lenientParsingMasterPlaylist() throws IOException {
-        MasterPlaylistParser parser = new MasterPlaylistParser(ParsingMode.LENIENT);
-        parser.readPlaylist(Paths.get("src/test/resources/master/master-lenient.m3u8"));
+    public void lenientParsingMainPlaylist() throws IOException {
+        MainPlaylistParser parser = new MainPlaylistParser(ParsingMode.LENIENT);
+        parser.readPlaylist(Paths.get("src/test/resources/main/main-lenient.m3u8"));
     }
 
     @Test(expected = PlaylistParserException.class)

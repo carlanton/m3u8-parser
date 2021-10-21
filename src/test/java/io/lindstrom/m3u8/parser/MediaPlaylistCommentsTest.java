@@ -9,7 +9,7 @@ public class MediaPlaylistCommentsTest {
     private final MediaPlaylistParser parser = new MediaPlaylistParser();
 
     @Test
-    public void shouldAddCommentToMasterPlaylist() {
+    public void shouldAddCommentToMainPlaylist() {
         MediaPlaylist playlist = MediaPlaylist.builder()
                 .targetDuration(2)
                 .addComments(
@@ -25,7 +25,7 @@ public class MediaPlaylistCommentsTest {
     }
 
     @Test
-    public void shouldAddCommentsToMasterPlaylist() {
+    public void shouldAddCommentsToMainPlaylist() {
         MediaPlaylist playlist = MediaPlaylist.builder()
                 .targetDuration(2)
                 .addComments(
