@@ -29,6 +29,7 @@ public class MasterPlaylistReadAndWrite {
                 "master/apple-master.m3u8",
                 "master/master.m3u8",
                 "master/master-variables.m3u8",
+                "master/master-alt-video.m3u8",
                 "open-m3u8/masterPlaylist.m3u8",
                 "open-m3u8/masterPlaylistWithAlternativeAudio.m3u8",
                 "open-m3u8/masterPlaylistWithAlternativeVideo.m3u8",

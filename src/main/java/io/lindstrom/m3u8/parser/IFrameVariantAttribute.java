@@ -154,6 +154,30 @@ enum IFrameVariantAttribute implements Attribute<IFrameVariant, IFrameVariant.Bu
         public void write(IFrameVariant value, TextBuilder textBuilder) {
             value.videoRange().ifPresent(v -> textBuilder.add(key(), v));
         }
+    },
+
+    NAME {
+        @Override
+        public void read(IFrameVariant.Builder builder, String value) throws PlaylistParserException {
+            builder.name(value);
+        }
+
+        @Override
+        public void write(IFrameVariant value, TextBuilder textBuilder) {
+            value.name().ifPresent(v -> textBuilder.addQuoted(key(), v));
+        }
+    },
+
+    LANGUAGE {
+        @Override
+        public void read(IFrameVariant.Builder builder, String value) throws PlaylistParserException {
+            builder.language(value);
+        }
+
+        @Override
+        public void write(IFrameVariant value, TextBuilder textBuilder) {
+            value.language().ifPresent(v -> textBuilder.addQuoted(key(), v));
+        }
     };
 
     final static Map<String, IFrameVariantAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
