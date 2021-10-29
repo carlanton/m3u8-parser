@@ -37,6 +37,10 @@ public interface IFrameVariant {
     Optional<Integer> programId();
     
     Optional<VideoRange> videoRange();
+
+    Optional<String> name();
+
+    Optional<String> language();
     
     static Builder builder() {
         return new Builder();
