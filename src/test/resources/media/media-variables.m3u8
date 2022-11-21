@@ -1,0 +1,10 @@
+#EXTM3U
+#EXT-X-VERSION:8
+
+#EXT-X-DEFINE:IMPORT="auth"
+
+#EXT-X-TARGETDURATION:7
+#EXT-X-PLAYLIST-TYPE:VOD
+#EXT-X-MAP:URI="init.mp4{$auth}"
+#EXTINF:6.0,
+segment_1.m4s{$auth}
