@@ -48,7 +48,7 @@ public enum PartialSegmentAttribute implements Attribute<PartialSegment, Partial
 
         @Override
         public void write(PartialSegment value, TextBuilder textBuilder) {
-            value.byterange().ifPresent(v -> textBuilder.add(name(), "\"" + ParserUtils.writeByteRange(v) + "\""));
+            value.byterange().ifPresent(v -> textBuilder.addQuoted(name(), ParserUtils.writeByteRange(v)));
         }
     },
     GAP {
