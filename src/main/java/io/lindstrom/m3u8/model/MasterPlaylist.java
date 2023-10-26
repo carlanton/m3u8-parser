@@ -1,6 +1,5 @@
 package io.lindstrom.m3u8.model;
 
-import jdk.javadoc.internal.doclets.formats.html.Contents;
 import org.immutables.value.Value;
 
 import java.util.List;
