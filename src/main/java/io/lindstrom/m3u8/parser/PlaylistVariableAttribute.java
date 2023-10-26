@@ -11,7 +11,7 @@ public enum PlaylistVariableAttribute implements Attribute<PlaylistVariable, Pla
     NAME {
         @Override
         public void read(PlaylistVariable.Builder builder, String value) {
-            builder.name(name());
+            builder.name(value);
         }
 
         @Override
