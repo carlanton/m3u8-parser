@@ -47,6 +47,18 @@ enum MediaPlaylistTag implements Tag<MediaPlaylist, MediaPlaylist.Builder> {
         }
     },
 
+    EXT_X_DEFINE {
+        @Override
+        public void read(MediaPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
+            builder.addVariables(PlaylistVariableAttribute.parse(attributes, parsingMode));
+        }
+
+        @Override
+        public void write(MediaPlaylist playlist, TextBuilder textBuilder) {
+            textBuilder.addTag(tag(), playlist.variables(), PlaylistVariableAttribute.attributeMap);
+        }
+    },
+
     EXT_X_I_FRAMES_ONLY {
         @Override
         public void read(MediaPlaylist.Builder builder, String attributes, ParsingMode parsingMode) {
