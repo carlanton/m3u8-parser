@@ -21,12 +21,12 @@ Maven:
 <dependency>
     <groupId>io.lindstrom</groupId>
     <artifactId>m3u8-parser</artifactId>
-    <version>0.24</version>
+    <version>0.25</version>
 </dependency>
 ```
 Gradle:
 ```
-implementation 'io.lindstrom:m3u8-parser:0.24'
+implementation 'io.lindstrom:m3u8-parser:0.25'
 ```
 
 ## Usage
@@ -193,6 +193,7 @@ EXT-X-DEFINE
 EXT-X-GAP
 EXT-X-BITRATE
 EXT-X-SERVER-CONTROL
+EXT-X-CONTENT-STEERING
 
 EXT-X-PART
 EXT-X-PRELOAD-HINT
