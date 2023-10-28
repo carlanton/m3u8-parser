@@ -3,6 +3,7 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.MasterPlaylist;
 
 import java.util.Map;
+import java.util.Optional;
 
 enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
     EXT_X_VERSION {
@@ -115,6 +116,19 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
             textBuilder.addTag(tag(), playlist.sessionKeys(), SegmentKeyAttribute.attributeMap);
+        }
+    },
+
+    EXT_X_CONTENT_STEERING {
+        @Override
+        public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
+            builder.contentSteering(ContentSteeringAttribute.parse(attributes, parsingMode));
+        }
+
+        @Override
+        public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
+            playlist.contentSteering().ifPresent(contentSteering ->
+                    textBuilder.addTag(tag(), contentSteering, ContentSteeringAttribute.attributeMap));
         }
     };
 

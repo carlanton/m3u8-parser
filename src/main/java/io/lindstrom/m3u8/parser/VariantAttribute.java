@@ -201,6 +201,18 @@ enum VariantAttribute implements Attribute<Variant, Variant.Builder> {
         public void write(Variant value, TextBuilder textBuilder) {
             value.videoRange().ifPresent(v -> textBuilder.add(key(), v));
         }
+    },
+
+    PATHWAY_ID {
+        @Override
+        public void read(Variant.Builder builder, String value) throws PlaylistParserException {
+            builder.pathwayId(value);
+        }
+
+        @Override
+        public void write(Variant value, TextBuilder textBuilder) {
+            value.pathwayId().ifPresent(v -> textBuilder.addQuoted(key(), v));
+        }
     };
 
     final static Map<String, VariantAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);

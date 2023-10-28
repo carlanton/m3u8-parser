@@ -3,6 +3,7 @@ package io.lindstrom.m3u8.model;
 import org.immutables.value.Value;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Master playlist interface
@@ -54,6 +55,15 @@ public interface MasterPlaylist extends Playlist {
      * RFC 8216 - 4.3.4.5.  EXT-X-SESSION-KEY</a>
      */
     List<SegmentKey> sessionKeys();
+
+    /**
+     * The content steering tag
+     *
+     * @return the content steering tag, if present.
+     * @see <a href="https://datatracker.ietf.org/doc/html/draft-pantos-hls-rfc8216bis#section-4.4.6.6" target="_blank">
+     * draft-pantos-hls-rfc8216bis-13 - 4.4.6.6. EXT-X-CONTENT-STEERING</a>
+     */
+    Optional<ContentSteering> contentSteering();
 
     static Builder builder() {
         return new Builder();

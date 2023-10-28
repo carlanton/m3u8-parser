@@ -33,7 +33,8 @@ public class MasterPlaylistReadAndWrite {
                 "open-m3u8/masterPlaylist.m3u8",
                 "open-m3u8/masterPlaylistWithAlternativeAudio.m3u8",
                 "open-m3u8/masterPlaylistWithAlternativeVideo.m3u8",
-                "open-m3u8/masterPlaylistWithIFrames.m3u8")
+                "open-m3u8/masterPlaylistWithIFrames.m3u8",
+                "master/content-steering.m3u8")
                 .map(p -> Paths.get("src/test/resources/", p))
                 .collect(Collectors.toList());
     }

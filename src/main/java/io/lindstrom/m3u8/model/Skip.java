@@ -19,7 +19,7 @@ public interface Skip {
 
     }
 
-    static Skip of(int skippedSegments) {
+    static Skip of(long skippedSegments) {
         return builder().skippedSegments(skippedSegments).build();
     }
 }

@@ -104,6 +104,11 @@ public interface Variant {
      */
     Optional<VideoRange> videoRange();
 
+    /**
+     * @return variant attribute PATHWAY-ID
+     */
+    Optional<String> pathwayId();
+
     static Builder builder() {
         return new Builder();
     }
