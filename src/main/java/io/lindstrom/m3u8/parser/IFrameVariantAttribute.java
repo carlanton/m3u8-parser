@@ -178,6 +178,18 @@ enum IFrameVariantAttribute implements Attribute<IFrameVariant, IFrameVariant.Bu
         public void write(IFrameVariant value, TextBuilder textBuilder) {
             value.language().ifPresent(v -> textBuilder.addQuoted(key(), v));
         }
+    },
+
+    PATHWAY_ID {
+        @Override
+        public void read(IFrameVariant.Builder builder, String value) throws PlaylistParserException {
+            builder.pathwayId(value);
+        }
+
+        @Override
+        public void write(IFrameVariant value, TextBuilder textBuilder) {
+            value.pathwayId().ifPresent(v -> textBuilder.addQuoted(key(), v));
+        }
     };
 
     final static Map<String, IFrameVariantAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);

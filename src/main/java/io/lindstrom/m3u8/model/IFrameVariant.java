@@ -41,7 +41,9 @@ public interface IFrameVariant {
     Optional<String> name();
 
     Optional<String> language();
-    
+
+    Optional<String> pathwayId();
+
     static Builder builder() {
         return new Builder();
     }
