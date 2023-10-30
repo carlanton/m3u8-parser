@@ -21,12 +21,12 @@ Maven:
 <dependency>
     <groupId>io.lindstrom</groupId>
     <artifactId>m3u8-parser</artifactId>
-    <version>0.26</version>
+    <version>0.27</version>
 </dependency>
 ```
 Gradle:
 ```
-implementation 'io.lindstrom:m3u8-parser:0.26'
+implementation 'io.lindstrom:m3u8-parser:0.27'
 ```
 
 ## Usage
