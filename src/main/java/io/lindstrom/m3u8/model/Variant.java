@@ -109,6 +109,11 @@ public interface Variant {
      */
     Optional<String> pathwayId();
 
+    /**
+     * @return variant attribute REQ-VIDEO-LAYOUT
+     */
+    Optional<String> reqVideoLayout();
+    
     static Builder builder() {
         return new Builder();
     }
