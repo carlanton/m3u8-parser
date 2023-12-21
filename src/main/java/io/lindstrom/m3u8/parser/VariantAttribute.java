@@ -223,7 +223,7 @@ enum VariantAttribute implements Attribute<Variant, Variant.Builder> {
 
         @Override
         public void write(Variant value, TextBuilder textBuilder) {
-            value.reqVideoLayout().ifPresent(v -> textBuilder.addQuoted(name(), v));
+            value.reqVideoLayout().ifPresent(v -> textBuilder.addQuoted(key(), v));
         };
 
     final static Map<String, VariantAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
