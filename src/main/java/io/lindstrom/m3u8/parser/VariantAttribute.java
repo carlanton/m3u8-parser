@@ -213,7 +213,18 @@ enum VariantAttribute implements Attribute<Variant, Variant.Builder> {
         public void write(Variant value, TextBuilder textBuilder) {
             value.pathwayId().ifPresent(v -> textBuilder.addQuoted(key(), v));
         }
-    };
+    },
+
+    REQ_VIDEO_LAYOUT {
+        @Override
+        public void read(Variant.Builder builder, String value) {
+            builder.reqVideoLayout(value);
+        }
+
+        @Override
+        public void write(Variant value, TextBuilder textBuilder) {
+            value.reqVideoLayout().ifPresent(v -> textBuilder.addQuoted(key(), v));
+        };
 
     final static Map<String, VariantAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);
 
