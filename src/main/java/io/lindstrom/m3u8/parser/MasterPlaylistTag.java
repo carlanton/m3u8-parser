@@ -3,7 +3,6 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.MasterPlaylist;
 
 import java.util.Map;
-import java.util.Optional;
 
 enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
     EXT_X_VERSION {
@@ -56,6 +55,30 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
         }
     },
 
+    EXT_X_SESSION_DATA {
+        @Override
+        public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
+            builder.addSessionData(SessionDataAttribute.parse(attributes, parsingMode));
+        }
+
+        @Override
+        public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
+            textBuilder.addTag(tag(), playlist.sessionData(), SessionDataAttribute.attributeMap);
+        }
+    },
+
+    EXT_X_SESSION_KEY {
+        @Override
+        public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
+            builder.addSessionKeys(SegmentKeyAttribute.parse(attributes, parsingMode));
+        }
+
+        @Override
+        public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
+            textBuilder.addTag(tag(), playlist.sessionKeys(), SegmentKeyAttribute.attributeMap);
+        }
+    },
+
     EXT_X_MEDIA {
         @Override
         public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
@@ -92,30 +115,6 @@ enum MasterPlaylistTag implements Tag<MasterPlaylist, MasterPlaylist.Builder> {
         @Override
         public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
             textBuilder.addTag(tag(), playlist.iFrameVariants(), IFrameVariantAttribute.attributeMap);
-        }
-    },
-
-    EXT_X_SESSION_DATA {
-        @Override
-        public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
-            builder.addSessionData(SessionDataAttribute.parse(attributes, parsingMode));
-        }
-
-        @Override
-        public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-            textBuilder.addTag(tag(), playlist.sessionData(), SessionDataAttribute.attributeMap);
-        }
-    },
-
-    EXT_X_SESSION_KEY {
-        @Override
-        public void read(MasterPlaylist.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
-            builder.addSessionKeys(SegmentKeyAttribute.parse(attributes, parsingMode));
-        }
-
-        @Override
-        public void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-            textBuilder.addTag(tag(), playlist.sessionKeys(), SegmentKeyAttribute.attributeMap);
         }
     },
 
