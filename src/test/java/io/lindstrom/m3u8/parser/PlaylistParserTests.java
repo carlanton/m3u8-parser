@@ -308,7 +308,7 @@ public class PlaylistParserTests {
         assertEquals(15, playlist.targetDuration());
         assertThat(playlist.mediaSegments(), is(Arrays.asList(
                 MediaSegment.builder()
-                        .segmentKey(SegmentKey.builder()
+                        .addSegmentKeys(SegmentKey.builder()
                                 .method(KeyMethod.AES_128)
                                 .uri("https://priv.example.com/key.php?r=52")
                                 .build())
@@ -324,9 +324,56 @@ public class PlaylistParserTests {
                         .uri("http://media.example.com/fileSequence52-C.ts")
                         .build(),
                 MediaSegment.builder()
-                        .segmentKey(SegmentKey.builder()
+                        .addSegmentKeys(SegmentKey.builder()
                                 .method(KeyMethod.AES_128)
                                 .uri("https://priv.example.com/key.php?r=53")
+                                .build())
+                        .duration(15.0)
+                        .uri("http://media.example.com/fileSequence53-A.ts")
+                        .build())));
+    }
+
+
+    @Test
+    public void playlistWithMultipleEncryptedMediaSegments() throws Exception {
+        MediaPlaylist playlist = mediaPlaylistParser.readPlaylist(resources.resolve("open-m3u8/playlistWithMultipleEncryptedMediaSegments.m3u8"));
+        assertTrue((playlist.version().isPresent()));
+        assertEquals(Integer.valueOf(3), playlist.version().get());
+        assertEquals(7794, playlist.mediaSequence());
+        assertEquals(15, playlist.targetDuration());
+        assertThat(playlist.mediaSegments(), is(Arrays.asList(
+                MediaSegment.builder()
+                        .addSegmentKeys(SegmentKey.builder()
+                                .method(KeyMethod.AES_128)
+                                .uri("https://priv.example.com/key.php?r=52")
+                                .keyFormat("123")
+                                .build())
+                        .addSegmentKeys(SegmentKey.builder()
+                                .method(KeyMethod.AES_128)
+                                .uri("https://priv.example.com/key.php?r=62")
+                                .keyFormat("456")
+                                .build())
+                        .duration(2.833)
+                        .uri("http://media.example.com/fileSequence52-A.ts")
+                        .build(),
+                MediaSegment.builder()
+                        .duration(15.0)
+                        .uri("http://media.example.com/fileSequence52-B.ts")
+                        .build(),
+                MediaSegment.builder()
+                        .duration(13.333)
+                        .uri("http://media.example.com/fileSequence52-C.ts")
+                        .build(),
+                MediaSegment.builder()
+                        .addSegmentKeys(SegmentKey.builder()
+                                .method(KeyMethod.AES_128)
+                                .uri("https://priv.example.com/key.php?r=53")
+                                .keyFormat("123")
+                                .build())
+                        .addSegmentKeys(SegmentKey.builder()
+                                .method(KeyMethod.AES_128)
+                                .uri("https://priv.example.com/key.php?r=63")
+                                .keyFormat("456")
                                 .build())
                         .duration(15.0)
                         .uri("http://media.example.com/fileSequence53-A.ts")

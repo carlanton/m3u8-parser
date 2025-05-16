@@ -25,7 +25,7 @@ public interface MediaSegment {
 
     Optional<SegmentMap> segmentMap();
 
-    Optional<SegmentKey> segmentKey();
+    List<SegmentKey> segmentKeys();
 
     @Value.Default
     default boolean discontinuity() {
