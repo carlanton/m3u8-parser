@@ -9,7 +9,7 @@ group = 'io.lindstrom'
 version = '0.29'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_18
+    sourceCompatibility = JavaVersion.VERSION_1_8
     withJavadocJar()
     withSourcesJar()
 }
