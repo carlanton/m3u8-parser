@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Master playlist interface
+ * Multivariant playlist interface
  */
 @Value.Immutable
-public interface MasterPlaylist extends Playlist {
+public interface MultivariantPlaylist extends Playlist {
 
     /**
      * A list of alternate renditions related to this playlist.
@@ -69,6 +69,6 @@ public interface MasterPlaylist extends Playlist {
         return new Builder();
     }
 
-    class Builder extends MasterPlaylistBuilder {
+    class Builder extends MultivariantPlaylistBuilder {
     }
 }

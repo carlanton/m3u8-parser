@@ -1,10 +1,18 @@
-group 'io.lindstrom'
-version '0.29'
+plugins {
+    id 'idea'
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+}
 
-apply plugin: 'idea'
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'signing'
+group = 'io.lindstrom'
+version = '0.29'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    withJavadocJar()
+    withSourcesJar()
+}
 
 ext {
     ideaGeneratedSources = file('build/generated/sources/annotationProcessor/java')
@@ -15,81 +23,76 @@ idea.module {
     generatedSourceDirs += ideaGeneratedSources
 }
 
-sourceCompatibility = 1.8
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compileOnly 'org.immutables:value:2.5.6'
+    compileOnly 'org.immutables:value:2.10.1'
     annotationProcessor "org.immutables:value:2.5.6"
-    testCompile 'junit:junit:4.12'
+    testImplementation('junit:junit:4.12')
 }
 
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
+test {
+    //useJUnitPlatform()
 }
 
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
-artifacts {
-    archives javadocJar, sourcesJar
-}
+publishing {
+    repositories {
+        maven {
+            def releaseRepo = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotRepo = "https://oss.sonatype.org/content/repositories/snapshots/"
 
-archivesBaseName = "m3u8-parser"
+            name = "OSSRH"
+            url = isReleaseVersion ? releaseRepo : snapshotRepo
 
-if (project.hasProperty('ossrhUsername')) {
-    signing {
-        sign configurations.archives
+            credentials {
+                username = findProperty("ossrhUsername") ?: System.getenv("OSSRH_USERNAME")
+                password = findProperty("ossrhPassword") ?: System.getenv("OSSRH_PASSWORD")
+            }
+        }
     }
 
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'm3u8-parser'
 
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
+            from components.java
+
+            pom {
+                groupId = 'io.lindstrom'
+                name = 'm3u8-parser'
+                description = 'm3u8 parser'
+                url = 'https://github.com/carlanton/m3u8-parser'
+                packaging = 'jar'
+
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://github.com/carlanton/m3u8-parser/blob/master/LICENSE'
+                    }
                 }
 
-                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                scm {
+                    url = 'https://github.com/carlanton/m3u8-parser.git'
+                    connection = 'scm:git:https://github.com/carlanton/m3u8-parser.git'
+                    developerConnection = 'scm:git:git@github.com:carlanton/m3u8-parser.git'
                 }
 
-                pom.project {
-                    name 'm3u8-parser'
-                    packaging 'jar'
-                    artifactId 'm3u8-parser'
-                    description 'm3u8 parser'
-                    url 'https://github.com/carlanton/m3u8-parser'
-
-                    scm {
-                        connection 'scm:git:https://github.com/carlanton/m3u8-parser.git'
-                        developerConnection 'scm:git:git@github.com:carlanton/m3u8-parser.git'
-                        url 'https://github.com/carlanton/m3u8-parser.git'
-                    }
-
-                    licenses {
-                        license {
-                            name 'MIT License'
-                            url 'https://github.com/carlanton/m3u8-parser/blob/master/LICENSE'
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id 'antonlindstrom'
-                            name 'Anton Lindström'
-                            email 'carlantonlindstrom@gmail.com'
-                        }
+                developers {
+                    developer {
+                        id = 'antonlindstrom'
+                        name = 'Anton Lindström'
+                        email = 'carlantonlindstrom@gmail.com'
                     }
                 }
             }
         }
     }
+}
+
+signing {
+    sign publishing.publications.mavenJava
 }

@@ -1,6 +1,6 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.*;
+import io.lindstrom.m3u8.model.MediaPlaylist;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -9,7 +9,7 @@ public class MediaPlaylistCommentsTest {
     private final MediaPlaylistParser parser = new MediaPlaylistParser();
 
     @Test
-    public void shouldAddCommentToMasterPlaylist() {
+    public void shouldAddCommentToMultivariantPlaylist() {
         MediaPlaylist playlist = MediaPlaylist.builder()
                 .targetDuration(2)
                 .addComments(
@@ -25,7 +25,7 @@ public class MediaPlaylistCommentsTest {
     }
 
     @Test
-    public void shouldAddCommentsToMasterPlaylist() {
+    public void shouldAddCommentsToMultivariantPlaylist() {
         MediaPlaylist playlist = MediaPlaylist.builder()
                 .targetDuration(2)
                 .addComments(
