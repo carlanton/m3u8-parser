@@ -8,7 +8,7 @@ import java.util.Optional;
 /**
  * Common playlist interface
  *
- * @see MasterPlaylist
+ * @see MultivariantPlaylist
  * @see MediaPlaylist
  */
 public interface Playlist {

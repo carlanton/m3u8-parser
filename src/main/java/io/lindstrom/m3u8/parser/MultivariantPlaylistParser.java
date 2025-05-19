@@ -1,22 +1,22 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.MasterPlaylist;
+import io.lindstrom.m3u8.model.MultivariantPlaylist;
 
 import java.util.Iterator;
 
 /**
- * MasterPlaylistParser can read and write Master Playlists according to RFC 8216 (HTTP Live Streaming).
+ * MultivariantPlaylistParser can read and write Multivariant Playlists according to RFC 8216 (HTTP Live Streaming).
  * <p>
  * Example usage:
  * <pre>
  * {@code
- * MasterPlaylistParser parser = new MasterPlaylistParser();
+ * MultivariantPlaylistParser parser = new MultivariantPlaylistParser();
  *
  * // Parse playlist
- * MasterPlaylist playlist = parser.readPlaylist(Paths.get("path/to/master.m3u8"));
+ * MultivariantPlaylist playlist = parser.readPlaylist(Paths.get("path/to/playlist.m3u8"));
  *
  * // Update playlist version
- * MasterPlaylist updated = MasterPlaylist.builder()
+ * MultivariantPlaylist updated = MultivariantPlaylist.builder()
  *                                        .from(playlist)
  *                                        .version(2)
  *                                        .build();
@@ -28,34 +28,34 @@ import java.util.Iterator;
  *
  * This implementation is reusable and thread safe.
  */
-public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist, MasterPlaylist.Builder> {
+public class MultivariantPlaylistParser extends AbstractPlaylistParser<MultivariantPlaylist, MultivariantPlaylist.Builder> {
     private final ParsingMode parsingMode;
 
-    public MasterPlaylistParser() {
+    public MultivariantPlaylistParser() {
         this(ParsingMode.STRICT);
     }
 
-    public MasterPlaylistParser(ParsingMode parsingMode) {
+    public MultivariantPlaylistParser(ParsingMode parsingMode) {
         this.parsingMode = parsingMode;
     }
 
     @Override
-    void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-        for (MasterPlaylistTag tag : MasterPlaylistTag.tags.values()) {
+    void write(MultivariantPlaylist playlist, TextBuilder textBuilder) {
+        for (MultivariantPlaylistTag tag : MultivariantPlaylistTag.tags.values()) {
             tag.write(playlist, textBuilder);
         }
     }
 
     @Override
-    MasterPlaylist.Builder newBuilder() {
-        return MasterPlaylist.builder();
+    MultivariantPlaylist.Builder newBuilder() {
+        return MultivariantPlaylist.builder();
     }
 
     @Override
-    void onTag(MasterPlaylist.Builder builder, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException{
-        MasterPlaylistTag tag = MasterPlaylistTag.tags.get(name);
+    void onTag(MultivariantPlaylist.Builder builder, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException{
+        MultivariantPlaylistTag tag = MultivariantPlaylistTag.tags.get(name);
 
-        if (tag == MasterPlaylistTag.EXT_X_STREAM_INF) {
+        if (tag == MultivariantPlaylistTag.EXT_X_STREAM_INF) {
             String uriLine = lineIterator.next();
             if (uriLine == null || uriLine.startsWith("#")) {
                 throw new PlaylistParserException("Expected URI, got " + uriLine);
@@ -69,14 +69,14 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
     }
 
     @Override
-    void onComment(MasterPlaylist.Builder builder, String value) {
+    void onComment(MultivariantPlaylist.Builder builder, String value) {
         builder.addComments(
                 value
         );
     }
 
     @Override
-    MasterPlaylist build(MasterPlaylist.Builder builder) {
+    MultivariantPlaylist build(MultivariantPlaylist.Builder builder) {
         return builder.build();
     }
 }

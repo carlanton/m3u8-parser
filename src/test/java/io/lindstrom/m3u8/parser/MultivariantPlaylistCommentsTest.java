@@ -1,16 +1,16 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.*;
+import io.lindstrom.m3u8.model.MultivariantPlaylist;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class MasterPlaylistCommentsTest {
-    private final MasterPlaylistParser parser = new MasterPlaylistParser();
+public class MultivariantPlaylistCommentsTest {
+    private final MultivariantPlaylistParser parser = new MultivariantPlaylistParser();
 
     @Test
-    public void shouldAddCommentToMasterPlaylist() {
-        MasterPlaylist playlist = MasterPlaylist.builder()
+    public void shouldAddCommentToMultivariantPlaylist() {
+        MultivariantPlaylist playlist = MultivariantPlaylist.builder()
                 .addComments("Test Comment")
                 .build();
 
@@ -21,8 +21,8 @@ public class MasterPlaylistCommentsTest {
     }
 
     @Test
-    public void shouldAddCommentsToMasterPlaylist() {
-        MasterPlaylist playlist = MasterPlaylist.builder()
+    public void shouldAddCommentsToMultivariantPlaylist() {
+        MultivariantPlaylist playlist = MultivariantPlaylist.builder()
                 .addComments(
                         "Test Comment 1",
                         "Test Comment 2"
@@ -38,7 +38,7 @@ public class MasterPlaylistCommentsTest {
 
     @Test
     public void shouldHaveCommentBetweenInitAndVersion() {
-        MasterPlaylist playlist = MasterPlaylist.builder()
+        MultivariantPlaylist playlist = MultivariantPlaylist.builder()
                 .version(4)
                 .addComments("Test Comment")
                 .build();
@@ -52,7 +52,7 @@ public class MasterPlaylistCommentsTest {
 
     @Test
     public void shouldOmitCommentsThatBeginWithExt() {
-        MasterPlaylist playlist = MasterPlaylist.builder()
+        MultivariantPlaylist playlist = MultivariantPlaylist.builder()
                 .version(4)
                 .addComments(
                         "Test Comment",

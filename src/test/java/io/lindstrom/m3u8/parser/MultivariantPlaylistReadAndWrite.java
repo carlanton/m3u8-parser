@@ -1,6 +1,6 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.MasterPlaylist;
+import io.lindstrom.m3u8.model.MultivariantPlaylist;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -20,21 +20,21 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.runners.Parameterized.Parameter;
 
 @RunWith(Parameterized.class)
-public class MasterPlaylistReadAndWrite {
-    private final MasterPlaylistParser masterPlaylistParser = new MasterPlaylistParser();
+public class MultivariantPlaylistReadAndWrite {
+    private final MultivariantPlaylistParser multivariantPlaylistParser = new MultivariantPlaylistParser();
 
     @Parameters
     public static List<Path> data() {
         return Stream.of(
-                "master/apple-master.m3u8",
-                "master/master.m3u8",
-                "master/master-variables.m3u8",
-                "master/master-alt-video.m3u8",
-                "open-m3u8/masterPlaylist.m3u8",
-                "open-m3u8/masterPlaylistWithAlternativeAudio.m3u8",
-                "open-m3u8/masterPlaylistWithAlternativeVideo.m3u8",
-                "open-m3u8/masterPlaylistWithIFrames.m3u8",
-                "master/content-steering.m3u8")
+                "multivariant/apple-multivariant.m3u8",
+                "multivariant/multivariant.m3u8",
+                "multivariant/multivariant-variables.m3u8",
+                "multivariant/multivariant-alt-video.m3u8",
+                "open-m3u8/multivariantPlaylist.m3u8",
+                "open-m3u8/multivariantPlaylistWithAlternativeAudio.m3u8",
+                "open-m3u8/multivariantPlaylistWithAlternativeVideo.m3u8",
+                "open-m3u8/multivariantPlaylistWithIFrames.m3u8",
+                "multivariant/content-steering.m3u8")
                 .map(p -> Paths.get("src/test/resources/", p))
                 .collect(Collectors.toList());
     }
@@ -44,14 +44,14 @@ public class MasterPlaylistReadAndWrite {
 
     @Test
     public void readAndWrite() throws Exception {
-        MasterPlaylist playlist = masterPlaylistParser.readPlaylist(playlistPath);
-        assertEquals(playlist, masterPlaylistParser.readPlaylist(masterPlaylistParser.writePlaylistAsString(playlist)));
+        MultivariantPlaylist playlist = multivariantPlaylistParser.readPlaylist(playlistPath);
+        assertEquals(playlist, multivariantPlaylistParser.readPlaylist(multivariantPlaylistParser.writePlaylistAsString(playlist)));
     }
 
     @Test
     public void readAndWriteAttributeQuoting() throws Exception {
         String original = new String(Files.readAllBytes(playlistPath), StandardCharsets.UTF_8);
-        String written = masterPlaylistParser.writePlaylistAsString(masterPlaylistParser.readPlaylist(original));
+        String written = multivariantPlaylistParser.writePlaylistAsString(multivariantPlaylistParser.readPlaylist(original));
 
         TestUtils.attributeConsistencyCheck(original, written, playlistPath);
     }
@@ -59,7 +59,7 @@ public class MasterPlaylistReadAndWrite {
     @Test
     public void streamInfoUriTest() throws IOException {
         String original = new String(Files.readAllBytes(playlistPath), StandardCharsets.UTF_8);
-        String written = masterPlaylistParser.writePlaylistAsString(masterPlaylistParser.readPlaylist(playlistPath));
+        String written = multivariantPlaylistParser.writePlaylistAsString(multivariantPlaylistParser.readPlaylist(playlistPath));
         assertEquals(variantUris(original), variantUris(written));
     }
 
